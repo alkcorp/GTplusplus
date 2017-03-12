@@ -702,22 +702,22 @@ public class RECIPES_Machines {
 				Utils.LOG_INFO("Using " + plateTier4 + " with " + pipeTier4);
 
 				RecipeUtils.addShapedGregtechRecipe(
-						plateTier1, OrePrefixes.plate.get(Materials.Iron), plateTier1,
+						plateTier1, "plateIron", plateTier1,
 						plateTier1, pipeTier1, plateTier1,
 						plateTier1, new ItemStack(Items.water_bucket, 1), plateTier1,
 						GregtechItemList.GT_FluidTank_ULV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
 						plateTier2, plateTier4, plateTier2,
 						plateTier2, pipeTier2, plateTier2,
-						plateTier2, electricPump_LV, plateTier2,
+						plateTier2, ItemList.Electric_Pump_LV, plateTier2,
 						GregtechItemList.GT_FluidTank_LV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						OrePrefixes.plate.get(Materials.Redstone), OrePrefixes.plate.get(Materials.RedstoneAlloy), OrePrefixes.plate.get(Materials.Redstone),
+						OrePrefixes.plate.get(Materials.Redstone), "plateRedstoneAlloy", OrePrefixes.plate.get(Materials.Redstone),
 						plateTier3, pipeTier3, plateTier3,
-						OrePrefixes.plate.get(Materials.Redstone), electricPump_LV, OrePrefixes.plate.get(Materials.Redstone),
+						"plateRedstone", ItemList.Electric_Pump_LV, "plateRedstone",
 						GregtechItemList.GT_FluidTank_MV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						ItemList.Circuit_Primitive, OrePrefixes.plate.get(Materials.DarkSteel), ItemList.Circuit_Primitive,
+						ItemList.Circuit_Primitive, "plateDarkSteel", ItemList.Circuit_Primitive,
 						plateTier4, pipeTier4, plateTier4,
 						ItemList.Circuit_Primitive, electricPump_LV, ItemList.Circuit_Primitive,
 						GregtechItemList.GT_FluidTank_HV.get(1));
