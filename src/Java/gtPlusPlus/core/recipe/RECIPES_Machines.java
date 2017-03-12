@@ -198,7 +198,8 @@ public class RECIPES_Machines {
 	static ItemStack IC2MFSU;
 
 	//Circuits
-	static String circuitPrimitive = "circuitBasic";
+	static String circuitPrimitive = "circuitPrimitive";
+	static String circuitBasic = "circuitBasic";
 	static String circuitTier1 = "circuitGood";
 	static String circuitTier2 = "circuitAdvanced";
 	static String circuitTier3 = "circuitData";
@@ -384,7 +385,7 @@ public class RECIPES_Machines {
 			//Buffer Core
 			RecipeUtils.addShapedGregtechRecipe(
 					plateTier1, cableTier1, plateTier1,
-					circuitPrimitive, IC2MFE, circuitPrimitive,
+					circuitBasic, IC2MFE, circuitBasic,
 					plateTier1, cableTier1, plateTier1,
 					RECIPE_BufferCore_ULV);
 			RecipeUtils.addShapedGregtechRecipe(
@@ -437,7 +438,7 @@ public class RECIPES_Machines {
 			RecipeUtils.addShapedGregtechRecipe(
 					wireTier1, RECIPE_BufferCore_ULV, wireTier1,
 					wireTier1, machineCasing_ULV, wireTier1,
-					circuitPrimitive, circuitTier1, circuitPrimitive,
+					circuitBasic, circuitTier1, circuitBasic,
 					RECIPE_Buffer_ULV);
 			RecipeUtils.addShapedGregtechRecipe(
 					wireTier2, RECIPE_BufferCore_LV, wireTier2,
@@ -717,9 +718,9 @@ public class RECIPES_Machines {
 						"plateRedstone", electricPump_LV, "plateRedstone",
 						GregtechItemList.GT_FluidTank_MV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						"circuitPrimitve", "plateDarkSteel", "circuitPrimitve",
+						circuitPrimitive, "plateDarkSteel", circuitPrimitive,
 						plateTier4, pipeTier4, plateTier4,
-						ItemList.Circuit_Primitive, electricPump_LV, ItemList.Circuit_Primitive,
+						circuitPrimitive, electricPump_LV, circuitPrimitive,
 						GregtechItemList.GT_FluidTank_HV.get(1));
 			}
 
