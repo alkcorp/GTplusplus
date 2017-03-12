@@ -9,6 +9,7 @@ import gtPlusPlus.core.util.recipe.RecipeUtils;
 import gtPlusPlus.xmod.gregtech.api.enums.GregtechItemList;
 import gtPlusPlus.xmod.gregtech.api.enums.GregtechOrePrefixes;
 import gtPlusPlus.xmod.gregtech.api.enums.GregtechOrePrefixes.GT_Materials;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
 public class RECIPES_Machines {
@@ -688,53 +689,38 @@ public class RECIPES_Machines {
 				pipeTier1 = "pipeLargeClay";
 				plateTier2 = "plateCopper";
 				pipeTier2 = "pipeHugeClay";
-				plateTier3 = "plateIron";
-				pipeTier3 = "pipeMediumCopper";
-				plateTier4 = "plateBronze";
-				pipeTier4 = "pipeLargeCopper";
-				plateTier5 = "plateSteel";
-				pipeTier5 = "pipeLargeBronze";
-				plateTier6 = "plateAluminium";
-				pipeTier6 = "pipeMediumSteel";
+				plateTier3 = "plateBronze";
+				pipeTier3 = "pipeMediumBronze";
+				plateTier4 = "plateSteel";
+				pipeTier4 = "pipeMediumSteel";
+
 
 				Utils.LOG_INFO("Loading New Horizon Tanks, with custom recipes.");
 				Utils.LOG_INFO("Using "+plateTier1+" with "+pipeTier1);
 				Utils.LOG_INFO("Using "+plateTier2+" with "+pipeTier2);
-				Utils.LOG_INFO("Using "+plateTier3+" with "+pipeTier3);
-				Utils.LOG_INFO("Using "+plateTier4+" with "+pipeTier4);
-				Utils.LOG_INFO("Using "+plateTier5+" with "+pipeTier5);
-				Utils.LOG_INFO("Using "+plateTier6+" with "+pipeTier6);
+				Utils.LOG_INFO("Using " + plateTier3 + " with " + pipeTier3);
+				Utils.LOG_INFO("Using " + plateTier4 + " with " + pipeTier4);
 
 				RecipeUtils.addShapedGregtechRecipe(
-						plateTier1, plateTier1, plateTier1,
+						plateTier1, OrePrefixes.plate.get(Materials.Iron), plateTier1,
 						plateTier1, pipeTier1, plateTier1,
-						plateTier1, GregtechItemList.Fluid_Cell_144L.get(1), plateTier1,
+						plateTier1, new ItemStack(Items.water_bucket, 1), plateTier1,
 						GregtechItemList.GT_FluidTank_ULV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						plateTier2, plateTier2, plateTier2,
+						plateTier2, plateTier4, plateTier2,
 						plateTier2, pipeTier2, plateTier2,
 						plateTier2, electricPump_LV, plateTier2,
 						GregtechItemList.GT_FluidTank_LV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						plateTier3, plateTier3, plateTier3,
+						OrePrefixes.plate.get(Materials.Redstone), OrePrefixes.plate.get(Materials.RedstoneAlloy), OrePrefixes.plate.get(Materials.Redstone),
 						plateTier3, pipeTier3, plateTier3,
-						plateTier3, electricPump_MV, plateTier3,
+						OrePrefixes.plate.get(Materials.Redstone), electricPump_LV, OrePrefixes.plate.get(Materials.Redstone),
 						GregtechItemList.GT_FluidTank_MV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						plateTier4, plateTier4, plateTier4,
+						ItemList.Circuit_Primitive, OrePrefixes.plate.get(Materials.DarkSteel), ItemList.Circuit_Primitive,
 						plateTier4, pipeTier4, plateTier4,
-						plateTier4, electricPump_HV, plateTier4,
+						ItemList.Circuit_Primitive, electricPump_LV, ItemList.Circuit_Primitive,
 						GregtechItemList.GT_FluidTank_HV.get(1));
-				RecipeUtils.addShapedGregtechRecipe(
-						plateTier5, plateTier5, plateTier5,
-						plateTier5, pipeTier5, plateTier5,
-						plateTier5, electricPump_EV, plateTier5,
-						GregtechItemList.GT_FluidTank_EV.get(1));
-				RecipeUtils.addShapedGregtechRecipe(
-						plateTier6, plateTier6, plateTier6,
-						plateTier6, pipeTier6, plateTier6,
-						plateTier6, electricPump_IV, plateTier6,
-						GregtechItemList.GT_FluidTank_IV.get(1));
 			}
 
 			//Industrial Multi Tank Casing
