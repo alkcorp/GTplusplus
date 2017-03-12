@@ -707,17 +707,17 @@ public class RECIPES_Machines {
 						plateTier1, new ItemStack(Items.water_bucket, 1), plateTier1,
 						GregtechItemList.GT_FluidTank_ULV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						plateTier2, plateTier4, plateTier2,
+						plateTier2, "plateSteel", plateTier2,
 						plateTier2, pipeTier2, plateTier2,
-						plateTier2, ItemList.Electric_Pump_LV, plateTier2,
+						plateTier2, electricPump_LV, plateTier2,
 						GregtechItemList.GT_FluidTank_LV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						OrePrefixes.plate.get(Materials.Redstone), "plateRedstoneAlloy", OrePrefixes.plate.get(Materials.Redstone),
+						"plateRedstone", "plateRedstoneAlloy", "plateRedstone",
 						plateTier3, pipeTier3, plateTier3,
-						"plateRedstone", ItemList.Electric_Pump_LV, "plateRedstone",
+						"plateRedstone", electricPump_LV, "plateRedstone",
 						GregtechItemList.GT_FluidTank_MV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						ItemList.Circuit_Primitive, "plateDarkSteel", ItemList.Circuit_Primitive,
+						"circuitPrimitve", "plateDarkSteel", "circuitPrimitve",
 						plateTier4, pipeTier4, plateTier4,
 						ItemList.Circuit_Primitive, electricPump_LV, ItemList.Circuit_Primitive,
 						GregtechItemList.GT_FluidTank_HV.get(1));
