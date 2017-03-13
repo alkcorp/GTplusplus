@@ -698,6 +698,7 @@ public class RECIPES_Machines {
 				plateTier6 = "plateRedstone";
 				plateTier7 = "plateRedstoneAlloy";
 				plateTier8 = "plateDarkSteel";
+				ItemStack waterBucket = ItemUtils.getSimpleStack(Items.water_bucket);
 
 
 				Utils.LOG_INFO("Loading New Horizon Tanks, with custom recipes.");
@@ -709,7 +710,7 @@ public class RECIPES_Machines {
 				RecipeUtils.addShapedGregtechRecipe(
 						plateTier1, plateTier4, plateTier1,
 						plateTier1, pipeTier1, plateTier1,
-						plateTier1, ItemUtils.getSimpleStack(Items.water_bucket, 1), plateTier1,
+						plateTier1, waterBucket, plateTier1,
 						GregtechItemList.GT_FluidTank_ULV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
 						plateTier2, plateTier5, plateTier2,
