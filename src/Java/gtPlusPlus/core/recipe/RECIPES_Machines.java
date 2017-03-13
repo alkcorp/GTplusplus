@@ -687,7 +687,7 @@ public class RECIPES_Machines {
 
 				plateTier1 = "plateTin";
 				pipeTier1 = "pipeLargeClay";
-				circuitTier1 = "circuitPrimitve";
+				circuitTier1 = "circuitPrimitive";
 				plateTier2 = "plateCopper";
 				pipeTier2 = "pipeHugeClay";
 				plateTier3 = "plateBronze";
