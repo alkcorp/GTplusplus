@@ -687,12 +687,17 @@ public class RECIPES_Machines {
 
 				plateTier1 = "plateTin";
 				pipeTier1 = "pipeLargeClay";
+				circuitTier1 = "circuitPrimitve";
 				plateTier2 = "plateCopper";
 				pipeTier2 = "pipeHugeClay";
 				plateTier3 = "plateBronze";
 				pipeTier3 = "pipeMediumBronze";
-				plateTier4 = "plateSteel";
+				plateTier4 = "plateIron";
 				pipeTier4 = "pipeMediumSteel";
+				plateTier5 = "plateSteel";
+				plateTier6 = "plateRedstone";
+				plateTier7 = "plateRedstoneAlloy";
+				plateTier8 = "plateDarkSteel";
 
 
 				Utils.LOG_INFO("Loading New Horizon Tanks, with custom recipes.");
@@ -702,24 +707,24 @@ public class RECIPES_Machines {
 				Utils.LOG_INFO("Using " + plateTier4 + " with " + pipeTier4);
 
 				RecipeUtils.addShapedGregtechRecipe(
-						plateTier1, "plateIron", plateTier1,
+						plateTier1, plateTier4, plateTier1,
 						plateTier1, pipeTier1, plateTier1,
-						plateTier1, new ItemStack(Items.water_bucket, 1), plateTier1,
+						plateTier1, ItemUtils.getSimpleStack(Items.water_bucket, 1), plateTier1,
 						GregtechItemList.GT_FluidTank_ULV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						plateTier2, "plateSteel", plateTier2,
+						plateTier2, plateTier5, plateTier2,
 						plateTier2, pipeTier2, plateTier2,
 						plateTier2, electricPump_LV, plateTier2,
 						GregtechItemList.GT_FluidTank_LV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						"plateRedstone", "plateRedstoneAlloy", "plateRedstone",
+						plateTier6, plateTier7, plateTier6,
 						plateTier3, pipeTier3, plateTier3,
-						"plateRedstone", electricPump_LV, "plateRedstone",
+						plateTier6, electricPump_LV, plateTier6,
 						GregtechItemList.GT_FluidTank_MV.get(1));
 				RecipeUtils.addShapedGregtechRecipe(
-						"circuitPrimitve", "plateDarkSteel", "circuitPrimitve",
+						circuitTier1, plateTier8, circuitTier1,
 						plateTier4, pipeTier4, plateTier4,
-						ItemList.Circuit_Primitive, electricPump_LV, ItemList.Circuit_Primitive,
+						circuitTier1, electricPump_LV, circuitTier1,
 						GregtechItemList.GT_FluidTank_HV.get(1));
 			}
 
