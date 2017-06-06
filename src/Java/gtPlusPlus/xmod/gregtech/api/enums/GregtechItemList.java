@@ -159,7 +159,10 @@ public enum GregtechItemList implements GregtechItemContainer {
 	//Tree Farm
 	Industrial_TreeFarm, TreeFarmer_Structural,
 	
-	Industrial_Sifter
+	Industrial_Sifter, 
+	
+	//Advanced Boilers
+	Boiler_Advanced_LV, Boiler_Advanced_MV, Boiler_Advanced_HV
 	;
 
 	public static final GregtechItemList[]
