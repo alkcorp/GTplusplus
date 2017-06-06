@@ -141,33 +141,25 @@ public class RECIPE_IC2 {
 
 		//Shaft Recipes
 		GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(9L, block_T1), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T1, 2560, 250);
-		if (CORE.GTNH) {
-			GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, shaft_block_T1), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T1, 2560, 250);
-		}
+		GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, shaft_block_T1), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T1, 2560, 250);
 		if (LoadedMods.EnderIO || CORE.GTNH) {
 			Utils.LOG_INFO("Added recipe for GT5 Extruder: Windmill Shaft [Energetic]");
 		} else {
 			Utils.LOG_INFO("Added recipe for GT5 Extruder: Windmill Shaft [Magnalium]");
 		}
 		GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(9L, block_T2), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T2, 5120, 500);
-		if (CORE.GTNH) {
-			GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, shaft_block_T2), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T2, 5120, 500);
-		}
+		GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, shaft_block_T2), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T2, 5120, 500);
 
 		Utils.LOG_INFO("Added recipe for GT5 Extruder: Windmill Shaft [TungstenSteel]");
 		GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(9L, block_T3), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T3, 10240, 2000);
-		if (CORE.GTNH) {
-			GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, shaft_block_T3), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T3, 10240, 2000);
-		}
+		GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, shaft_block_T3), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T3, 10240, 2000);
 		if (LoadedMods.EnderIO || CORE.GTNH) {
 			Utils.LOG_INFO("Added recipe for GT5 Extruder: Windmill Shaft [Vibrant]");
 		} else {
 			Utils.LOG_INFO("Added recipe for GT5 Extruder: Windmill Shaft [Ultimet]");
 		}
 		GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(9L, block_T4), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T4, 20480, 4000);
-		if (CORE.GTNH) {
-			GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, shaft_block_T4), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T4, 20480, 4000);
-		}
+		GT_Values.RA.addExtruderRecipe(GT_Utility.copyAmount(1L, shaft_block_T4), GregtechItemList.Shape_Extruder_WindmillShaft.get(0L, new Object[0]), shaft_T4, 20480, 4000);
 		Utils.LOG_INFO("Added recipe for GT5 Extruder: Windmill Shaft [Iridium]");
 
 		if (!CORE.GTNH) {
