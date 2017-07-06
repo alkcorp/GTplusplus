@@ -51,18 +51,6 @@ public class Utils {
 		}
 	}
 
-	public static boolean isModUpToDate(){
-
-		if (CORE.MASTER_VERSION.toLowerCase().equals("offline")){
-			return false;
-		}
-
-		if (CORE.MASTER_VERSION.equals(CORE.VERSION.toLowerCase())){
-			return true;
-		}
-		return false;
-	}
-
 	public static TC_AspectStack getTcAspectStack (final TC_Aspects aspect, final long size){
 		return getTcAspectStack(aspect.name(), (int) size);
 	}
@@ -542,6 +530,23 @@ public class Utils {
 		temp = temp.replace("}", "");
 		temp = temp.replace("[", "");
 		temp = temp.replace("]", "");
+		temp = temp.replace(" ", "");
+		output = temp;
+		return output;
+
+	}
+	
+	public static String sanitizeStringKeepBrackets(final String input){
+		String temp;
+		String output;
+
+		temp = input.replace(" ", "");
+		temp = temp.replace("-", "");
+		temp = temp.replace("_", "");
+		temp = temp.replace("?", "");
+		temp = temp.replace("!", "");
+		temp = temp.replace("@", "");
+		temp = temp.replace("#", "");
 		temp = temp.replace(" ", "");
 		output = temp;
 		return output;
