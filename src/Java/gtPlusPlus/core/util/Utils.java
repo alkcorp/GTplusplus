@@ -472,7 +472,7 @@ public class Utils {
 	}
 
 	public static boolean doesEntryExistAlreadyInOreDictionary(final String OreDictName){
-		return OreDictionary.getOres(OreDictName).size() != 0;
+		return !OreDictionary.getOres(OreDictName).isEmpty();
 	}
 
 	public static boolean invertBoolean(final boolean booleans){
