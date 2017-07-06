@@ -118,3 +118,10 @@ local.properties
 /dont-compile/bloodsteel/BloodSteelSpade.java
 /dont-compile/bloodsteel/BloodSteelSword.java
 /screenshots
+out/
+run/
+libs/
+*.bat
+GT++.iws
+GT++.ipr
+GT++.iml

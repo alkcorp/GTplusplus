@@ -34,10 +34,10 @@ dependencies {
 	compile fileTree(dir: 'libs', include: '*.jar')
 }
 
-sourceCompatibility = JavaVersion.VERSION_1_7
-targetCompatibility = JavaVersion.VERSION_1_7
-sourceCompatibility = 1.7
-targetCompatibility = 1.7
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 archivesBaseName = "GT-PlusPlus"
 version = "1.5.5-Release"
