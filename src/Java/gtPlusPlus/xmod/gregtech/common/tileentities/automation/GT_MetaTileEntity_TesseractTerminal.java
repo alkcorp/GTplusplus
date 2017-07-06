@@ -458,7 +458,7 @@ extends GT_MetaTileEntity_BasicTank
 					this.getBaseMetaTileEntity().issueBlockUpdate();
 				}
 			}
-			else if (this.mDidWork == true)
+			else if (this.mDidWork)
 			{
 				this.mDidWork = false;
 				this.getBaseMetaTileEntity().issueBlockUpdate();

@@ -285,7 +285,7 @@ public abstract class GregtechMetaSafeBlockBase extends GT_MetaTileEntity_Tiered
 			this.value_current = this.bUnbreakable;
 			if (this.value_last != this.value_current){
 				Utils.LOG_WARNING("VALUE CHANGE - Ticking for a moment.");
-				if (this.bUnbreakable == true){
+				if (this.bUnbreakable){
 					//Xasda.setmTileEntity((BaseMetaTileEntity) aBaseMetaTileEntity);
 					//Utils.LOG_ERROR("Safe is Indestructible.");
 					this.getBaseMetaTileEntity().getBlock(this.getBaseMetaTileEntity().getXCoord(), this.getBaseMetaTileEntity().getYCoord(), this.getBaseMetaTileEntity().getZCoord()).setResistance(Float.MAX_VALUE);

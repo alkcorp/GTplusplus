@@ -128,7 +128,7 @@ public class UtilsMining {
 			}
 
 			//Set Durability damage to the item
-			if (durabilityDamage == true){
+			if (durabilityDamage){
 			Utils.LOG_WARNING("Total Loss: "+(int)DURABILITY_LOSS);
 			if (stack.getItemDamage() < (stack.getMaxDamage()-DURABILITY_LOSS)){
 				stack.damageItem((int) DURABILITY_LOSS, aPlayer);

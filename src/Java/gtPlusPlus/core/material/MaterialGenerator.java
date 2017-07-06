@@ -51,7 +51,7 @@ public class MaterialGenerator {
 		}
 
 		if (matInfo.getState() == MaterialState.SOLID){
-			if (generateEverything == true){
+			if (generateEverything){
 				if (sRadiation >= 1){
 					Item temp;
 					Block tempBlock;
@@ -127,7 +127,7 @@ public class MaterialGenerator {
 		RecipeGen_ShapedCrafting.generateRecipes(matInfo);
 
 	}
-	
+
 	public static void generateDusts(final Material matInfo){
 		final String unlocalizedName = matInfo.getUnlocalizedName();
 		final String materialName = matInfo.getLocalizedName();
@@ -155,7 +155,7 @@ public class MaterialGenerator {
 		RecipeGen_DustGeneration.addMixerRecipe_Standalone(matInfo);
 		RecipeGen_Fluids.generateRecipes(matInfo);
 	}
-	
+
 	public static void generateNuclearMaterial(final Material matInfo){
 		generateNuclearMaterial(matInfo, true);
 	}
