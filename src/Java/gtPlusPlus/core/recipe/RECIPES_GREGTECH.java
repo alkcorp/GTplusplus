@@ -11,6 +11,7 @@ import gtPlusPlus.core.material.nuclear.NUCLIDE;
 import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.fluid.FluidUtils;
 import gtPlusPlus.core.util.item.ItemUtils;
+import gtPlusPlus.core.util.reflect.AddGregtechRecipe;
 import gtPlusPlus.xmod.gregtech.api.enums.GregtechItemList;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -48,58 +49,38 @@ public class RECIPES_GREGTECH {
 	private static void cokeOvenRecipes(){
 		Utils.LOG_INFO("Loading Recipes for Industrial Coking Oven.");
 
-		try {
+		//Wood to Charcoal
+		AddGregtechRecipe.addCokeAndPyrolyseRecipes(
+				GT_OreDictUnificator.get(OrePrefixes.log, Materials.Wood, 20L),
+				20,
+				GT_ModHandler.getSteam(1000),
+				GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Charcoal, 24L),
+				FluidUtils.getFluidStack("fluid.coalgas", 1440), 
+				60,
+				30);
 
-			//GT Logs to Charcoal Recipe
-			//With Sulfuric Acid
-			CORE.RA.addCokeOvenRecipe(
-					GT_OreDictUnificator.get(OrePrefixes.log, Materials.Wood, 1L), //Input 1
-					GT_OreDictUnificator.get(OrePrefixes.log, Materials.Wood, 1L), //Input 2
-					Materials.SulfuricAcid.getFluid(20L), //Fluid Input
-					Materials.Creosote.getFluid(175L), //Fluid Output
-					GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Charcoal, 2L), //Item Output
-					800,  //Time in ticks
-					30); //EU
-		}catch (final NullPointerException e){Utils.LOG_INFO("FAILED TO LOAD RECIPES - NULL POINTER SOMEWHERE");}
-		try {
+		//Coal to Coke
+		AddGregtechRecipe.addCokeAndPyrolyseRecipes(
+				GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Coal, 16L),
+				22,
+				GT_ModHandler.getSteam(1000),
+				ItemUtils.getItemStackOfAmountFromOreDict("fuelCoke", 10),
+				FluidUtils.getFluidStack("fluid.coalgas", 2880), 
+				30,
+				120);
 
-			//Coal -> Coke Recipe
-			//With Sulfuric Acid
-			CORE.RA.addCokeOvenRecipe(
-					GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Coal, 1L), //Input 1
-					GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Coal, 1L), //Input 2
-					Materials.SulfuricAcid.getFluid(60L), //Fluid Input
-					Materials.Creosote.getFluid(250L), //Fluid Output
-					ItemUtils.getItemStack("Railcraft:fuel.coke", 2), //Item Output
-					600,  //Time in ticks
-					120); //EU
-		}catch (final NullPointerException e){Utils.LOG_INFO("FAILED TO LOAD RECIPES - NULL POINTER SOMEWHERE");}
+		//Coke & Coal
+		CORE.RA.addCokeOvenRecipe(
+				GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Coal, 12L),
+				ItemUtils.getItemStackOfAmountFromOreDict("fuelCoke", 6),
+				GT_ModHandler.getSteam(2000),
+				FluidUtils.getFluidStack("fluid.coalgas", 5040),
+				ItemUtils.getItemStackOfAmountFromOreDict("fuelCoke", 14),
+				60*20,
+				240);
 
-		try {
-			//GT Logs to Charcoal Recipe
-			//Without Sulfuric Acid
-			CORE.RA.addCokeOvenRecipe(
-					GT_OreDictUnificator.get(OrePrefixes.log, Materials.Wood, 1L), //Input 1
-					GT_OreDictUnificator.get(OrePrefixes.log, Materials.Wood, 1L), //Input 2
-					FluidUtils.getFluidStack("oxygen", 80), //Fluid Input
-					Materials.Creosote.getFluid(145L), //Fluid Output
-					GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Charcoal, 2L), //Item Output
-					1200,  //Time in ticks
-					30); //EU
-		}catch (final NullPointerException e){Utils.LOG_INFO("FAILED TO LOAD RECIPES - NULL POINTER SOMEWHERE");}
 
-		try {
-			//Coal -> Coke Recipe
-			//Without Sulfuric Acid
-			CORE.RA.addCokeOvenRecipe(
-					GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Coal, 1L), //Input 1
-					GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Coal, 1L), //Input 2
-					FluidUtils.getFluidStack("oxygen", 185), //Fluid Input
-					Materials.Creosote.getFluid(200L), //Fluid Output
-					ItemUtils.getItemStack("Railcraft:fuel.coke", 2), //Item Output
-					900,  //Time in ticks
-					120); //EU
-		}catch (final NullPointerException e){Utils.LOG_INFO("FAILED TO LOAD RECIPES - NULL POINTER SOMEWHERE");}
+
 	}
 
 	private static void matterFabRecipes(){
@@ -488,7 +469,7 @@ public class RECIPES_GREGTECH {
 		GT_ModHandler.addExtractionRecipe(GregtechItemList.Battery_RE_EV_Cadmium.get(1L, new Object[0]), ItemList.Battery_Hull_HV.get(4L, new Object[0]));
 		GT_ModHandler.addExtractionRecipe(GregtechItemList.Battery_RE_EV_Lithium.get(1L, new Object[0]), ItemList.Battery_Hull_HV.get(4L, new Object[0]));
 	}
-	
+
 	private static void fluidExtractorRecipes(){
 		GT_Values.RA.addFluidExtractionRecipe(ItemUtils.getSimpleStack(Items.ender_pearl), null, FluidUtils.getFluidStack("ender", 250), 10000, 100, 30);
 	}
@@ -539,7 +520,7 @@ public class RECIPES_GREGTECH {
 		GT_Values.RA.addMixerRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustUranium233", 4), ItemUtils.getItemStackOfAmountFromOreDict("dustUranium235", 1), null, null, FluidUtils.getFluidStack("hydrofluoricacid", 144*5), FluidUtils.getFluidStack("molten.uraniumtetrafluoride", 144*5), null, 3000, 500);
 		//GT_Values.RA.addMixerRecipe(ItemUtils.getItemStackOfAmountFromOreDict("cellFluorine", 1), ItemUtils.getItemStackOfAmountFromOreDict("cellFluorine", 1), null, null, FluidUtils.getFluidStack("molten.uraniumtetrafluoride", 720), FluidUtils.getFluidStack("molten.uraniumhexafluoride", 288), null, 5000, 2000);
 		GT_Values.RA.addMixerRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustSteel", 20), ItemUtils.getItemStackOfAmountFromOreDict("dustSilicon", 1), ItemUtils.getItemStackOfAmountFromOreDict("dustNickel", 5), ItemUtils.getItemStackOfAmountFromOreDict("dustAluminium", 4), null, null, ItemUtils.getItemStackOfAmountFromOreDict("dustEglinSteel", 30), 1200, 60);
-		}
+	}
 
 	private static void chemicalReactorRecipes(){
 		GT_Values.RA.addChemicalRecipe(
@@ -615,7 +596,7 @@ public class RECIPES_GREGTECH {
 				120*20,
 				30);
 	}
-	
+
 	private static void compressorRecipes(){
 		GT_ModHandler.addCompressionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustSmallClay", 4), ItemUtils.getItemStackOfAmountFromOreDict("plateClay", 1));
 	}

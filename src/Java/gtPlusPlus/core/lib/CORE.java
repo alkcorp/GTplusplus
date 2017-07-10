@@ -4,6 +4,7 @@ import java.util.*;
 
 import gregtech.api.GregTech_API;
 import gtPlusPlus.core.util.Utils;
+import gtPlusPlus.core.util.array.Pair;
 import gtPlusPlus.core.util.geo.GeoUtils;
 import gtPlusPlus.core.util.gregtech.recipehandlers.GregtechRecipe;
 import gtPlusPlus.core.util.networking.NetworkUtils;
@@ -12,6 +13,7 @@ import gtPlusPlus.xmod.gregtech.api.interfaces.internal.IGregtech_RecipeAdder;
 import gtPlusPlus.xmod.gregtech.api.objects.XSTR;
 import gtPlusPlus.xmod.gregtech.common.Meta_GT_Proxy;
 import gtPlusPlus.xmod.gregtech.common.tileentities.automation.GT_MetaTileEntity_TesseractGenerator;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.config.Configuration;
 
@@ -29,7 +31,7 @@ public class CORE {
 
 	public static final String name = "GT++";
 	public static final String MODID = "miscutils";
-	public static final String VERSION = "1.5.5-Pre-release";
+	public static final String VERSION = "1.5.6-Pre-release";
 	public static final String MASTER_VERSION = NetworkUtils.getContentFromURL("https://raw.githubusercontent.com/draknyte1/GTplusplus/master/Recommended.txt").toLowerCase();
 	public static final String USER_COUNTRY = GeoUtils.determineUsersCountry();
 	public static boolean isModUpToDate = Utils.isModUpToDate();
@@ -38,6 +40,7 @@ public class CORE {
 	public static final int GREG_FIRST_ID = 760;
 	public static Map PlayerCache;
 	public static final String[] VOLTAGES = {"ULV","LV","MV","HV","EV","IV","LuV","ZPM","UV","MAX"};
+	public static List<Pair<Integer, ItemStack>> burnables = new ArrayList<Pair<Integer, ItemStack>>();
 	public static final boolean MAIN_GREGTECH_5U_EXPERIMENTAL_FORK = Meta_GT_Proxy.areWeUsingGregtech5uExperimental();
 	public static final int GREGTECH_API_VERSION = GregTech_API.VERSION;
 	public static IGregtech_RecipeAdder RA;
@@ -52,6 +55,7 @@ public class CORE {
 
 	//Because I want to be lazy.
 	public static boolean GTNH = false;
+	public static int DARKBIOME_ID = 238;
 
 	/**
 	 * A List containing all the Materials, which are somehow in use by GT and therefor receive a specific Set of Items.

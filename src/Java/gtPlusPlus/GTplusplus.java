@@ -11,6 +11,7 @@ import java.util.Collection;
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.util.GT_Recipe;
@@ -18,6 +19,7 @@ import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.Recipe_GT.Gregtech_Recipe_Map;
 import gtPlusPlus.core.commands.CommandMath;
 import gtPlusPlus.core.common.CommonProxy;
+import gtPlusPlus.core.handler.BurnableFuelHandler;
 import gtPlusPlus.core.handler.Recipes.RegistrationHandler;
 import gtPlusPlus.core.handler.events.LoginEventHandler;
 import gtPlusPlus.core.item.general.RF2EU_Battery;
@@ -143,7 +145,10 @@ public class GTplusplus implements ActionListener {
 		// Features
 		enableCustomAlvearyBlocks = config.getBoolean("enableCustomAlvearyBlocks", "features", false,
 				"Enables Custom Alveary Blocks.");
-
+		
+		//Biomes
+		CORE.DARKBIOME_ID = config.getInt("darkbiome_ID", "worldgen", 238, 1, 254, "The biome within the Dark Dimension.");
+		
 		config.save();
 	}
 
@@ -210,6 +215,13 @@ public class GTplusplus implements ActionListener {
 
 		// ~
 		ReflectionUtils.becauseIWorkHard();
+		
+		//Make Burnables burnable
+		if (!CORE.burnables.isEmpty()){
+				BurnableFuelHandler fuelHandler = new BurnableFuelHandler();
+				GameRegistry.registerFuelHandler(fuelHandler);
+				Utils.LOG_INFO("[Fuel Handler] Registering "+fuelHandler.getClass().getName());
+		}
 
 		// Utils.LOG_INFO("Activating GT OreDictionary Handler, this can take
 		// some time.");
