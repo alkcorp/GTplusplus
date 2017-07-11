@@ -6,7 +6,11 @@ import static gtPlusPlus.core.lib.CORE.configSwitches.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.lang.reflect.Field;
 import java.util.Collection;
+import java.util.HashSet;
+
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 import cpw.mods.fml.common.*;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -14,6 +18,8 @@ import cpw.mods.fml.common.event.*;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import gregtech.api.enums.GT_Values;
+import gregtech.api.util.EmptyRecipeMap;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.Recipe_GT.Gregtech_Recipe_Map;
@@ -68,7 +74,9 @@ public class GTplusplus implements ActionListener {
 		//Circuits
 		CORE.configSwitches.enableCustomCircuits = config.getBoolean("enableCustomCircuits", "gregtech", true,
 				"Adds custom circuits to expand past the Master Tier.");
-		
+		CORE.configSwitches.enableOldGTcircuits = config.getBoolean("enableOldGTcircuits", "gregtech", true,
+				"Restores circuits and their recipes from Pre-5.09.28 times.");
+
 		// Tools
 		CORE.configSwitches.enableSkookumChoochers = config.getBoolean("enableSkookumChoochers", "gregtech", true,
 				"Adds Custom GT Tools, called Skookum Choochers, functioning as a hard hammer and a wrench.");
@@ -145,10 +153,10 @@ public class GTplusplus implements ActionListener {
 		// Features
 		enableCustomAlvearyBlocks = config.getBoolean("enableCustomAlvearyBlocks", "features", false,
 				"Enables Custom Alveary Blocks.");
-		
+
 		//Biomes
 		CORE.DARKBIOME_ID = config.getInt("darkbiome_ID", "worldgen", 238, 1, 254, "The biome within the Dark Dimension.");
-		
+
 		config.save();
 	}
 
@@ -175,6 +183,10 @@ public class GTplusplus implements ActionListener {
 		// FirstCall();
 		FMLCommonHandler.instance().bus().register(new LoginEventHandler());
 		Utils.LOG_INFO("Login Handler Initialized");
+
+		if (CORE.MAIN_GREGTECH_5U_EXPERIMENTAL_FORK && CORE.configSwitches.enableOldGTcircuits){
+			removeCircuitRecipeMap(); //Bye shitty recipes.			
+		}
 
 		// Handle GT++ Config
 		handleConfigFile(event);
@@ -214,13 +226,13 @@ public class GTplusplus implements ActionListener {
 		}
 
 		// ~
-		ReflectionUtils.becauseIWorkHard();
-		
+		//ReflectionUtils.becauseIWorkHard();
+
 		//Make Burnables burnable
 		if (!CORE.burnables.isEmpty()){
-				BurnableFuelHandler fuelHandler = new BurnableFuelHandler();
-				GameRegistry.registerFuelHandler(fuelHandler);
-				Utils.LOG_INFO("[Fuel Handler] Registering "+fuelHandler.getClass().getName());
+			BurnableFuelHandler fuelHandler = new BurnableFuelHandler();
+			GameRegistry.registerFuelHandler(fuelHandler);
+			Utils.LOG_INFO("[Fuel Handler] Registering "+fuelHandler.getClass().getName());
 		}
 
 		// Utils.LOG_INFO("Activating GT OreDictionary Handler, this can take
@@ -235,7 +247,7 @@ public class GTplusplus implements ActionListener {
 
 	@EventHandler
 	public void load(FMLInitializationEvent event) {
-		
+
 	}
 
 	@EventHandler
@@ -268,4 +280,18 @@ public class GTplusplus implements ActionListener {
 		}
 	}
 
+
+	private static boolean removeCircuitRecipeMap(){
+		try {			
+			ReflectionUtils.setFinalStatic(GT_Recipe_Map.class.getDeclaredField("sCircuitAssemblerRecipes"), new EmptyRecipeMap(new HashSet<GT_Recipe>(0), "gt.recipe.removed", "Removed", null, GT_Values.RES_PATH_GUI + "basicmachines/Default", 0, 0, 0, 0, 0, GT_Values.E, 0, GT_Values.E, true, false));		
+			Field jaffar = GT_Recipe_Map.class.getDeclaredField("sCircuitAssemblerRecipes");
+			FieldUtils.removeFinalModifier(jaffar, true);
+			jaffar.set(null, new EmptyRecipeMap(new HashSet<GT_Recipe>(0), "gt.recipe.removed", "Removed", null, GT_Values.RES_PATH_GUI + "basicmachines/Default", 0, 0, 0, 0, 0, GT_Values.E, 0, GT_Values.E, true, false));
+		}
+		catch (Exception e) {
+			Utils.LOG_INFO("Failed removing circuit assembler recipe map.");
+			return false;
+		}
+		return true;
+	}
 }

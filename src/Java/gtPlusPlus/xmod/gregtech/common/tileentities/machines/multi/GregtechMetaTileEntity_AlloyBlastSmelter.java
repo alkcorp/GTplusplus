@@ -3,6 +3,7 @@ package gtPlusPlus.xmod.gregtech.common.tileentities.machines.multi;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import gregtech.api.enums.TAE;
 import gregtech.api.enums.Textures;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
@@ -10,11 +11,12 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.objects.GT_RenderedTexture;
-import gregtech.api.util.*;
+import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.GT_Utility;
+import gregtech.api.util.Recipe_GT;
 import gtPlusPlus.core.block.ModBlocks;
 import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.util.Utils;
-import gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtBlock;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -58,9 +60,9 @@ extends GT_MetaTileEntity_MultiBlockBase {
 	@Override
 	public ITexture[] getTexture(final IGregTechTileEntity aBaseMetaTileEntity, final byte aSide, final byte aFacing, final byte aColorIndex, final boolean aActive, final boolean aRedstone) {
 		if (aSide == aFacing) {
-			return new ITexture[]{TexturesGtBlock.CASING_BLOCKS_GTPP[15], new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_ELECTRIC_BLAST_FURNACE_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_ELECTRIC_BLAST_FURNACE)};
+			return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[TAE.GTPP_INDEX(15)], new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_ELECTRIC_BLAST_FURNACE_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_ELECTRIC_BLAST_FURNACE)};
 		}
-		return new ITexture[]{TexturesGtBlock.CASING_BLOCKS_GTPP[15]};
+		return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[TAE.GTPP_INDEX(15)]};
 	}
 
 	@Override
@@ -158,7 +160,7 @@ extends GT_MetaTileEntity_MultiBlockBase {
 		if (!aBaseMetaTileEntity.getAirOffset(xDir, 2, zDir)) {
 			return false;
 		}
-		this.addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, 3, zDir), 72);
+		this.addMufflerToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, 3, zDir), TAE.GTPP_INDEX(15));
 
 		final byte tUsedMeta = aBaseMetaTileEntity.getMetaIDOffset(xDir + 1, 2, zDir);
 
@@ -192,7 +194,7 @@ extends GT_MetaTileEntity_MultiBlockBase {
 			for (int j = -1; j < 2; j++) {
 				if (((xDir + i) != 0) || ((zDir + j) != 0)) {
 					final IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0, zDir + j);
-					if ((!this.addMaintenanceToMachineList(tTileEntity, 72)) && (!this.addInputToMachineList(tTileEntity, 72)) && (!this.addOutputToMachineList(tTileEntity, 72)) && (!this.addEnergyInputToMachineList(tTileEntity, 72))) {
+					if ((!this.addMaintenanceToMachineList(tTileEntity, TAE.GTPP_INDEX(15))) && (!this.addInputToMachineList(tTileEntity, TAE.GTPP_INDEX(15))) && (!this.addOutputToMachineList(tTileEntity, TAE.GTPP_INDEX(15))) && (!this.addEnergyInputToMachineList(tTileEntity, TAE.GTPP_INDEX(15)))) {
 						if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 0, zDir + j) != ModBlocks.blockCasingsMisc) {
 							return false;
 						}

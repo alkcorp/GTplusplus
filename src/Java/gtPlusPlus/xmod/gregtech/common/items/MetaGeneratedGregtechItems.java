@@ -2,14 +2,18 @@ package gtPlusPlus.xmod.gregtech.common.items;
 
 import static gtPlusPlus.core.util.Utils.getTcAspectStack;
 
+import codechicken.nei.api.API;
+import cpw.mods.fml.common.Loader;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.*;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.objects.*;
-import gregtech.api.util.GT_FoodStat;
-import gregtech.api.util.GT_OreDictUnificator;
+import gregtech.api.util.*;
 import gregtech.common.covers.*;
+import gregtech.common.items.behaviors.Behaviour_DataOrb;
+import gregtech.common.items.behaviors.Behaviour_DataStick;
 import gtPlusPlus.core.lib.CORE;
+import gtPlusPlus.core.recipe.RECIPES_Old_Circuits;
 import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.item.ItemUtils;
 import gtPlusPlus.xmod.gregtech.api.enums.GregtechItemList;
@@ -148,7 +152,6 @@ public class MetaGeneratedGregtechItems extends Gregtech_MetaItem_X32 {
 			}
 		}
 
-
 		//Extruder Shape
 		GregtechItemList.Shape_Extruder_WindmillShaft.set(this.addItem(tLastID = 40, "Extruder Shape (Shaft)", "Extruder Shape for making Windmill Shafts", new Object[0]));
 
@@ -173,6 +176,10 @@ public class MetaGeneratedGregtechItems extends Gregtech_MetaItem_X32 {
 		//FOOOOOOOOOOOOOOD
 		GregtechItemList.Food_Baked_Raisin_Bread.set(this.addItem(tLastID = 60, "Raisin Bread", "Extra Raisins, Just for ImQ009", new Object[]{new GT_FoodStat(5, 0.5F, EnumAction.eat, null, false, true, false, new int[0]), getTcAspectStack(TC_Aspects.CORPUS, 1L), getTcAspectStack(TC_Aspects.FAMES, 1L), getTcAspectStack(TC_Aspects.IGNIS, 1L)}));
 
+		//Old Circuits
+		if (CORE.configSwitches.enableOldGTcircuits && CORE.MAIN_GREGTECH_5U_EXPERIMENTAL_FORK){
+			registerOldCircuits();
+		}
 
 		if (!CORE.GTNH) {
 			GregtechItemList.Fluid_Cell_144L.set(this.addItem(tLastID = 61, "144L Invar Fluid Cell", "Holds exactly one dust worth of liquid.", new Object[]{new ItemData(Materials.Invar, (OrePrefixes.plate.mMaterialAmount * 8L) + (4L * OrePrefixes.ring.mMaterialAmount), new MaterialStack[0]), getTcAspectStack(TC_Aspects.VACUOS, 2L), getTcAspectStack(TC_Aspects.AQUA, 1L)}));
@@ -234,6 +241,139 @@ public class MetaGeneratedGregtechItems extends Gregtech_MetaItem_X32 {
 		GregTech_API.registerCover(GregtechItemList.Conveyor_Module_MAX.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[4][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_CONVEYOR)}), new GT_Cover_Conveyor(4));
 		GregTech_API.registerCover(GregtechItemList.Robot_Arm_MAX.get(1L, new Object[0]), new GT_MultiTexture(new ITexture[]{Textures.BlockIcons.MACHINE_CASINGS[4][0], new GT_RenderedTexture(Textures.BlockIcons.OVERLAY_ARM)}), new GT_Cover_Arm(4));
 
+
+		return true;
+	}
+
+	private boolean registerOldCircuits(){
+		//Enable Old Circuits
+
+		GregtechItemList.Old_Circuit_Primitive.set(this.addItem(200, "NAND Chip", "A very simple Circuit", new Object[]{OrePrefixes.circuit.get(Materials.Primitive)}));
+		GregtechItemList.Old_Circuit_Basic.set(this.addItem(201, "Basic Electronic Circuit", "A basic Circuit", new Object[]{OrePrefixes.circuit.get(Materials.Basic)}));
+		GregtechItemList.Old_Circuit_Good.set(this.addItem(202, "Good Electronic Circuit", "A good Circuit", new Object[]{OrePrefixes.circuit.get(Materials.Good)}));
+		GregtechItemList.Old_Circuit_Advanced.set(this.addItem(203, "Advanced Circuit", "An advanced Circuit", new Object[]{OrePrefixes.circuit.get(Materials.Advanced)}));
+		GregtechItemList.Old_Circuit_Data.set(this.addItem(204, "Data Storage Circuit", "A Data Storage Chip", new Object[]{OrePrefixes.circuit.get(Materials.Data)}));
+		GregtechItemList.Old_Circuit_Elite.set(this.addItem(205, "Data Control Circuit", "A Processor", new Object[]{OrePrefixes.circuit.get(Materials.Elite)}));
+		GregtechItemList.Old_Circuit_Master.set(this.addItem(206, "Energy Flow Circuit", "A High Voltage Processor", new Object[]{OrePrefixes.circuit.get(Materials.Master)}));
+
+		GregtechItemList.Old_Tool_DataOrb.set(this.addItem(207, "Data Orb [GT++]", "A High Capacity Data Storage", new Object[]{OrePrefixes.circuit.get(Materials.Ultimate), SubTag.NO_UNIFICATION, new Behaviour_DataOrb()}));
+		GregtechItemList.Old_Circuit_Ultimate.set(GregtechItemList.Old_Tool_DataOrb.get(1L, new Object[0]));
+		GT_ModHandler.addShapelessCraftingRecipe(GregtechItemList.Old_Tool_DataOrb.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[]{GregtechItemList.Old_Tool_DataOrb.get(1L, new Object[0])});
+
+		GregtechItemList.Old_Tool_DataStick.set(this.addItem(208, "Data Stick [GT++]", "A Low Capacity Data Storage", new Object[]{OrePrefixes.circuit.get(Materials.Data), SubTag.NO_UNIFICATION, new Behaviour_DataStick()}));
+		GT_ModHandler.addShapelessCraftingRecipe(GregtechItemList.Old_Tool_DataStick.get(1L, new Object[0]), GT_ModHandler.RecipeBits.NOT_REMOVABLE, new Object[]{GregtechItemList.Old_Tool_DataStick.get(1L, new Object[0])});
+
+		GregtechItemList.Old_Circuit_Board_Basic.set(this.addItem(210, "Basic Circuit Board", "A basic Board", new Object[0]));
+		GregtechItemList.Old_Circuit_Board_Advanced.set(this.addItem(211, "Advanced Circuit Board", "An advanced Board", new Object[0]));
+		GregtechItemList.Old_Circuit_Board_Elite.set(this.addItem(212, "Processor Board", "A Processor Board", new Object[0]));
+		GregtechItemList.Old_Circuit_Parts_Crystal_Chip_Elite.set(this.addItem(213, "Engraved Crystal Chip", "Needed for Circuits", new Object[0]));
+		GregtechItemList.Old_Circuit_Parts_Crystal_Chip_Master.set(this.addItem(214, "Engraved Lapotron Chip", "Needed for Circuits", new Object[0]));
+		GregtechItemList.Old_Circuit_Parts_Advanced.set(this.addItem(215, "Advanced Circuit Parts", "Advanced Circuit Parts", new Object[0]));
+		GregtechItemList.Old_Circuit_Parts_Wiring_Basic.set(this.addItem(216, "Etched Medium Voltage Wiring", "Part of Circuit Boards", new Object[0]));
+		GregtechItemList.Old_Circuit_Parts_Wiring_Advanced.set(this.addItem(217, "Etched High Voltage Wiring", "Part of Circuit Boards", new Object[0]));
+		GregtechItemList.Old_Circuit_Parts_Wiring_Elite.set(this.addItem(218, "Etched Extreme Voltage Wiring", "Part of Circuit Boards", new Object[0]));
+		GregtechItemList.Old_Empty_Board_Basic.set(this.addItem(219, "Empty Circuit Board", "A Board Part", new Object[0]));
+		GregtechItemList.Old_Empty_Board_Elite.set(this.addItem(220, "Empty Processor Board", "A Processor Board Part", new Object[0]));
+
+		//Add the old recipes.
+		new RECIPES_Old_Circuits();
+		RECIPES_Old_Circuits.addCircuitRecipes();
+		Utils.LOG_INFO("[Old Feature] Enabling Pre 5.09.28 circuits & recipes.");
+
+		Boolean isNEILoaded = Loader.isModLoaded("NotEnoughItems");
+		if (isNEILoaded){
+			String[] CircuitToHide = {
+					"Circuit_Board_Basic",
+					"Circuit_Board_Advanced",
+					"Circuit_Board_Elite",
+					"Circuit_Parts_Advanced",
+					"Circuit_Parts_Wiring_Basic",
+					"Circuit_Parts_Wiring_Advanced",
+					"Circuit_Parts_Wiring_Elite",
+					"Circuit_Parts_Crystal_Chip_Elite",
+					"Circuit_Parts_Crystal_Chip_Master",
+					"Circuit_Primitive",
+					"Circuit_Basic",
+					"Circuit_Integrated_Good",
+					"Circuit_Good",
+					"Circuit_Advanced",
+					"Circuit_Data",
+					"Circuit_Elite",
+					"Circuit_Master",
+					"Circuit_Ultimate",
+					"Circuit_Board_Coated", 
+					"Circuit_Board_Phenolic", 
+					"Circuit_Board_Epoxy", 
+					"Circuit_Board_Fiberglass", 
+					"Circuit_Board_Multifiberglass", 
+					"Circuit_Board_Wetware", 
+					"Circuit_Parts_Resistor", 
+					"Circuit_Parts_ResistorSMD", 
+					"Circuit_Parts_Glass_Tube", 
+					"Circuit_Parts_Vacuum_Tube", 
+					"Circuit_Parts_Coil", 
+					"Circuit_Parts_Diode", 
+					"Circuit_Parts_DiodeSMD", 
+					"Circuit_Parts_Transistor", 
+					"Circuit_Parts_TransistorSMD", 
+					"Circuit_Parts_Capacitor", 
+					"Circuit_Parts_CapacitorSMD", 
+					"Circuit_Silicon_Ingot", 
+					"Circuit_Silicon_Ingot2", 
+					"Circuit_Silicon_Ingot3", 
+					"Circuit_Silicon_Wafer", 
+					"Circuit_Silicon_Wafer2", 
+					"Circuit_Silicon_Wafer3",
+					"Circuit_Wafer_ILC", 
+					"Circuit_Chip_ILC", 
+					"Circuit_Wafer_Ram", 
+					"Circuit_Chip_Ram", 
+					"Circuit_Wafer_NAND", 
+					"Circuit_Chip_NAND", 
+					"Circuit_Wafer_NOR", 
+					"Circuit_Chip_NOR", 
+					"Circuit_Wafer_CPU", 
+					"Circuit_Chip_CPU", 
+					"Circuit_Wafer_SoC", 
+					"Circuit_Chip_SoC", 
+					"Circuit_Wafer_SoC2", 
+					"Circuit_Chip_SoC2", 
+					"Circuit_Wafer_PIC", 
+					"Circuit_Chip_PIC", 
+					"Circuit_Wafer_HPIC", 
+					"Circuit_Chip_HPIC", 
+					"Circuit_Wafer_NanoCPU", 
+					"Circuit_Chip_NanoCPU", 
+					"Circuit_Wafer_QuantumCPU", 
+					"Circuit_Chip_QuantumCPU", 
+					"Circuit_Chip_CrystalCPU", 
+					"Circuit_Chip_CrystalSoC", 
+					"Circuit_Chip_NeuroCPU", 
+					"Circuit_Chip_Stemcell",
+					"Circuit_Processor", 
+					"Circuit_Computer", 
+					"Circuit_Nanoprocessor", 
+					"Circuit_Nanocomputer", 
+					"Circuit_Elitenanocomputer", 
+					"Circuit_Quantumprocessor", 
+					"Circuit_Quantumcomputer", 
+					"Circuit_Masterquantumcomputer", 
+					"Circuit_Quantummainframe", 
+					"Circuit_Crystalprocessor", 
+					"Circuit_Crystalcomputer", 
+					"Circuit_Ultimatecrystalcomputer", 
+					"Circuit_Crystalmainframe", 
+					"Circuit_Neuroprocessor", 
+					"Circuit_Wetwarecomputer", 
+					"Circuit_Wetwaresupercomputer", 
+					"Circuit_Wetwaremainframe", 
+					"Circuit_Parts_RawCrystalChip"					
+			};
+
+			for (String component : CircuitToHide){
+				API.hideItem(ItemList.valueOf(component).get(1L, new Object[0]));
+			}			
+		}
 
 		return true;
 	}

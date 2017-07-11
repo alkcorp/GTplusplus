@@ -23,7 +23,7 @@ public class Container_Workbench extends Container {
 	public final InventoryWorkbenchChest inventoryChest;
 	public final InventoryWorkbenchTools inventoryTool;
 	public final InventoryWorkbenchHoloSlots inventoryHolo;
-	public final InventoryWorkbenchHoloCrafting inventoryCrafting;
+	//public final InventoryWorkbenchHoloCrafting inventoryCrafting;
 
 	private final World worldObj;
 	private final int posX;
@@ -84,7 +84,7 @@ public class Container_Workbench extends Container {
 		this.inventoryChest = tile.inventoryChest;
 		this.inventoryTool = tile.inventoryTool;
 		this.inventoryHolo = tile.inventoryHolo;
-		this.inventoryCrafting = tile.inventoryCrafting;
+		//this.inventoryCrafting = tile.inventoryCrafting;
 
 		int var6;
 		int var7;
@@ -119,7 +119,7 @@ public class Container_Workbench extends Container {
 		{
 			for (var7 = 0; var7 < 3; ++var7)
 			{
-				this.addSlotToContainer(new Slot(this.craftMatrix, var7 + (var6 * 3), 82 + (var7 * 18), 28 + (var6 * 18)));
+				//this.addSlotToContainer(new Slot(this.craftMatrix, var7 + (var6 * 3), 82 + (var7 * 18), 28 + (var6 * 18)));
 
 				/*if (this.inventoryCrafting.getStackInSlot(o) != null){
 					this.craftMatrix.setInventorySlotContents(o, inventoryCrafting.getStackInSlot(o));
@@ -262,7 +262,7 @@ public class Container_Workbench extends Container {
 
 	private void updateCraftingMatrix() {
 		for (int i = 0; i < this.craftMatrix.getSizeInventory(); i++) {
-			this.craftMatrix.setInventorySlotContents(i, this.tile_entity.inventoryCrafting.getStackInSlot(i));
+			//this.craftMatrix.setInventorySlotContents(i, this.tile_entity.inventoryCrafting.getStackInSlot(i));
 		}
 	}
 
@@ -280,7 +280,7 @@ public class Container_Workbench extends Container {
 
 	private void saveCraftingMatrix() {
 		for (int i = 0; i < this.craftMatrix.getSizeInventory(); i++) {
-			this.tile_entity.inventoryCrafting.setInventorySlotContents(i, this.craftMatrix.getStackInSlot(i));
+			//this.tile_entity.inventoryCrafting.setInventorySlotContents(i, this.craftMatrix.getStackInSlot(i));
 		}
 	}
 
