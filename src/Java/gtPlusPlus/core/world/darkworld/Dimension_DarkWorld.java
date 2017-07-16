@@ -5,6 +5,8 @@ import java.util.Random;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
+import gtPlusPlus.core.block.ModBlocks;
+import gtPlusPlus.core.lib.LoadedMods;
 import gtPlusPlus.core.world.darkworld.block.*;
 import gtPlusPlus.core.world.darkworld.item.itemDarkWorldPortalTrigger;
 import gtPlusPlus.core.world.darkworld.world.WorldProviderMod;
@@ -24,10 +26,10 @@ public class Dimension_DarkWorld {
 	public static blockDarkWorldPortal portalBlock;
 	public static itemDarkWorldPortalTrigger portalItem;
 	public static Block blockTopLayer;
-	public static Block blockSecondLayer = Blocks.dirt;
+	public static Block blockSecondLayer;
 	public static Block blockMainFiller = Blocks.stone;
 	public static Block blockSecondaryFiller;
-	public static Block blockFluidLakes = Blocks.lava;
+	public static Block blockFluidLakes = ModBlocks.blockFluidSludge;
 
 	public static Block blockPortalFrame;
 
@@ -38,10 +40,17 @@ public class Dimension_DarkWorld {
 		portalItem = (itemDarkWorldPortalTrigger) (new itemDarkWorldPortalTrigger().setUnlocalizedName("dimensionDarkWorld_trigger"));
 		Item.itemRegistry.addObject(423, "dimensionDarkWorld_trigger", portalItem);
 		blockTopLayer = new blockDarkWorldGround();
+		blockSecondLayer = new blockDarkWorldPollutedDirt();
 		GameRegistry.registerBlock(blockTopLayer, "blockDarkWorldGround");
+		GameRegistry.registerBlock(blockSecondLayer, "blockDarkWorldGround2");
 		Blocks.fire.setFireInfo(blockTopLayer, 30, 20);
 		blockPortalFrame = new blockDarkWorldPortalFrame();
 		GameRegistry.registerBlock(blockPortalFrame, "blockDarkWorldPortalFrame");
+		
+		if (LoadedMods.BuildCraft){
+			//blockFluidLakes = 
+		}
+		
 	}
 
 	public Dimension_DarkWorld() {

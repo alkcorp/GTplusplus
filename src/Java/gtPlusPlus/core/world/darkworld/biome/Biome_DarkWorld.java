@@ -27,7 +27,7 @@ public class Biome_DarkWorld {
 	}
 
 	public void load() {
-		BiomeDictionary.registerBiomeType(biome, BiomeDictionary.Type.SPOOKY);
+		BiomeDictionary.registerBiomeType(biome, BiomeDictionary.Type.DEAD);
 		BiomeManager.addSpawnBiome(biome);
 		// BiomeManager.desertBiomes.add(new BiomeManager.BiomeEntry(biome,
 		// 10));
@@ -56,45 +56,45 @@ public class Biome_DarkWorld {
 		@SuppressWarnings("unchecked")
 		public BiomeGenbiomeDarkWorld() {
 			super(CORE.DARKBIOME_ID);
+			this.theBiomeDecorator = new BiomeGenerator_Custom();
 			Utils.LOG_INFO("Dark World Temperature Category: "+getTempCategory());
-			setBiomeName("Dark World");
-			topBlock = Dimension_DarkWorld.blockTopLayer;
-			fillerBlock = Dimension_DarkWorld.blockSecondLayer;
-			theBiomeDecorator.generateLakes = true;
-			theBiomeDecorator.treesPerChunk = 50;
-			theBiomeDecorator.flowersPerChunk = 4;
-			theBiomeDecorator.grassPerChunk = 10;
-			theBiomeDecorator.deadBushPerChunk = 25;
-			theBiomeDecorator.mushroomsPerChunk = 5;
-			theBiomeDecorator.reedsPerChunk = 1;
-			theBiomeDecorator.cactiPerChunk = 1;
-			theBiomeDecorator.sandPerChunk = 8;
-			enableRain = true;
-			enableSnow = false;
-			rainfall = 0.7F;
-			setHeight(new BiomeGenBase.Height(0.15F, 0.65F));
-			waterColorMultiplier = 0x2d0b2d;
-			rootHeight = 48; //Ground level
+			this.setBiomeName("Dark World");
+			this.topBlock = Dimension_DarkWorld.blockTopLayer;
+			this.fillerBlock = Dimension_DarkWorld.blockSecondLayer;
+			this.enableRain = true;
+			this.enableSnow = false;
+			this.rainfall = 0.7F;
+			this.setHeight(new BiomeGenBase.Height(0.3F, 0.5F));
+			this.heightVariation = 0.4F;
+			this.waterColorMultiplier = 0x17290A;
+			this.rootHeight = -0.25f; //Ground level
 
 			this.spawnableMonsterList.clear();
 			this.spawnableCreatureList.clear();
 			this.spawnableWaterCreatureList.clear();
 			this.spawnableCaveCreatureList.clear();
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityBat.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityBlaze.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityCaveSpider.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityCreeper.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityEnderman.class, 5, 1, 5));
+			
+			//Enemies
 			this.spawnableMonsterList.add(new SpawnListEntry(EntityGhast.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityGiantZombie.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityMagmaCube.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityPigZombie.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntitySkeleton.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntitySpider.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntitySquid.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityWolf.class, 5, 1, 5));
-			this.spawnableMonsterList.add(new SpawnListEntry(EntityZombie.class, 5, 1, 5));
+			this.spawnableMonsterList.add(new SpawnListEntry(EntityGiantZombie.class, 20, 1, 1));
+			addToMonsterSpawnLists(EntityBlaze.class, 5, 1, 5);
+			addToMonsterSpawnLists(EntityCaveSpider.class, 5, 1, 5);
+			addToMonsterSpawnLists(EntityCreeper.class, 4, 1, 2);
+			addToMonsterSpawnLists(EntityEnderman.class, 5, 1, 5);
+			addToMonsterSpawnLists(EntityMagmaCube.class, 5, 1, 5);
+			addToMonsterSpawnLists(EntityPigZombie.class, 5, 1, 5);
+			addToMonsterSpawnLists(EntitySkeleton.class, 5, 1, 5);
+			addToMonsterSpawnLists(EntitySpider.class, 5, 1, 5);
+			addToMonsterSpawnLists(EntityZombie.class, 5, 1, 5);
 
+			//Passive
+			this.spawnableCreatureList.add(new SpawnListEntry(EntityCow.class, 5, 5, 10));
+			this.spawnableCreatureList.add(new SpawnListEntry(EntityBat.class, 4, 4, 8));
+			this.spawnableCreatureList.add(new SpawnListEntry(EntityWolf.class, 5, 4, 10));
+			
+			//Water
+			this.spawnableWaterCreatureList.add(new SpawnListEntry(EntitySquid.class, 5, 1, 10));
+			
 		}
 
 		@SideOnly(Side.CLIENT)
@@ -110,7 +110,13 @@ public class Biome_DarkWorld {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public int getSkyColorByTemp(float par1) {
-			return 0x333333;
+			return 0xF67A14;
+		}
+		
+		private boolean addToMonsterSpawnLists(Class EntityClass, int a, int b, int c){
+			this.spawnableMonsterList.add(new SpawnListEntry(EntityClass, a, b, c));
+			this.spawnableCaveCreatureList.add(new SpawnListEntry(EntityClass, a, b, c));
+			return true;
 		}
 
 	}
