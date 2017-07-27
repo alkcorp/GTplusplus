@@ -111,3 +111,10 @@ local.properties
 # STS (Spring Tool Suite)
 .springBeans
 /screenshots
+out/
+run/
+libs/
+*.bat
+GT++.iws
+GT++.ipr
+GT++.iml
