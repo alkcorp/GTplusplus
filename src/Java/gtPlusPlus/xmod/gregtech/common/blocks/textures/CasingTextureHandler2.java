@@ -36,12 +36,12 @@ public class CasingTextureHandler2 {
 				//Broken Pink Fusion Casings
 			case 8:
 				return TexturesGtBlock._PlaceHolder.getIcon();
-				//Matter Fabricator Casings
+				//Cyclotron Coil
 			case 9:
-				return TexturesGtBlock._PlaceHolder.getIcon();
-				//Iron Blast Fuance Textures
+				return TexturesGtBlock.Overlay_Machine_Cyber_A.getIcon();
+				//Cyclotron External Casing
 			case 10:
-				return TexturesGtBlock._PlaceHolder.getIcon();
+				return TexturesGtBlock.Casing_Material_HastelloyX.getIcon();
 				//Multitank Exterior Casing
 			case 11:
 				return TexturesGtBlock._PlaceHolder.getIcon();

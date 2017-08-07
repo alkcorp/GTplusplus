@@ -144,12 +144,34 @@ public enum GregtechItemList implements GregtechItemContainer {
 	GT4_Tesseract_Generator, GT4_Tesseract_Terminal,
 
 	//Casings Tier 2 [17-32]
+	//Structural Glass
 	Casing_StructuralGlass,
-	Casing_Refinery_External, Casing_Refinery_Structural, Casing_Refinery_Internal,
-	Casing_PlaceHolder4, Casing_Sifter, Casing_SifterGrate,
-	Casing_PlaceHolder7, Casing_PlaceHolder8, Casing_PlaceHolder9,
-	Casing_PlaceHolder10, Casing_PlaceHolder11, Casing_PlaceHolder12,
-	Casing_PlaceHolder13, Casing_PlaceHolder14, Casing_PlaceHolder15,
+	
+	//Fission Fuel Refinery
+	Casing_Refinery_External,
+	Casing_Refinery_Structural,
+	Casing_Refinery_Internal,
+	
+	//Unknown
+	Casing_PlaceHolder4,
+	
+	//Industrial Sifter
+	Casing_Sifter,
+	Casing_SifterGrate,
+	
+	//Unknown
+	Casing_PlaceHolder7, 
+	Casing_PlaceHolder8, 
+	
+	//Cyclotron
+	Casing_Cyclotron_Coil,
+	Casing_Cyclotron_External,
+	
+	Casing_PlaceHolder11, 
+	Casing_PlaceHolder12,
+	Casing_PlaceHolder13, 
+	Casing_PlaceHolder14, 
+	Casing_PlaceHolder15,
 
 	//LFTR
 	ThoriumReactor,
@@ -160,6 +182,7 @@ public enum GregtechItemList implements GregtechItemContainer {
 	//Tree Farm
 	Industrial_TreeFarm, TreeFarmer_Structural,
 	
+	//Sifter
 	Industrial_Sifter, 
 	
 	//Advanced Boilers
@@ -196,6 +219,15 @@ public enum GregtechItemList implements GregtechItemContainer {
 	
 	//Computer Cube
 	Gregtech_Computer_Cube, 
+	
+	//Cyclotron
+	COMET_Cyclotron, 
+	
+	//GT4 Multiblocks
+	GT4_Thermal_Boiler, GT4_Multi_Crafter, 
+	
+	//GT4 Shelves
+	GT4_Shelf, GT4_Shelf_Iron, GT4_Shelf_FileCabinet, GT4_Shelf_Desk, GT4_Shelf_Compartment
 	
 	
 	
