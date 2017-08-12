@@ -7,13 +7,15 @@ import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.item.ItemUtils;
 import gtPlusPlus.core.util.math.MathUtils;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
-public class TileEntityFishTrap extends TileEntity {
+public class TileEntityFishTrap extends TileEntity implements ISidedInventory {
 
 	private int tickCount = 0;
 	private boolean isInWater = false;
@@ -99,8 +101,7 @@ public class TileEntityFishTrap extends TileEntity {
 						this.markDirty();
 						return true;
 					}
-					else if (contents.getItem() == loot.getItem()
-							&& contents.stackSize <= contents.getMaxStackSize() - 1) {
+					else if (contents.getItem() == loot.getItem() && contents.stackSize <= contents.getMaxStackSize() - 1) {
 						if (contents.stackSize < contents.getMaxStackSize()) {
 							contents.stackSize++;
 							this.markDirty();
@@ -123,17 +124,17 @@ public class TileEntityFishTrap extends TileEntity {
 		if (lootWeight <= 5) {
 			loot = ItemUtils.getSimpleStack(Items.slime_ball);
 		}
-		else if (lootWeight <= 15) {
+		else if (lootWeight <= 10) {
 			loot = ItemUtils.getSimpleStack(Items.bone);
 		}
-		else if (lootWeight <= 25) {
+		else if (lootWeight <= 20) {
 			loot = ItemUtils.getSimpleStack(Blocks.sand);
 		}
-		else if (lootWeight <= 35) {
+		else if (lootWeight <= 30) {
 			loot = ItemUtils.getItemStackOfAmountFromOreDictNoBroken(seaweed, 1);
 		}
 		// Pam Fish
-		else if (lootWeight <= 70) {
+		else if (lootWeight <= 60) {
 			if (LoadedMods.PamsHarvestcraft) {
 				loot = ItemUtils.getItemStackOfAmountFromOreDictNoBroken(
 						prefix + harvestcraftFish[MathUtils.randInt(0, harvestcraftFish.length - 1)] + suffix, 1);
@@ -143,8 +144,16 @@ public class TileEntityFishTrap extends TileEntity {
 			}
 		}
 		// Minecraft Fish
-		else if (lootWeight <= 100) {
+		else if (lootWeight <= 99) {
 			loot = ItemUtils.getSimpleStack(minecraftFish[MathUtils.randInt(0, minecraftFish.length - 1)], 1);
+		}
+		else if (lootWeight == 100){
+			if (MathUtils.randInt(0, 1) == 0){
+			loot = ItemUtils.getSimpleStack(Items.emerald);
+			}
+			else {
+				loot = ItemUtils.getSimpleStack(Items.diamond);
+			}
 		}
 		else {
 			loot = ItemUtils.getSimpleStack(Blocks.diamond_ore);
@@ -255,6 +264,86 @@ public class TileEntityFishTrap extends TileEntity {
 		for (int i = 0; i < harvestcraftFish.length; i++) {
 
 		}
+	}
+
+	@Override
+	public int getSizeInventory() {
+		return this.getInventory().getSizeInventory();
+	}
+
+	@Override
+	public ItemStack getStackInSlot(int slot) {
+		return this.getInventory().getStackInSlot(slot);
+	}
+
+	@Override
+	public ItemStack decrStackSize(int slot, int count) {
+		return this.getInventory().decrStackSize(slot, count);
+	}
+
+	@Override
+	public ItemStack getStackInSlotOnClosing(int slot) {
+		return this.getInventory().getStackInSlotOnClosing(slot);
+	}
+
+	@Override
+	public void setInventorySlotContents(int slot, ItemStack stack) {
+		this.getInventory().setInventorySlotContents(slot, stack);
+	}
+
+	@Override
+	public String getInventoryName() {
+		return this.getInventory().getInventoryName();
+	}
+
+	@Override
+	public boolean hasCustomInventoryName() {
+		return this.getInventory().hasCustomInventoryName();
+	}
+
+	@Override
+	public int getInventoryStackLimit() {
+		return this.getInventory().getInventoryStackLimit();
+	}
+
+	@Override
+	public boolean isUseableByPlayer(EntityPlayer entityplayer) {
+		return this.getInventory().isUseableByPlayer(entityplayer);
+	}
+
+	@Override
+	public void openInventory() {
+		this.getInventory().openInventory();		
+	}
+
+	@Override
+	public void closeInventory() {
+		this.getInventory().closeInventory();		
+	}
+
+	@Override
+	public boolean isItemValidForSlot(int slot, ItemStack itemstack) {
+		return this.getInventory().isItemValidForSlot(slot, itemstack);
+	}
+
+	@Override
+	public int[] getAccessibleSlotsFromSide(int p_94128_1_) {
+		int[] accessibleSides = new int[this.getSizeInventory()];
+		for (int r=0; r<this.getInventory().getSizeInventory(); r++){
+			accessibleSides[r]=r;
+		}
+		return accessibleSides;
+		
+	}
+
+	@Override
+	public boolean canInsertItem(int p_102007_1_, ItemStack p_102007_2_, int p_102007_3_) {
+		return false;
+	}
+
+	@Override
+	public boolean canExtractItem(int p_102008_1_, ItemStack p_102008_2_, int p_102008_3_) {
+		return true;
 	}
 
 }

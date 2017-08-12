@@ -1,6 +1,7 @@
 package gtPlusPlus.core.recipe;
 
 import gregtech.api.enums.*;
+import gtPlusPlus.core.item.ModItems;
 import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.lib.LoadedMods;
 import gtPlusPlus.core.recipe.common.CI;
@@ -391,7 +392,7 @@ public class RECIPES_Machines {
 
 				//Industrial Centrifuge
 				RecipeUtils.addShapedGregtechRecipe(
-						CI.circuitTier6, pipeHugeStainlessSteel, CI.circuitTier6,
+						CI.circuitTier5, pipeHugeStainlessSteel, CI.circuitTier5,
 						CI.component_Plate[6], IV_MACHINE_Centrifuge, CI.component_Plate[6],
 						CI.component_Plate[8], CI.machineCasing_IV, CI.component_Plate[8],
 						RECIPE_IndustrialCentrifugeController);
@@ -459,7 +460,7 @@ public class RECIPES_Machines {
 						RECIPE_IndustrialElectrolyzerFrame);
 				//Industrial Electrolyzer
 				RecipeUtils.addShapedGregtechRecipe(
-						"plateStellite", CI.circuitTier6, "plateStellite",
+						"plateStellite", CI.circuitTier5, "plateStellite",
 						CI.machineCasing_EV, IV_MACHINE_Electrolyzer, CI.machineCasing_EV,
 						"plateStellite", "rotorStellite", "plateStellite",
 						RECIPE_IndustrialElectrolyzerController);
@@ -517,7 +518,7 @@ public class RECIPES_Machines {
 				//Industrial Wire Factory
 				RecipeUtils.addShapedGregtechRecipe(
 						"plateZeron100", CI.machineCasing_IV, "plateZeron100",
-						CI.circuitTier6, IV_MACHINE_Wiremill, CI.circuitTier6,
+						CI.circuitTier5, IV_MACHINE_Wiremill, CI.circuitTier5,
 						"plateZeron100", CI.machineCasing_IV, "plateZeron100",
 						RECIPE_IndustrialWireFactoryController);
 			}
@@ -751,21 +752,33 @@ public class RECIPES_Machines {
 						"plateTitanium",CI.machineHull_EV,"plateTitanium",
 						RECIPE_TesseractTerminal);
 			}
+			
+			if (CORE.configSwitches.enableMachine_SimpleWasher){
+				ItemStack plateWrought = ItemUtils.getItemStackOfAmountFromOreDict("plateWroughtIron", 1);
+				ItemStack washerPipe;
+				if (CORE.configSwitches.enableCustom_Pipes){
+					washerPipe = ItemUtils.getItemStackOfAmountFromOreDict("pipeLargeClay", 1);
+				}
+				else {
+					washerPipe = ItemUtils.getItemStackOfAmountFromOreDict("pipeLargeCopper", 1);				
+				}
+				//Add Recipe
+				RecipeUtils.addShapedGregtechRecipe(
+						plateWrought, CI.electricPump_LV, plateWrought,
+						plateWrought, washerPipe, plateWrought,
+						plateWrought, CI.machineCasing_ULV, plateWrought,
+						GregtechItemList.SimpleDustWasher.get(1));
+			}
+			
+			if (CORE.configSwitches.enableMachine_Pollution){
+				RecipeUtils.addShapedGregtechRecipe(
+						"plateCarbon", "plateCarbon", "plateCarbon",
+						"dustCarbon", "dustCarbon", "dustCarbon",
+						"plateCarbon", "plateCarbon", "plateCarbon",
+						ItemUtils.simpleMetaStack(ModItems.itemAirFilter, 0, 1));
+			}
 
-			ItemStack plateWrought = ItemUtils.getItemStackOfAmountFromOreDict("plateWroughtIron", 1);
-			ItemStack washerPipe;
-			if (CORE.configSwitches.enableCustom_Pipes){
-				washerPipe = ItemUtils.getItemStackOfAmountFromOreDict("pipeLargeClay", 1);
-			}
-			else {
-				washerPipe = ItemUtils.getItemStackOfAmountFromOreDict("pipeLargeCopper", 1);				
-			}
-			//Add Recipe
-			RecipeUtils.addShapedGregtechRecipe(
-					plateWrought, CI.electricPump_LV, plateWrought,
-					plateWrought, washerPipe, plateWrought,
-					plateWrought, CI.machineCasing_ULV, plateWrought,
-					GregtechItemList.SimpleDustWasher.get(1));	
+	
 
 		}
 
