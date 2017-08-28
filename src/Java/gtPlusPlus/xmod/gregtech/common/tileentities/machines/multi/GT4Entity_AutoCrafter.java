@@ -6,6 +6,7 @@ import gregtech.api.enums.*;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.MetaTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_OutputBus;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Recipe;
@@ -23,11 +24,11 @@ import net.minecraftforge.fluids.FluidStack;
 public class GT4Entity_AutoCrafter
 extends GT_MetaTileEntity_MultiBlockBase
 {
-	
+
 	private boolean isDisassembling = false;
-	private final int mTier = 6;
+	private byte mTier = 1;
 	private final int mHeatingCapacity = 4700;
-	
+
 	@Override
 	public boolean isFacingValid(byte aFacing)
 	{
@@ -85,7 +86,7 @@ extends GT_MetaTileEntity_MultiBlockBase
 	@Override
 	public int getPollutionPerTick(ItemStack aStack)
 	{
-		return 0;
+		return 200;
 	}
 
 	public int getAmountOfOutputs()
@@ -115,7 +116,7 @@ extends GT_MetaTileEntity_MultiBlockBase
 				"1x Energy Hatch",
 				"--------------------------------------",
 				CORE.GT_Tooltip
-				};
+		};
 	}
 
 	@Override
@@ -156,22 +157,29 @@ extends GT_MetaTileEntity_MultiBlockBase
 				}
 			}
 		}
-		
-		if ((this.mInputHatches.size() >= 1) || (this.mOutputHatches.size() >= 1) ||
-				(this.mInputBusses.size() >= 1) || (this.mOutputBusses.size() >= 1) || 
+
+		if ((this.mInputHatches.size() == 0) || (this.mOutputHatches.size() == 0) ||
+				(this.mInputBusses.size() == 0) || (this.mOutputBusses.size() == 0) || 
 				(this.mMufflerHatches.size() != 1) || (this.mMaintenanceHatches.size() != 1) ||
-				(this.mEnergyHatches.size() >= 1)){
+				(this.mEnergyHatches.size() == 0)){
 			Utils.LOG_INFO("Wrong Hatch count.");
+			Utils.LOG_INFO("|"+this.mInputHatches.size()+
+					"|"+this.mOutputHatches.size()+
+					"|"+this.mInputBusses.size()+
+					"|"+this.mOutputBusses.size()+
+					"|"+this.mMufflerHatches.size()+
+					"|"+this.mMaintenanceHatches.size()+
+					"|"+this.mEnergyHatches.size()+"|");
 			return false;
 		}
-		
+
 		return tAmount >= 16;
-		
+
 	}
-	
+
 	@Override
 	public GT_Recipe.GT_Recipe_Map getRecipeMap() {
-			return GT_Recipe.GT_Recipe_Map.sAssemblerRecipes;
+		return GT_Recipe.GT_Recipe_Map.sAssemblerRecipes;
 	}	
 
 	@Override
@@ -185,15 +193,17 @@ extends GT_MetaTileEntity_MultiBlockBase
 		}
 		super.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);
 	}
-	
+
 	@Override
 	public boolean checkRecipe(final ItemStack aStack) {
+
+		final long tVoltage = this.getMaxInputVoltage();
+		final byte tTier = this.mTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
+
 		if (this.isDisassembling){
-			Utils.LOG_INFO("Breaking things down.");
 			return doDisassembly();
 		}
 		else {
-			Utils.LOG_INFO("Putting the pieces together.");
 			final ArrayList<ItemStack> tInputList = this.getStoredInputs();
 			for (int tInputList_sS = tInputList.size(), i = 0; i < tInputList_sS - 1; ++i) {
 				for (int j = i + 1; j < tInputList_sS; ++j) {
@@ -225,24 +235,17 @@ extends GT_MetaTileEntity_MultiBlockBase
 			}
 			final FluidStack[] tFluids = tFluidList.toArray(new FluidStack[tFluidList.size()]);
 			if (tInputList.size() > 0) {
-				Utils.LOG_INFO("test1");
-				final long tVoltage = this.getMaxInputVoltage();
-				final byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
 				final GT_Recipe tRecipe = this.getRecipeMap().findRecipe(this.getBaseMetaTileEntity(), false, GT_Values.V[this.mTier], tFluids,	tInputs);
 				if (tRecipe == null){
-					Utils.LOG_INFO("Recipe is Null.");
 				}
 				if (tRecipe != null && tRecipe.isRecipeInputEqual(true, tFluids, tInputs)) {
-					Utils.LOG_INFO("test2");
 					this.mEfficiency = 10000 - (this.getIdealStatus() - this.getRepairStatus()) * 1000;
 					this.mEfficiencyIncrease = 10000;
 					final int tHeatCapacityDivTiers = (this.mHeatingCapacity - tRecipe.mSpecialValue) / 900;
 					if (tRecipe.mEUt <= 16) {
-						Utils.LOG_INFO("test3");
 						this.mEUt = tRecipe.mEUt * (1 << tTier - 1) * (1 << tTier - 1);
 						this.mMaxProgresstime = tRecipe.mDuration / (1 << tTier - 1);
 					} else {
-						Utils.LOG_INFO("test4");
 						this.mEUt = tRecipe.mEUt;
 						this.mMaxProgresstime = tRecipe.mDuration;
 						int m = 2;
@@ -253,26 +256,23 @@ extends GT_MetaTileEntity_MultiBlockBase
 						}
 					}
 					if (tHeatCapacityDivTiers > 0) {
-						Utils.LOG_INFO("test5");
 						this.mEUt *= (int) Math.pow(0.95, tHeatCapacityDivTiers);
 					}
 					if (this.mEUt > 0) {
-						Utils.LOG_INFO("test6");
 						this.mEUt = -this.mEUt;
 					}
 					this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
 					this.mOutputItems = new ItemStack[]{tRecipe.getOutput(0), tRecipe.getOutput(1)};
 					this.updateSlots();
-					Utils.LOG_INFO("test7");
 					return true;
 				}
 			}
 			return false;
 		}
 	}
-	
+
 	public boolean doDisassembly(){
-		
+
 		final ArrayList<ItemStack> tInputList = this.getStoredInputs();
 		for (int tInputList_sS = tInputList.size(), i = 0; i < tInputList_sS - 1; ++i) {
 			for (int j = i + 1; j < tInputList_sS; ++j) {
@@ -288,22 +288,30 @@ extends GT_MetaTileEntity_MultiBlockBase
 			}
 		}
 		final ItemStack[] tInputs = tInputList.toArray(new ItemStack[tInputList.size()]);
-		
+
 		ItemStack inputItem = tInputs[0];
+		if (tInputs[0].stackSize <= 0){
+			tInputs[0] = null;
+			this.updateSlots();
+		}
 		int outputSlots = this.mOutputBusses.get(0).getSizeInventory();
+
+		if (this.mOutputBusses.size() > 1){
+			outputSlots=0;
+			for (GT_MetaTileEntity_Hatch_OutputBus r : this.mOutputBusses){
+				outputSlots+=r.getSizeInventory();
+			}
+		}
+
 		this.mOutputItems = new ItemStack[outputSlots];
-		if (inputItem != null) {
-			Utils.LOG_INFO("test 1");
+		if (inputItem != null && inputItem.stackSize > 0) {
 			NBTTagCompound tNBT = inputItem.getTagCompound();
 			if (tNBT != null) {
-				Utils.LOG_INFO("test 2");
 				tNBT = tNBT.getCompoundTag("GT.CraftingComponents");
 				if (tNBT != null) {
-					Utils.LOG_INFO("test 3");
 					this.mEUt = 16 * (1 << this.mTier - 1) * (1 << this.mTier - 1);
-					this.mMaxProgresstime = 400;
+					this.mMaxProgresstime = (100-(8*this.mTier));
 					for (int i = 0; i < this.mOutputItems.length; ++i) {
-						Utils.LOG_INFO("test 4 | "+i);
 						if (this.getBaseMetaTileEntity().getRandomNumber(100) < 50 + 10 * this.mTier) {
 							this.mOutputItems[i] = GT_Utility.loadItem(tNBT, "Ingredient." + i);
 							if (this.mOutputItems[i] != null) {
@@ -314,20 +322,24 @@ extends GT_MetaTileEntity_MultiBlockBase
 					if (this.mTier > 5) {
 						this.mMaxProgresstime >>= this.mTier - 5;
 					}
-					if (this.mMaxProgresstime == 400) {
+					if (this.mMaxProgresstime <= 20) {
 						return false;
 					}
-					final ItemStack input2 = inputItem;
-					inputItem.stackSize--;
-					return true;
+					else {
+						inputItem.stackSize--;
+						if (inputItem.stackSize <= 0){
+							tInputs[0] = null;
+						}
+						this.updateSlots();
+						return true;
+					}
 				}
 			}
 		}
-		Utils.LOG_INFO("test - bad");
 		return false;
 	}
-	
-	
+
+
 	@Override
 	public String[] getInfoData() {
 
@@ -340,7 +352,7 @@ extends GT_MetaTileEntity_MultiBlockBase
 		else {
 			tMode = "§aAssembly";			
 		}
-		
+
 		return new String[]{
 				"Large Scale Auto-Asesembler v1.01c",
 				tRunning,
@@ -352,5 +364,17 @@ extends GT_MetaTileEntity_MultiBlockBase
 	public boolean isGivingInformation() {
 		return true;
 	}
-	
+
+	@Override
+	public void saveNBTData(NBTTagCompound aNBT) {
+		aNBT.setBoolean("isDisassembling", this.isDisassembling);
+		super.saveNBTData(aNBT);
+	}
+
+	@Override
+	public void loadNBTData(NBTTagCompound aNBT) {
+		this.isDisassembling = aNBT.getBoolean("isDisassembling");
+		super.loadNBTData(aNBT);
+	}
+
 }
