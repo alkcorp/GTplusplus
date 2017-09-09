@@ -15,9 +15,9 @@ import gregtech.api.util.GT_Utility;
 import gtPlusPlus.core.block.ModBlocks;
 import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.util.Utils;
+import gtPlusPlus.core.util.math.MathUtils;
 import gtPlusPlus.xmod.gregtech.api.gui.GUI_MultiMachine;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.base.GregtechMeta_MultiBlockBase;
-import gtPlusPlus.xmod.gregtech.recipes.MultiblockRecipeMapHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -66,7 +66,7 @@ extends GregtechMeta_MultiBlockBase {
 
 	@Override
 	public GT_Recipe.GT_Recipe_Map getRecipeMap() {
-		return MultiblockRecipeMapHandler.mMultiWireMill;
+		return GT_Recipe.GT_Recipe_Map.sWiremillRecipes;
 	}
 
 	@Override
@@ -82,6 +82,7 @@ extends GregtechMeta_MultiBlockBase {
 			final byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
 
 			final GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sWiremillRecipes.findRecipe(this.getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], null, new ItemStack[]{tInput});
+			tRecipe.mDuration = MathUtils.findPercentageOfInt(tRecipe.mDuration, 80);
 			if (tRecipe != null) {
 
 				final int tValidOutputSlots = this.getValidOutputSlots(this.getBaseMetaTileEntity(), tRecipe, new ItemStack[]{tInput});
@@ -231,7 +232,7 @@ extends GregtechMeta_MultiBlockBase {
 
 
 	public byte getCasingTextureIndex() {
-		return 1;
+		return (byte) TAE.GTPP_INDEX(6);
 	}
 
 	private boolean addToMachineList(final IGregTechTileEntity tTileEntity) {

@@ -20,7 +20,6 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin.MCVersion;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.enums.GT_Values;
-import gregtech.api.enums.Materials;
 import gregtech.api.util.EmptyRecipeMap;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
@@ -31,7 +30,6 @@ import gtPlusPlus.core.handler.Recipes.RegistrationHandler;
 import gtPlusPlus.core.handler.events.LoginEventHandler;
 import gtPlusPlus.core.item.general.RF2EU_Battery;
 import gtPlusPlus.core.lib.CORE;
-import gtPlusPlus.core.material.gregtech.CustomGTMaterials;
 import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.geo.GeoUtils;
 import gtPlusPlus.core.util.item.ItemUtils;
@@ -59,6 +57,9 @@ public class GTplusplus implements ActionListener {
 		final Configuration config = new Configuration(
 				new File(event.getModConfigurationDirectory(), "GTplusplus/GTplusplus.cfg"));
 		config.load();
+
+		CORE.configSwitches.enableUpdateChecker = config.getBoolean("enableUpdateChecker", "debug", true,
+				"Stops mod checking for updates.");
 
 		// Debug
 		DEBUG = config.getBoolean("debugMode", "debug", false,
@@ -160,14 +161,14 @@ public class GTplusplus implements ActionListener {
 				"gregtech", true, "Large scale sifting.");
 		CORE.configSwitches.enableMachine_ThermalBoiler = config.getBoolean("enableMachineThermalBoiler",
 				"gregtech", true, "Thermal Boiler from GT4. Can Filter Lava for resources.");
-		
+
 		// Options
 		RF2EU_Battery.rfPerEU = config.getInt("rfUsedPerEUForUniversalBatteries", "configurables", 4, 1, 1000,
 				"How much RF is a single unit of EU worth? (Most mods use 4:1 ratio)");
 
 		// Features
-		enableCustomAlvearyBlocks = config.getBoolean("enableCustomAlvearyBlocks", "features", false,
-				"Enables Custom Alveary Blocks.");
+		CORE.mEnableCape = config.getBoolean("enableSupporterCape", "features", true,
+				"Enables Custom GT++ Cape.");
 
 		//Biomes
 		CORE.DARKBIOME_ID = config.getInt("darkbiome_ID", "worldgen", 238, 1, 254, "The biome within the Dark Dimension.");
@@ -178,8 +179,8 @@ public class GTplusplus implements ActionListener {
 				"BlacklistedTileEntiyClassNames", "gregtech",
 				BlacklistedTileEntiyClassNames,
 				"The Canonical Class-Names of TileEntities that should be ignored by the WorldAccelerator");
-		
-		
+
+
 		config.save();
 	}
 
@@ -198,16 +199,22 @@ public class GTplusplus implements ActionListener {
 	@Mod.EventHandler
 	public void preInit(final FMLPreInitializationEvent event) {
 		Utils.LOG_INFO("Loading " + CORE.name + " V" + CORE.VERSION);
-		
+
+		if(!Utils.isServer()){
+			CORE.mEnableCape = true;
+		}
+
 		//HTTP Requests
 		CORE.MASTER_VERSION = NetworkUtils.getContentFromURL("https://raw.githubusercontent.com/draknyte1/GTplusplus/master/Recommended.txt").toLowerCase();
 		CORE.USER_COUNTRY = GeoUtils.determineUsersCountry();
-		
+
 		// Handle GT++ Config
 		handleConfigFile(event);
-		
+
 		CORE.DEVENV = (Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment");
-		Utils.LOG_INFO("Latest is " + CORE.MASTER_VERSION + ". Updated? " + Utils.isModUpToDate());
+		if (CORE.configSwitches.enableUpdateChecker){
+			Utils.LOG_INFO("Latest is " + CORE.MASTER_VERSION + ". Updated? " + Utils.isModUpToDate());
+		}
 		Utils.LOG_INFO("User's Country: " + CORE.USER_COUNTRY);
 
 		// FirstCall();
@@ -215,14 +222,14 @@ public class GTplusplus implements ActionListener {
 		Utils.LOG_INFO("Login Handler Initialized");
 
 		//Early load materials
-		try {
+		/*try {
 			CustomGTMaterials.run();
-		} catch (Throwable t){}
-		
+		} catch (Throwable t){}*/
+
 		if (CORE.configSwitches.enableOldGTcircuits && CORE.MAIN_GREGTECH_5U_EXPERIMENTAL_FORK){
 			removeCircuitRecipeMap(); //Bye shitty recipes.			
 		}
-		
+
 		// HANDLER_GT.mMaterialProperties = new GT_Config(new Configuration(new
 		// File(new File(event.getModConfigurationDirectory(), "GTplusplus"),
 		// "MaterialProperties.cfg")));
@@ -256,13 +263,11 @@ public class GTplusplus implements ActionListener {
 			this.dumpGtRecipeMap(Gregtech_Recipe_Map.sMatterFab2Recipes);
 			this.dumpGtRecipeMap(Gregtech_Recipe_Map.sAlloyBlastSmelterRecipes);
 		}
-		
-		for (Materials s : gtPlusPlus.core.material.gregtech.CustomGTMaterials.Custom_GT_Materials){
-			Utils.LOG_INFO("Verification for New Material: "+s.mName);
-		}
 
-		// ~
-		//ReflectionUtils.becauseIWorkHard();
+		/*for (Materials s : gtPlusPlus.core.material.gregtech.CustomGTMaterials.Custom_GT_Materials){
+			Utils.LOG_INFO("Verification for New Material: "+s.mName);
+		}*/
+
 		// Utils.LOG_INFO("Activating GT OreDictionary Handler, this can take
 		// some time.");
 		Utils.LOG_INFO("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");

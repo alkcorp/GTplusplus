@@ -5,6 +5,7 @@ import static gregtech.api.enums.GT_Values.W;
 import gregtech.api.util.*;
 import gtPlusPlus.xmod.gregtech.api.interfaces.GregtechItemContainer;
 import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.Fluid;
@@ -230,7 +231,13 @@ public enum GregtechItemList implements GregtechItemContainer {
 	GT4_Thermal_Boiler, GT4_Multi_Crafter, 
 	
 	//GT4 Shelves
-	GT4_Shelf, GT4_Shelf_Iron, GT4_Shelf_FileCabinet, GT4_Shelf_Desk, GT4_Shelf_Compartment
+	GT4_Shelf, GT4_Shelf_Iron, GT4_Shelf_FileCabinet, GT4_Shelf_Desk, GT4_Shelf_Compartment, 
+	
+	
+	//Hi Amp Transformers
+	Transformer_HA_LV_ULV, Transformer_HA_MV_LV, Transformer_HA_HV_MV,
+	Transformer_HA_EV_HV, Transformer_HA_IV_EV, Transformer_HA_LuV_IV,
+	Transformer_HA_ZPM_LuV, Transformer_HA_UV_ZPM, Transformer_HA_MAX_UV
 	
 	
 	
@@ -279,7 +286,7 @@ public enum GregtechItemList implements GregtechItemContainer {
 		if (this.mHasNotBeenSet) {
 			throw new IllegalAccessError("The Enum '" + this.name() + "' has not been set to an Item at this time!");
 		}
-		return GT_Utility.getBlockFromStack(this.getItem());
+		return getBlockFromStack(this.getItem());
 	}
 
 	@Override
@@ -298,6 +305,12 @@ public enum GregtechItemList implements GregtechItemContainer {
 			return false;
 		}
 		return GT_Utility.areUnificationsEqual((ItemStack)aStack, aWildcard?this.getWildcard(1):this.get(1), aIgnoreNBT);
+	}
+	
+	public static Block getBlockFromStack(Object aStack) {
+		if (GT_Utility.isStackInvalid(aStack))
+			return Blocks.air;
+		return Block.getBlockFromItem(((ItemStack) aStack).getItem());
 	}
 
 	@Override
