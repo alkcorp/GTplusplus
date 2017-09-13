@@ -1,6 +1,7 @@
 package gtPlusPlus.xmod.gregtech.common.tileentities.machines.multi;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import gregtech.api.enums.*;
 import gregtech.api.interfaces.ITexture;
@@ -16,18 +17,14 @@ import gtPlusPlus.core.block.ModBlocks;
 import gtPlusPlus.core.item.ModItems;
 import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.util.Utils;
+import gtPlusPlus.core.util.array.ArrayUtils;
+import gtPlusPlus.core.util.math.MathUtils;
 import gtPlusPlus.core.util.nbt.NBTUtils;
 import gtPlusPlus.core.util.player.PlayerUtils;
 import gtPlusPlus.xmod.gregtech.common.helpers.CraftingHelper;
 import gtPlusPlus.xmod.gregtech.common.helpers.autocrafter.AC_Helper_Utils;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.ContainerWorkbench;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryCraftResult;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -39,6 +36,7 @@ extends GT_MetaTileEntity_MultiBlockBase
 	private MODE mMachineMode = MODE.ASSEMBLY;
 	private byte mTier = 1;
 	private final int mHeatingCapacity = 4700;
+	protected GT_Recipe mLastRecipeToBuffer;
 
 	/** The crafting matrix inventory (3x3). */
 	public CraftingHelper mInventoryCrafter;
@@ -245,123 +243,7 @@ extends GT_MetaTileEntity_MultiBlockBase
 			return doDisassembly();
 		}
 		else if (mMachineMode == MODE.CRAFTING){
-
-			//Try - Debug
-			try{
-
-				GT_MetaTileEntity_Hatch_InputBus craftingInput = null;
-
-				//Set Crafting input hatch
-				if (!this.mInputBusses.isEmpty()){
-					for (GT_MetaTileEntity_Hatch_InputBus x : this.mInputBusses){
-						if (x.mInventory.length == 9){
-							craftingInput = x;
-						}
-					}
-				}
-				//Return if no input hatch set.
-				if (craftingInput == null){
-					Utils.LOG_INFO("Cannot do Auto-Crafting without a 9-slot Input Bus [MV].");
-					return false;
-
-				}
-
-				//Read stored data from encrypter data stick.
-				ItemStack storedData_Output[] = NBTUtils.readItemsFromNBT(aStack, "Output");
-				ItemStack storedData_Input[] = NBTUtils.readItemsFromNBT(aStack);
-				ItemStack loadedData[] = new ItemStack[9];
-				if (storedData_Input.length >= 1){
-					int number = 0;
-					for (ItemStack a : storedData_Input){
-						if (a.getItem() == ModItems.ZZZ_Empty){
-							Utils.LOG_INFO("Allocating free memory into crafting manager slot "+number+".");
-							loadedData[number] = null;
-							//ContainerWorkbench.craftMatrix.setInventorySlotContents(number, null);
-							//ContainerWorkbench.craftMatrix.markDirty();
-						}
-						else {
-							Utils.LOG_INFO("Downloading "+a.getDisplayName()+" into crafting manager slot "+number+".");
-							loadedData[number] = a;
-							//ContainerWorkbench.craftMatrix.setInventorySlotContents(number, a);
-							//ContainerWorkbench.craftMatrix.markDirty();
-						}
-						number++;
-					}
-				}
-
-				if (storedData_Output.length >= 1){
-					int number = 0;
-					for (ItemStack a : storedData_Output){
-						if (a.getItem() == ModItems.ZZZ_Empty){
-							Utils.LOG_INFO("Allocating free memory into crafting manager Output slot "+number+".");
-							loadedData[number] = null;
-							//ContainerWorkbench.craftMatrix.setInventorySlotContents(number, null);
-							//ContainerWorkbench.craftMatrix.markDirty();
-						}
-						else {
-							Utils.LOG_INFO("Downloading "+a.getDisplayName()+" into crafting manager Output slot "+number+".");
-							loadedData[number] = a;
-							//ContainerWorkbench.craftMatrix.setInventorySlotContents(number, a);
-							//ContainerWorkbench.craftMatrix.markDirty();
-						}
-						number++;
-					}
-				}
-
-				boolean areInputsCorrect[] = new boolean[9];
-				int counter=0;
-				for (ItemStack inputItem : loadedData){
-
-					if (inputItem == null){
-						areInputsCorrect[counter] = true;
-					}
-
-					//Check input busses for recipe components
-					for (GT_MetaTileEntity_Hatch_InputBus x : this.mInputBusses){
-						if (x.mInventory.length > 0){
-							for (ItemStack r : x.mInventory){								
-								if (r == inputItem){
-									this.depleteInput(inputItem);
-									areInputsCorrect[counter] = true;
-								}
-							}
-						}					
-					}
-					counter++;
-				}
-
-				int mCorrectInputs=0;
-				for (boolean isValid : areInputsCorrect){
-					if (isValid){
-						mCorrectInputs++;
-					}
-				}
-				
-				if (mCorrectInputs == 9){
-					this.addOutput(storedData_Output[0]);
-				}
-
-
-				//if the are all found remove inputs
-
-				//if they are all found produce output
-
-
-				//Do Crafting
-				//Utils.LOG_INFO("Crafting Grid Size: "+ContainerWorkbench.craftMatrix.getSizeInventory());
-				//Utils.LOG_INFO("Crafting Grid Result: "+ContainerWorkbench.craftResult.getSizeInventory());
-				//Utils.LOG_INFO("Crafting Grid Result: "+ContainerWorkbench.craftResult.getStackInSlot(0));
-
-
-
-
-
-			}
-			//End Debug
-			catch (Throwable t){}
-
-
-			return false;
+			return doCrafting(aStack);
 		}
 		else {
 			final ArrayList<ItemStack> tInputList = this.getStoredInputs();
@@ -397,8 +279,10 @@ extends GT_MetaTileEntity_MultiBlockBase
 			if (tInputList.size() > 0) {
 				final GT_Recipe tRecipe = this.getRecipeMap().findRecipe(this.getBaseMetaTileEntity(), false, GT_Values.V[this.mTier], tFluids,	tInputs);
 				if (tRecipe == null){
+					mLastRecipeToBuffer = null;
 				}
 				if (tRecipe != null && tRecipe.isRecipeInputEqual(true, tFluids, tInputs)) {
+					mLastRecipeToBuffer = tRecipe;
 					this.mEfficiency = 10000 - (this.getIdealStatus() - this.getRepairStatus()) * 1000;
 					this.mEfficiencyIncrease = 10000;
 					final int tHeatCapacityDivTiers = (this.mHeatingCapacity - tRecipe.mSpecialValue) / 900;
@@ -472,10 +356,10 @@ extends GT_MetaTileEntity_MultiBlockBase
 					this.mEUt = 16 * (1 << this.mTier - 1) * (1 << this.mTier - 1);
 					this.mMaxProgresstime = (100-(8*this.mTier));
 					for (int i = 0; i < this.mOutputItems.length; ++i) {
-						if (this.getBaseMetaTileEntity().getRandomNumber(100) < 50 + 10 * this.mTier) {
+						if (this.getBaseMetaTileEntity().getRandomNumber(100) < 60 + 12 * this.mTier) {
 							this.mOutputItems[i] = GT_Utility.loadItem(tNBT, "Ingredient." + i);
 							if (this.mOutputItems[i] != null) {
-								this.mMaxProgresstime *= (int) 1.7;
+								this.mMaxProgresstime *= (int) 1.5;
 							}
 						}
 					}
@@ -498,6 +382,153 @@ extends GT_MetaTileEntity_MultiBlockBase
 		}
 		return false;
 	}
+	
+	private boolean doesCrafterHave9SlotInput(){
+		GT_MetaTileEntity_Hatch_InputBus craftingInput = null;
+		if (!this.mInputBusses.isEmpty()){
+			for (GT_MetaTileEntity_Hatch_InputBus x : this.mInputBusses){
+				if (x.mInventory.length == 9){
+					craftingInput = x;
+				}
+			}
+		}
+		//Return if no input hatch set.
+		if (craftingInput == null){
+			Utils.LOG_INFO("Cannot do Auto-Crafting without a 9-slot Input Bus [MV].");
+			return false;
+
+		}
+		else {
+			return true;
+		}
+	}
+
+	private boolean doCrafting(ItemStack aStack){
+		try{
+			//Set Crafting input hatch
+			if (!doesCrafterHave9SlotInput()){
+				return false;
+			}
+
+			//Read stored data from encrypted data stick.
+			ItemStack storedData_Output[] = NBTUtils.readItemsFromNBT(aStack, "Output");
+			ItemStack storedData_Input[] = NBTUtils.readItemsFromNBT(aStack);
+			if (storedData_Output != null && storedData_Input != null){
+				ItemStack loadedData[] = new ItemStack[9];
+				if (storedData_Input.length >= 1){
+					int number = 0;
+					for (ItemStack a : storedData_Input){
+						if (a.getItem() == ModItems.ZZZ_Empty){
+							//Utils.LOG_INFO("Allocating free memory into crafting manager slot "+number+".");
+							loadedData[number] = null;
+						}
+						else {
+							//Utils.LOG_INFO("Downloading "+a.getDisplayName()+" into crafting manager slot "+number+".");
+							loadedData[number] = a;
+						}
+						number++;
+					}
+				}
+
+
+
+				//Remove inputs here
+				ArrayList<ItemStack> mInputArray = new ArrayList<ItemStack>();
+				ItemStack allInputs[];
+
+				for (GT_MetaTileEntity_Hatch_InputBus x : this.mInputBusses){
+					if (x.mInventory.length > 0){
+						for (ItemStack r : x.mInventory){	
+							if (r != null){
+								mInputArray.add(r);
+							}
+						}
+					}
+				}
+
+				if (mInputArray.isEmpty()){
+					return false;
+				}
+				else {
+					List<ItemStack> list = mInputArray;			
+					allInputs = list.toArray(new ItemStack[list.size()]);
+
+					if (allInputs != null && allInputs.length > 0){
+
+						this.mEUt = 8 * (1 << this.mTier - 1) * (1 << this.mTier - 1);
+						this.mMaxProgresstime = MathUtils.roundToClosestInt((50-(5*MathUtils.randDouble(((this.mTier-2) <= 0 ? 1 : (this.mTier-2)), this.mTier))));
+
+						Utils.LOG_INFO("MPT: "+mMaxProgresstime+" | "+mEUt);
+						this.getBaseMetaTileEntity().setActive(true);
+
+						//Setup some vars
+						int counter=0;
+
+						ItemStack toUse[] = new ItemStack[9];
+
+						outerloop:
+							for (ItemStack inputItem : loadedData){
+								if (inputItem == null){
+									toUse[counter] = null;
+									continue outerloop;
+								}
+								for (ItemStack r : allInputs){
+									if (r != null){
+										//Utils.LOG_INFO("Input Bus Inventory Iteration - Found:" +r.getDisplayName()+" | "+allInputs.length);		
+										if (GT_Utility.areStacksEqual(r, inputItem)){
+											if (this.getBaseMetaTileEntity().isServerSide()){							
+												toUse[counter] = inputItem;
+												counter++;
+												continue outerloop;
+											}
+
+										}
+									}
+								}
+								counter++;
+							}					
+
+						int mCorrectInputs=0;
+						for (ItemStack isValid : toUse){
+							if (isValid == null || this.depleteInput(isValid)){
+								mCorrectInputs++;
+							}
+							else {
+								Utils.LOG_INFO("Input in Slot "+mCorrectInputs+" was not valid.");
+							}
+						}
+
+
+						if (this.mTier > 5) {
+							this.mMaxProgresstime >>= this.mTier - 5;
+						}			
+
+						if (mCorrectInputs == 9){
+							ItemStack mOutputItem = storedData_Output[0];				
+							NBTUtils.writeItemsToGtCraftingComponents(mOutputItem, loadedData, true);
+							this.addOutput(mOutputItem);
+							this.updateSlots();
+							return true;
+						}
+						else { 
+							return false;
+						}
+
+
+					}
+				}							
+			}
+		}
+		//End Debug
+		catch (Throwable t){
+			t.printStackTrace();
+			this.mMaxProgresstime = 0;
+		}
+
+
+		this.mMaxProgresstime = 0;
+		return false;
+	}
 
 
 	@Override
@@ -505,23 +536,32 @@ extends GT_MetaTileEntity_MultiBlockBase
 
 		final String tRunning = (this.mMaxProgresstime>0 ? "Auto-Crafter running":"Auto-Crafter stopped");
 		final String tMaintainance = (this.getIdealStatus() == this.getRepairStatus() ? "No Maintainance issues" : "Needs Maintainance");
+		String tSpecialText = ""+(60 + 12 * this.mTier)+"% chance to recover disassembled parts.";
 		String tMode;
 		if (mMachineMode == MODE.DISASSEMBLY){
-			tMode = "§cDisassembly";			
+			tMode = "§cDisassembly";	
+			tSpecialText = ""+(60 + 12 * this.mTier)+"% chance to recover disassembled parts.";
 		}
 		else if (mMachineMode == MODE.ASSEMBLY){
-			tMode = "§aAssembly";	
-
+			tMode = "§aAssembly";
+			if (mLastRecipeToBuffer != null && mLastRecipeToBuffer.mOutputs[0].getDisplayName() != null){
+				tSpecialText = "Currently processing: "+mLastRecipeToBuffer.mOutputs[0].getDisplayName();				
+			}
+			else{
+				tSpecialText = "Currently processing: Nothing";
+			}
 		}
 		else {	
-			tMode = "§dAuto-Crafting";		
+			tMode = "§dAuto-Crafting";
+			tSpecialText = "Does Auto-Crafter have 9-slot input bus? "+doesCrafterHave9SlotInput();		
 		}
 
 		return new String[]{
 				"Large Scale Auto-Asesembler v1.01c",
 				tRunning,
 				tMaintainance,
-				"Mode: "+tMode};
+				"Mode: "+tMode,
+				tSpecialText};
 	}
 
 	@Override
