@@ -1,6 +1,7 @@
 package gtPlusPlus.core.item.chemistry;
 
 import gregtech.api.enums.*;
+import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_OreDictUnificator;
 import gtPlusPlus.core.item.ModItems;
 import gtPlusPlus.core.lib.CORE;
@@ -9,6 +10,7 @@ import gtPlusPlus.core.util.fluid.FluidUtils;
 import gtPlusPlus.core.util.item.ItemUtils;
 import gtPlusPlus.core.util.reflect.AddGregtechRecipe;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
 public class CoalTar {
 
@@ -16,8 +18,8 @@ public class CoalTar {
 
 		//Special Compatibility for Coke
 		ItemUtils.addItemToOreDictionary(ItemUtils.getSimpleStack(ModItems.itemCoalCoke, 1), "fuelCoke");
-		
-		
+
+
 		//Create Coal Gas
 		FluidUtils.generateFluidNonMolten("CoalGas", "Coal Gas", 500, new short[]{48, 48, 48, 100}, null, null);
 
@@ -88,10 +90,19 @@ public class CoalTar {
 
 	private static void createRecipes() {
 		recipeCreateEthylene();
-		recipeCreatebenzene();
+		recipeCreateBenzene();
 		recipeCreateEthylbenzene();
 
 		recipeCoalToCoalTar();
+		recipeCoalTarToCoalTarOil();
+		recipeCoalTarOilToSulfuricOilToNaphthalene();
+		recipeNaphthaleneToPhthalicAcid();
+		recipePhthalicAcidToPhthalicAnhydride();
+		recipe2Ethylanthraquinone();
+		recipe2Ethylanthrahydroquinone();
+		recipeHydrogenPeroxide();
+		recipeLithiumHydroperoxide();
+		recipeLithiumPeroxide();
 	}
 
 	public static void recipeCreateEthylene(){
@@ -116,12 +127,18 @@ public class CoalTar {
 				80);
 	}
 
-	public static void recipeCreatebenzene(){
+	public static void recipeCreateBenzene(){
 
 	}
 
 	public static void recipeCreateEthylbenzene(){
-		//GT_Values.RA.addChemicalRecipe(arg0, arg1, arg2, arg3)
+		GT_Values.RA.addChemicalRecipe(
+				ItemUtils.getItemStackOfAmountFromOreDict("cellEthylene", 2), 
+				ItemUtils.getItemStackOfAmountFromOreDict("cellBenzene", 2), 
+				null,
+				FluidUtils.getFluidStack("", 4000),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 4), 
+				300);
 	}
 
 
@@ -158,5 +175,179 @@ public class CoalTar {
 
 	}
 
+	private static void recipeCoalTarToCoalTarOil() {
+		// v - Distill (60% Tar oil/15% Naphtha/20% Ethylbenzene/5% Anthracene)
+		//Create Coal Tar Oil
+		//FluidUtils.generateFluidNonMolten("CoalTarOil", "Coal Tar Oil", 240, new short[]{240, 240, 150, 100}, null, null);
+		GT_Values.RA.addDistilleryRecipe(
+				1, //Circuit
+				FluidUtils.getFluidStack("fluid.coaltar", 1000), //aInput
+				FluidUtils.getFluidStack("fluid.coaltaroil", 600), //aOutput
+				null, //aSolidOutput
+				600, //aDuration
+				64,//aEUt
+				false //Hidden?
+				);	
+		GT_Values.RA.addDistilleryRecipe(
+				2, //Circuit
+				FluidUtils.getFluidStack("fluid.coaltar", 1000), //aInput
+				FluidUtils.getFluidStack("liquid_naphtha", 150), //aOutput
+				null, //aSolidOutput
+				300, //aDuration
+				30,//aEUt
+				false //Hidden?
+				);
+		GT_Values.RA.addDistilleryRecipe(
+				3, //Circuit
+				FluidUtils.getFluidStack("fluid.coaltar", 1000), //aInput
+				FluidUtils.getFluidStack("fluid.ethylbenzene", 200), //aOutput
+				null, //aSolidOutput
+				450, //aDuration
+				86,//aEUt
+				false //Hidden?
+				);
+		GT_Values.RA.addDistilleryRecipe(
+				4, //Circuit
+				FluidUtils.getFluidStack("fluid.coaltar", 1000), //aInput
+				FluidUtils.getFluidStack("fluid.anthracene", 50), //aOutput
+				null, //aSolidOutput
+				900, //aDuration
+				30,//aEUt
+				false //Hidden?
+				);
+		GT_Values.RA.addDistillationTowerRecipe(
+				FluidUtils.getFluidStack("fluid.coaltar", 1000),
+				new FluidStack[]{
+						FluidUtils.getFluidStack("fluid.coaltaroil", 600), //aOutput
+						FluidUtils.getFluidStack("liquid_naphtha", 150), //aOutput
+						FluidUtils.getFluidStack("fluid.ethylbenzene", 200), //aOutput
+						FluidUtils.getFluidStack("fluid.anthracene", 50), //aOutput
+				},
+				null,
+				900,
+				60);
+
+	}
+
+	private static void recipeCoalTarOilToSulfuricOilToNaphthalene() {
+		//SulfuricCoalTarOil
+		GT_Values.RA.addChemicalRecipe(
+				ItemUtils.getItemStackOfAmountFromOreDict("cellCoalTarOil", 8),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellSulfuricAcid", 8),
+				null,
+				null,
+				ItemUtils.getItemStackOfAmountFromOreDict("cellSulfuricCoalTarOil", 16),
+				20*16);
+		GT_Values.RA.addDistilleryRecipe(
+				5, //Circuit
+				FluidUtils.getFluidStack("fluid.sulfuriccoaltaroil", 1000), //aInput
+				FluidUtils.getFluidStack("fluid.naphthalene", 1000), //aOutput
+				null, //aSolidOutput
+				1200, //aDuration
+				30,//aEUt
+				false //Hidden?
+				);	
+
+	}
+
+	private static void recipeNaphthaleneToPhthalicAcid() {
+		//SulfuricCoalTarOil
+		GT_Values.RA.addChemicalRecipe(
+				ItemUtils.getItemStackOfAmountFromOreDict("cellNaphthalene", 2),
+				ItemUtils.getItemStackOfAmountFromOreDict("dustLithium", 5),
+				null,
+				FluidUtils.getFluidStack("fluid.phthalicacid", 2500),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 2),
+				20*16);
+
+	}
+
+	private static void recipePhthalicAcidToPhthalicAnhydride() {
+		CORE.RA.addDehydratorRecipe(
+				ItemUtils.getGregtechCircuit(6),
+				FluidUtils.getFluidStack("fluid.phthalicacid", 144),
+				new ItemStack[]{
+						ItemUtils.getItemStackOfAmountFromOreDict("dustPhthalicAnhydride", 1)
+				},
+				60*20,
+				120);
+
+	}
+
+	private static void recipe2Ethylanthraquinone() {
+		GT_Values.RA.addChemicalRecipe(
+				ItemUtils.getItemStackOfAmountFromOreDict("dustPhthalicAnhydride", 4),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellEthylbenzene", 2),
+				null,
+				FluidUtils.getFluidStack("fluid.2ethylanthraquinone", 2000+(144*4)),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 2),
+				20*16);
+
+	}
+
+	private static void recipe2Ethylanthrahydroquinone() {
+		GT_Values.RA.addChemicalRecipe(
+				ItemUtils.getItemStackOfAmountFromOreDict("platePalladium", 0),
+				ItemUtils.getItemStackOfAmountFromOreDict("cell2Ethylanthraquinone", 1),
+				FluidUtils.getFluidStack("hydrogen", 500),
+				FluidUtils.getFluidStack("fluid.2ethylanthrahydroquinone", 1200),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 1),
+				20*40);
+
+	}
+
+	private static void recipeHydrogenPeroxide() {		
+		GT_Values.RA.addElectrolyzerRecipe(
+				GT_ModHandler.getAirCell(15),
+				ItemUtils.getItemStackOfAmountFromOreDict("cell2Ethylanthrahydroquinone", 5),
+				FluidUtils.getFluidStack("fluid.anthracene", 50),
+				FluidUtils.getFluidStack("fluid.2ethylanthrahydroquinone", 4450),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellHydrogenPeroxide", 2),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 13), 
+				null, 
+				null,
+				null,
+				null,
+				new int[]{10000, 10000}, 
+				20*90, 
+				240);		
+	}
+
+
+	private static void recipeLithiumHydroperoxide() {
+		GT_Values.RA.addElectrolyzerRecipe(
+				ItemUtils.getItemStackOfAmountFromOreDict("dustLithiumHydroxide", 7),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellHydrogenPeroxide", 1),
+				FluidUtils.getFluidStack("fluid.cellhydrogenperoxide", 50),
+				null,
+				ItemUtils.getItemStackOfAmountFromOreDict("dustLithiumHydroperoxide", 14),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 1), 
+				null, 
+				null,
+				null,
+				null,
+				new int[]{10000, 10000}, 
+				20*60, 
+				240);		
+	}
+
+
+	private static void recipeLithiumPeroxide() {
+		CORE.RA.addDehydratorRecipe(
+				new ItemStack[]{
+						ItemUtils.getItemStackOfAmountFromOreDict("dustLithiumHydroperoxide", 2),
+						ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 3)
+				}, 
+				null, 
+				null, 
+				new ItemStack[]{
+						ItemUtils.getItemStackOfAmountFromOreDict("dustLithiumPeroxide", 1),
+						ItemUtils.getItemStackOfAmountFromOreDict("cellHydrogenPeroxide", 1),
+						ItemUtils.getItemStackOfAmountFromOreDict("cellWater", 2)
+				},
+				new int[]{10000, 10000, 10000}, 
+				20*100, 
+				240);
+	}
 
 }
