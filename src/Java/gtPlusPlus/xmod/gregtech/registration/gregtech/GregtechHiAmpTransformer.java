@@ -8,6 +8,8 @@ import gtPlusPlus.xmod.gregtech.api.enums.GregtechItemList;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.base.GregtechMetaTransformerHiAmp;
 import net.minecraft.item.ItemStack;
 
+import static gtPlusPlus.core.lib.CORE.GTNH;
+
 public class GregtechHiAmpTransformer {
 
 	
@@ -54,7 +56,7 @@ public class GregtechHiAmpTransformer {
 			} catch (Throwable t){	
 				mItem_3 = ItemList.Circuit_Ultimate.get(1);
 			}
-		
+		if(!GTNH){
 		GT_ModHandler.addCraftingRecipe(GregtechItemList.Transformer_HA_LV_ULV.get(1L, new Object[0]), bitsd,
 				new Object[] { " BB", "CM ", " BB", Character.valueOf('M'), ItemList.Hull_ULV, Character.valueOf('C'),
 						OrePrefixes.wireGt16.get(Materials.Tin), Character.valueOf('B'),
@@ -97,6 +99,7 @@ public class GregtechHiAmpTransformer {
 						OrePrefixes.wireGt01.get(Materials.Superconductor), Character.valueOf('B'),
 						OrePrefixes.wireGt04.get(Materials.NaquadahAlloy), Character.valueOf('K'),
 						mItem_3 });
+		}
 	}
 	
 }
