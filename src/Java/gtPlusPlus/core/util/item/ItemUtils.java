@@ -1,8 +1,5 @@
 package gtPlusPlus.core.util.item;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import cpw.mods.fml.common.registry.GameRegistry;
 import gregtech.api.enums.Materials;
 import gregtech.api.enums.OrePrefixes;
@@ -32,6 +29,9 @@ import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.oredict.OreDictionary;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemUtils {
 
@@ -567,7 +567,7 @@ public class ItemUtils {
 			return null;
 		}
 		final ItemStack[] outputs = new ItemStack[blockDrops.size()];
-		final short forCounter = 0;
+		short forCounter = 0;
 		for (final ItemStack I : blockDrops){
 			outputs[forCounter++] = I;
 		}
