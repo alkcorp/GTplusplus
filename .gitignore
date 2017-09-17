@@ -117,3 +117,6 @@ GT++.ipr
 GT++.iml
 *.jar
 out/
+*.iml
+*.ipr
+*.iws
