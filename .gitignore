@@ -120,3 +120,6 @@ out/
 *.iml
 *.ipr
 *.iws
+run/GregTech.cfg
+run/GregTech.lang
+run/PlayerCache.dat
