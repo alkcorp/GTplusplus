@@ -111,3 +111,15 @@ local.properties
 # STS (Spring Tool Suite)
 .springBeans
 /screenshots
+*.bat
+GT++.iws
+GT++.ipr
+GT++.iml
+*.jar
+out/
+*.iml
+*.ipr
+*.iws
+run/GregTech.cfg
+run/GregTech.lang
+run/PlayerCache.dat
