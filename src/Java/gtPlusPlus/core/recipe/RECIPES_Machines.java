@@ -175,17 +175,12 @@ public class RECIPES_Machines {
 	public static ItemStack INPUT_RCCokeOvenBlock;
 	public static ItemStack INPUT_IECokeOvenBlock;
 
-        //Output
+        //Output Determiner
 	public static int Casing_Amount;
-	        if (CORE.MAIN_GREGTECH_5U_EXPERIMENTAL_FORK){
-			Casing_Amount=2;
-		}
-	        else {
-			Casing_Amount=1;
-		}
-
-
-       public static final void RECIPES_LOAD(){
+	        
+	
+	
+        public static final void RECIPES_LOAD(){
 		run();
 		Utils.LOG_INFO("Loading Recipes for the Various machine blocks.");
 	}
@@ -234,6 +229,15 @@ public class RECIPES_Machines {
 	private static void runModRecipes(){
 		if (LoadedMods.Gregtech){
 
+			//Determines Casing Recipe Output
+			if (CORE.MAIN_GREGTECH_5U_EXPERIMENTAL_FORK){
+			Casing_Amount=2;
+		         }
+	                else {
+			Casing_Amount=1;
+			}
+			
+			
 			//Computer Cube
 			RecipeUtils.addShapedGregtechRecipe(
 					CI.getDataOrb(),ItemList.Cover_Screen.get(1),"circuitMaster",
