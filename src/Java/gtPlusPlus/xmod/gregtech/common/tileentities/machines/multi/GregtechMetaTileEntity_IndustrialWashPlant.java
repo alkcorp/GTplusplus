@@ -63,6 +63,7 @@ extends GregtechMeta_MultiBlockBase {
 				"1x Input Hatch (Any casing)",
 				"1x Output Hatch (Any casing)",
 				"1x Maintenance Hatch (Any casing)",
+				"1x Muffler Hatch (Any casing)",
 				"1x Energy Hatch (Any casing)",
 				"Wash Plant Casing (The rest)",
 				"Causes " + (20 * getPollutionPerTick(null)) + " Pollution per second",
@@ -97,7 +98,7 @@ extends GregtechMeta_MultiBlockBase {
 	public boolean checkRecipe(final ItemStack aStack) {
 
 		if (!checkForWater()){
-			Utils.LOG_INFO("Did not find enough cleaning solution.");
+			Utils.LOG_WARNING("Did not find enough cleaning solution.");
 			return false;
 		}
 
@@ -135,7 +136,7 @@ extends GregtechMeta_MultiBlockBase {
 						//this.mOutputItems = new ItemStack[] { tRecipe.getOutput(0) };
 						ItemStack mNewOutputs[] = new ItemStack[tRecipe.mOutputs.length];
 						for (int f=0;f<tRecipe.mOutputs.length;f++){
-							Utils.LOG_INFO("Step 5 - Adding Output");
+							Utils.LOG_WARNING("Step 5 - Adding Output");
 							mNewOutputs[f] = tRecipe.mOutputs[f].copy();
 						}
 						this.mOutputItems = mNewOutputs;
@@ -145,7 +146,7 @@ extends GregtechMeta_MultiBlockBase {
 						//this.mOutputFluids = new FluidStack[] { tRecipe.getFluidOutput(0) };
 						FluidStack outputFluids[] = new FluidStack[1];						
 						if (true){
-							Utils.LOG_INFO("Adding Sludge");
+							Utils.LOG_WARNING("Adding Sludge");
 							outputFluids[0] = FluidUtils.getFluidStack("fluid.sludge", 100);
 						}						
 						this.mOutputFluids = outputFluids;
@@ -236,6 +237,23 @@ extends GregtechMeta_MultiBlockBase {
 				}
 			}
 		}
+		
+		if ((this.mInputBusses.size() < 1) || (this.mOutputBusses.size() < 1)
+				|| (this.mInputHatches.size() < 1) || (this.mOutputHatches.size() < 1)
+				|| (this.mMaintenanceHatches.size() != 1) || (this.mEnergyHatches.size() < 1)
+				|| (this.mMufflerHatches.size() < 1)) {
+			Utils.LOG_MACHINE_INFO("Returned False");
+			Utils.LOG_MACHINE_INFO("Input Buses: "+this.mInputBusses.size()+" | expected: >= 1 | "+(this.mInputBusses.size() >= 1));
+			Utils.LOG_MACHINE_INFO("Output Buses: "+this.mOutputBusses.size()+" | expected: >= 1 | "+(this.mOutputBusses.size() >= 1));
+			Utils.LOG_MACHINE_INFO("Input Hatches: "+this.mInputHatches.size()+" | expected: >= 1 | "+(this.mInputHatches.size() >= 1));
+			Utils.LOG_MACHINE_INFO("Output Hatches: "+this.mOutputHatches.size()+" | expected: >= 1 | "+(this.mOutputHatches.size() >= 1));
+			Utils.LOG_MACHINE_INFO("Energy Hatches: "+this.mEnergyHatches.size()+" | expected: >= 1 | "+(this.mEnergyHatches.size() >= 1));
+			Utils.LOG_MACHINE_INFO("Muffler Hatches: "+this.mMufflerHatches.size()+" | expected: >= 1 | "+(this.mMufflerHatches.size() >= 1));
+			Utils.LOG_MACHINE_INFO("Maint. Hatches: "+this.mMaintenanceHatches.size()+" | expected: 1 | "+(this.mMaintenanceHatches.size() != 1));
+			return false;
+		}
+		
+		
 		if ((tAmount >= 8)){
 			Utils.LOG_WARNING("Made structure.");
 		}
@@ -340,7 +358,7 @@ extends GregtechMeta_MultiBlockBase {
 											for (FluidStack stored : this.getStoredFluids()){
 												if (stored.isFluidEqual(FluidUtils.getFluidStack("water", 1))){
 													if (stored.amount >= 1000){
-														//Utils.LOG_INFO("Going to try swap an air block for water from inut bus.");
+														//Utils.LOG_WARNING("Going to try swap an air block for water from inut bus.");
 														stored.amount -= 1000;
 														Block fluidUsed = null;
 														if (tBlock == Blocks.air || tBlock == Blocks.flowing_water){
@@ -360,12 +378,12 @@ extends GregtechMeta_MultiBlockBase {
 									}
 									if (tBlock == Blocks.water){
 										++tAmount;
-										//Utils.LOG_INFO("Found Water");
+										//Utils.LOG_WARNING("Found Water");
 									}
 									else if (tBlock == BlocksItems.getFluidBlock(InternalName.fluidDistilledWater)){
 										++tAmount;
 										++tAmount;
-										//Utils.LOG_INFO("Found Distilled Water");										
+										//Utils.LOG_WARNING("Found Distilled Water");										
 									}
 								}
 								else {

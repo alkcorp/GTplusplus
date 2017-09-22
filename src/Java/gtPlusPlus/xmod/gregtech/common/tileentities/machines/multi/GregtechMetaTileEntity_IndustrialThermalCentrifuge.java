@@ -152,7 +152,7 @@ extends GregtechMeta_MultiBlockBase {
 							byte tMeta = aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j);
 							if ((((tBlock != ModBlocks.blockCasings2Misc) || (tMeta != 0)))
 									&& (((tBlock != GregTech_API.sBlockCasings3) || (tMeta != 9)))) {
-								Utils.LOG_INFO("Wrong Block?");
+								Utils.LOG_WARNING("Wrong Block?");
 								return false;
 							}
 							++tAmount;
@@ -161,7 +161,18 @@ extends GregtechMeta_MultiBlockBase {
 				}
 			}
 		}
-		Utils.LOG_INFO("Trying to assemble structure. Completed? "+(tAmount >= 8));
+		if ((this.mInputBusses.size() < 1) || (this.mOutputBusses.size() < 1)
+				|| (this.mMaintenanceHatches.size() != 1) || (this.mEnergyHatches.size() < 1)
+				|| (this.mMufflerHatches.size() < 1)) {
+			Utils.LOG_MACHINE_INFO("Returned False");
+			Utils.LOG_MACHINE_INFO("Input Buses: "+this.mInputBusses.size()+" | expected: >= 1 | "+(this.mInputBusses.size() >= 1));
+			Utils.LOG_MACHINE_INFO("Output Buses: "+this.mOutputBusses.size()+" | expected: >= 1 | "+(this.mOutputBusses.size() >= 1));
+			Utils.LOG_MACHINE_INFO("Energy Hatches: "+this.mEnergyHatches.size()+" | expected: >= 1 | "+(this.mEnergyHatches.size() >= 1));
+			Utils.LOG_MACHINE_INFO("Muffler Hatches: "+this.mMufflerHatches.size()+" | expected: >= 1 | "+(this.mMufflerHatches.size() >= 1));
+			Utils.LOG_MACHINE_INFO("Maint. Hatches: "+this.mMaintenanceHatches.size()+" | expected: 1 | "+(this.mMaintenanceHatches.size() != 1));
+			return false;
+		}
+		Utils.LOG_WARNING("Trying to assemble structure. Completed? "+(tAmount >= 8));
 		return (tAmount >= 8);
 	}
 
