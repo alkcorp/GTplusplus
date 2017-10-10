@@ -1,10 +1,10 @@
-ic2.itemEnergeticRotor=Kinetic Gearbox Rotor (Energetic Alloy)
-ic2.itemTungstenSteelRotor=Kinetic Gearbox Rotor (TungstenSteel)
-ic2.itemVibrantRotor=Kinetic Gearbox Rotor (Vibrant Alloy)
-ic2.itemIridiumRotor=Kinetic Gearbox Rotor (Iridium)
+ic2.itemEnergeticRotor=动力齿轮转子(充能合金)
+ic2.itemTungstenSteelRotor=动力齿轮转子(钨钢)
+ic2.itemVibrantRotor=动力齿轮转子(脉冲合金)
+ic2.itemIridiumRotor=动力齿轮转子(铱)
 
-ic2.itemMagnaliumRotor=Kinetic Gearbox Rotor (Magnalium)
-ic2.itemUltimetRotor=Kinetic Gearbox Rotor (Ultimet)
+ic2.itemMagnaliumRotor=动力齿轮转子(镁铝合金)
+ic2.itemUltimetRotor=动力齿轮转子(哈氏合金)
 
 ic2.blockGenerator=RTG POWARZ
 ic2.blockGenerator.0=RTG POWA
@@ -24,6 +24,6 @@ ic2.HydrogenChloride=工业强化氯化氢单元
 ic2.LithiumHydroxide=氢氧化锂单元
 ic2.SulfuricLithium=硫酸锂单元
 
-ic2.UraniumHexaFluoride=Uranium Hexafluoride Cell
-ic2.ThoriumTetraFluoride=Thorium Tetrafluoride Cell
-ic2.UraniumTetraFluoride=Uranium Tetrafluoride Cell
+ic2.UraniumHexaFluoride=六氟化铀单元
+ic2.ThoriumTetraFluoride=四氟化钍单元
+ic2.UraniumTetraFluoride=四氟化铀单元
