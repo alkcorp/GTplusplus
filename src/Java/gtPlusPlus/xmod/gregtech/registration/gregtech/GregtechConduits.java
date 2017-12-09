@@ -6,6 +6,7 @@ import static gtPlusPlus.core.lib.LoadedMods.Gregtech;
 import java.util.ArrayList;
 
 import gregtech.api.enums.*;
+import gregtech.api.interfaces.ITexture;
 import gregtech.api.metatileentity.implementations.GT_MetaPipeEntity_Fluid;
 import gregtech.api.util.GT_OreDictUnificator;
 import gregtech.api.util.GT_Utility;
@@ -32,6 +33,16 @@ public class GregtechConduits {
 	 *
 	 */
 
+	private static OrePrefixes cableGt16;
+	static{
+		if(GTNH) {
+			try {
+				cableGt16=(OrePrefixes) GT_Utility.getField(OrePrefixes.class,"cableGt16").get(null);
+			}catch (IllegalAccessException | NullPointerException e){
+				throw new Error(e);
+			}
+		}
+	}
 
 	private static int BaseWireID = 30600;
 	private static int BasePipeID = 30700;
@@ -125,7 +136,7 @@ public class GregtechConduits {
 			GT_OreDictUnificator.registerOre(OrePrefixes.cableGt08, aMaterial, new GregtechMetaPipeEntity_Cable(aStartID + 9, "cable." + aMaterial.name().toLowerCase() + ".08", "8x " + aMaterial.mDefaultLocalName + " Cable", 0.625F, aMaterial, aLossInsulated, 8L * aAmperage, aVoltage, true, false, aRGB).getStackForm(1L));
 			GT_OreDictUnificator.registerOre(OrePrefixes.cableGt12, aMaterial, new GregtechMetaPipeEntity_Cable(aStartID + 10, "cable." + aMaterial.name().toLowerCase() + ".12", "12x " + aMaterial.mDefaultLocalName + " Cable", GTNH?0.75F:0.875F, aMaterial, aLossInsulated, 12L * aAmperage, aVoltage, true, false, aRGB).getStackForm(1L));
 			if(GTNH){
-				GT_OreDictUnificator.registerOre(OrePrefixes.cableGt16, aMaterial, new GregtechMetaPipeEntity_Cable(aStartID + 11, "cable." + aMaterial.name().toLowerCase() + ".16", "16x " + aMaterial.mDefaultLocalName + " Cable", 0.875f, aMaterial, aLossInsulated, 16L * aAmperage, aVoltage, true, false, aRGB).getStackForm(1L));
+				GT_OreDictUnificator.registerOre(cableGt16, aMaterial, new GregtechMetaPipeEntity_Cable(aStartID + 11, "cable." + aMaterial.name().toLowerCase() + ".16", "16x " + aMaterial.mDefaultLocalName + " Cable", 0.875f, aMaterial, aLossInsulated, 16L * aAmperage, aVoltage, true, false, aRGB).getStackForm(1L));
 			}
 		}
 	}
@@ -157,7 +168,7 @@ public class GregtechConduits {
 			registerOre(OrePrefixes.cableGt08, aMaterial, new GregtechMetaPipeEntity_Cable(aStartID + 9, "cable." + aMaterial.getLocalizedName().toLowerCase() + ".08", "8x " + aMaterial.getLocalizedName() + " Cable", 0.625F, aLossInsulated, 8L * aAmperage, aVoltage, true, false, aMaterial.getRGBA()).getStackForm(1L));
 			registerOre(OrePrefixes.cableGt12, aMaterial, new GregtechMetaPipeEntity_Cable(aStartID + 10, "cable." + aMaterial.getLocalizedName().toLowerCase() + ".12", "12x " + aMaterial.getLocalizedName() + " Cable", GTNH?0.75F:0.875F, aLossInsulated, 12L * aAmperage, aVoltage, true, false, aMaterial.getRGBA()).getStackForm(1L));
 			if(GTNH){
-				registerOre(OrePrefixes.cableGt16, aMaterial, new GregtechMetaPipeEntity_Cable(aStartID + 11, "cable." + aMaterial.getLocalizedName().toLowerCase() + ".16", "16x " + aMaterial.getLocalizedName() + " Cable", 0.875f, aLossInsulated, 16L * aAmperage, aVoltage, true, false, aMaterial.getRGBA()).getStackForm(1L));
+				registerOre(cableGt16, aMaterial, new GregtechMetaPipeEntity_Cable(aStartID + 11, "cable." + aMaterial.getLocalizedName().toLowerCase() + ".16", "16x " + aMaterial.getLocalizedName() + " Cable", 0.875f, aLossInsulated, 16L * aAmperage, aVoltage, true, false, aMaterial.getRGBA()).getStackForm(1L));
 			}
 		}
 
@@ -614,8 +625,6 @@ public class GregtechConduits {
 				ItemUtils.getItemStackOfAmountFromOreDict(Utils.sanitizeString("wireGt16"+aMaterial.getLocalizedName()), 1),
 				100,
 				8);
-
-
 
 		return true;
 	}

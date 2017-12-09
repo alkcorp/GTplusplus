@@ -1005,15 +1005,7 @@ public class RECIPES_GREGTECH {
 					FluidUtils.getFluidStack("ammonia", 1000),
 					ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 3),
 					14 * 20);
-		} else {
-			GT_Values.RA.addChemicalRecipe(
-					ItemUtils.getItemStackOfAmountFromOreDict("cellHydrogen", 3),
-					ItemUtils.getItemStackOfAmountFromOreDict("dustMagnetite", 0),
-					FluidUtils.getFluidStack("nitrogen", 1000),
-					FluidUtils.getFluidStack("ammonia", 1000),
-					ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 3),
-					16 * 20, 384);
-		}
+		}//moved to GTNH core mod
 		//Ammonium
 		GT_Values.RA.addChemicalRecipe(
 				ItemUtils.getItemStackOfAmountFromOreDict("cellAmmonia", 1),
