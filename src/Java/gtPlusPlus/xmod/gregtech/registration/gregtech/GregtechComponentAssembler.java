@@ -66,7 +66,8 @@ public class GregtechComponentAssembler {
 						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.WIRE4 }).getStackForm(1L));
 
 		// Motors
-		//addRecipeMotor(0, Materials.Lead, 1, Materials.RedAlloy, 1, Materials.WroughtIron, Materials.IronMagnetic);
+		// addRecipeMotor(0, Materials.Lead, 1, Materials.RedAlloy, 1,
+		// Materials.WroughtIron, Materials.IronMagnetic);
 		addRecipeMotor(1, Materials.Copper, 1, Materials.Tin, 1, Materials.Iron, Materials.IronMagnetic);
 		addRecipeMotor(2, Materials.Copper, 2, Materials.Copper, 1, Materials.Aluminium, Materials.SteelMagnetic);
 		addRecipeMotor(3, Materials.Copper, 4, Materials.Gold, 1, Materials.StainlessSteel, Materials.SteelMagnetic);
@@ -75,7 +76,7 @@ public class GregtechComponentAssembler {
 				Materials.NeodymiumMagnetic);
 
 		// Pistons
-		//addRecipePiston(0, Materials.Lead, Materials.Lead);
+		// addRecipePiston(0, Materials.Lead, Materials.Lead);
 		addRecipePiston(1, Materials.Steel, Materials.Tin);
 		addRecipePiston(2, Materials.Aluminium, Materials.Copper);
 		addRecipePiston(3, Materials.StainlessSteel, Materials.Gold);
@@ -83,7 +84,7 @@ public class GregtechComponentAssembler {
 		addRecipePiston(5, Materials.TungstenSteel, Materials.Tungsten);
 
 		// Conveyors
-		//addRecipeConveyor(0, Materials.Lead);
+		// addRecipeConveyor(0, Materials.Lead);
 		addRecipeConveyor(1, Materials.Tin);
 		addRecipeConveyor(2, Materials.Copper);
 		addRecipeConveyor(3, Materials.Gold);
@@ -91,7 +92,7 @@ public class GregtechComponentAssembler {
 		addRecipeConveyor(5, Materials.Tungsten);
 
 		// Pumps
-		//addRecipePump(0, Materials.Lead, Materials.Lead, Materials.Lead);
+		// addRecipePump(0, Materials.Lead, Materials.Lead, Materials.Lead);
 		addRecipePump(1, Materials.Tin, Materials.Copper, Materials.Tin);
 		addRecipePump(2, Materials.Bronze, Materials.Steel, Materials.Copper);
 		addRecipePump(3, Materials.Steel, Materials.StainlessSteel, Materials.Gold);
@@ -99,7 +100,7 @@ public class GregtechComponentAssembler {
 		addRecipePump(5, Materials.TungstenSteel, Materials.TungstenSteel, Materials.Tungsten);
 
 		// Robot Arms
-		//addRecipeRobotArm(0, Materials.Lead, Materials.Lead);
+		// addRecipeRobotArm(0, Materials.Lead, Materials.Lead);
 		addRecipeRobotArm(1, Materials.Steel, Materials.Tin);
 		addRecipeRobotArm(2, Materials.Aluminium, Materials.Copper);
 		addRecipeRobotArm(3, Materials.StainlessSteel, Materials.Gold);
@@ -107,7 +108,7 @@ public class GregtechComponentAssembler {
 		addRecipeRobotArm(5, Materials.TungstenSteel, Materials.Tungsten);
 
 		// Field Generators
-		//addRecipeFieldGenerator(0, Materials.Lead);
+		// addRecipeFieldGenerator(0, Materials.Lead);
 		addRecipeFieldGenerator(1);
 		addRecipeFieldGenerator(2);
 		addRecipeFieldGenerator(3);
@@ -115,15 +116,16 @@ public class GregtechComponentAssembler {
 		addRecipeFieldGenerator(5);
 
 		// Emitters
-		//addRecipeEmitter(0, Materials.Lead, Materials.IronMagnetic);
+		// addRecipeEmitter(0, Materials.Lead, Materials.IronMagnetic);
 		addRecipeEmitter(1, Materials.Tin, Materials.Brass, Materials.Quartzite);
-		addRecipeEmitter(2, Materials.Copper, Materials.Electrum, Materials.NetherQuartz);;
+		addRecipeEmitter(2, Materials.Copper, Materials.Electrum, Materials.NetherQuartz);
 		addRecipeEmitter(3, Materials.Gold, Materials.Chrome, Materials.Emerald);
 		addRecipeEmitter(4, Materials.Aluminium, Materials.Platinum, Materials.EnderPearl);
 		addRecipeEmitter(5, Materials.Tungsten, Materials.Osmium, Materials.EnderEye);
 
 		// Sensors
-		//addRecipeSensor(0, Materials.WroughtIron, Materials.IronMagnetic, Materials.Apatite);
+		// addRecipeSensor(0, Materials.WroughtIron, Materials.IronMagnetic,
+		// Materials.Apatite);
 		addRecipeSensor(1, Materials.Steel, Materials.Brass, Materials.Quartzite);
 		addRecipeSensor(2, Materials.Aluminium, Materials.Electrum, Materials.NetherQuartz);
 		addRecipeSensor(3, Materials.StainlessSteel, Materials.Chrome, Materials.Emerald);
@@ -283,17 +285,40 @@ public class GregtechComponentAssembler {
 			ItemStack rodStack = ItemUtils.getGregtechOreStack(OrePrefixes.stick, stick, 2);
 			ItemStack motorStack = ItemList.valueOf("Electric_Motor_" + GT_Values.VN[tier]).get(2);
 			ItemStack pistonStack = ItemList.valueOf("Electric_Piston_" + GT_Values.VN[tier]).get(1);
-			ItemStack circuitStack;
-			if (CI.getTieredCircuit(tier) instanceof String) {
-				circuitStack = ItemUtils.getItemStackOfAmountFromOreDict((String) CI.getTieredCircuit(tier), 1);
+			
+			boolean mAdd[];
+			final ItemStack oreDictList[] = CI.getAllCircuitsOfTier(tier);
+			if (oreDictList.length > 0) {
+				int mcount = 0, added = 0;
+				mAdd = new boolean[oreDictList.length];
+				for (ItemStack mCircuitType : oreDictList) {
+					final ItemStack returnValue = mCircuitType.copy();
+					returnValue.stackSize = 1;					
+					ItemStack Input[] = { returnValue, cableStack, rodStack, pistonStack, motorStack  };
+					mAdd[mcount++] = CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
+							ItemList.valueOf("Robot_Arm_" + GT_Values.VN[tier]).get(1), (tier * 40),
+							((int) GT_Values.V[tier] / 16) * 15);					
+				}
+				for (boolean y : mAdd) {
+					if (y) {
+						added++;
+					}
+				}
+				if (added >= (oreDictList.length / 2)) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 			else {
-				circuitStack = (ItemStack) CI.getTieredCircuit(tier);
+				ItemStack Input[] = { ItemUtils.getItemStackOfAmountFromOreDict(CI.getTieredCircuitOreDictName(tier), 1), cableStack, rodStack, pistonStack, motorStack  };
+				return CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
+						ItemList.valueOf("Robot_Arm_" + GT_Values.VN[tier]).get(1), (tier * 40),
+						((int) GT_Values.V[tier] / 16) * 15);
 			}
-			ItemStack Input[] = { circuitStack, cableStack, rodStack, pistonStack, motorStack };
-			return CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
-					ItemList.valueOf("Robot_Arm_" + GT_Values.VN[tier]).get(1), (tier * 40),
-					((int) GT_Values.V[tier] / 16) * 15);
+			
+			
 		}
 		catch (Throwable t) {
 			return false;
@@ -304,36 +329,67 @@ public class GregtechComponentAssembler {
 		try {
 			ItemStack gem;
 			String mWT;
-			if (tier == 1) mWT = "01";
-			else if (tier == 2) mWT = "02";
-			else if (tier == 3) mWT = "04";
-			else if (tier == 4) mWT = "08";
-			else if (tier == 5) mWT = "16";
-			else mWT = "01";
-			
-			if (tier == 1) gem = ItemUtils.getSimpleStack(Items.ender_pearl);
-			else if (tier == 2) gem = ItemUtils.getSimpleStack(Items.ender_eye);
-			else if (tier == 3) gem = ItemList.QuantumEye.get(1);
-			else if (tier == 4) gem = ItemUtils.getSimpleStack(Items.nether_star);
-			else if (tier == 5) gem = ItemList.QuantumStar.get(1);
-			else gem = ItemUtils.getSimpleStack(Items.ender_pearl);
-			
+			if (tier == 1)
+				mWT = "01";
+			else if (tier == 2)
+				mWT = "02";
+			else if (tier == 3)
+				mWT = "04";
+			else if (tier == 4)
+				mWT = "08";
+			else if (tier == 5)
+				mWT = "16";
+			else
+				mWT = "01";
+
+			if (tier == 1)
+				gem = ItemUtils.getSimpleStack(Items.ender_pearl);
+			else if (tier == 2)
+				gem = ItemUtils.getSimpleStack(Items.ender_eye);
+			else if (tier == 3)
+				gem = ItemList.QuantumEye.get(1);
+			else if (tier == 4)
+				gem = ItemUtils.getSimpleStack(Items.nether_star);
+			else if (tier == 5)
+				gem = ItemList.QuantumStar.get(1);
+			else
+				gem = ItemUtils.getSimpleStack(Items.ender_pearl);
 
 			OrePrefixes prefixWire = OrePrefixes.getOrePrefix("wireGt" + mWT);
-
-			ItemStack wireStack = ItemUtils.getGregtechOreStack(prefixWire, Materials.Osmium, 4);
-
-			ItemStack circuitStack;
-			if (CI.getTieredCircuit(tier) instanceof String) {
-				circuitStack = ItemUtils.getItemStackOfAmountFromOreDict((String) CI.getTieredCircuit(tier), 4);
+			ItemStack wireStack = ItemUtils.getGregtechOreStack(prefixWire, Materials.Osmium, 4);			
+			
+			boolean mAdd[];
+			final ItemStack oreDictList[] = CI.getAllCircuitsOfTier(tier);
+			if (oreDictList.length > 0) {
+				int mcount = 0, added = 0;
+				mAdd = new boolean[oreDictList.length];
+				for (ItemStack mCircuitType : oreDictList) {
+					final ItemStack returnValue = mCircuitType.copy();
+					returnValue.stackSize = 4;					
+					ItemStack Input[] = { returnValue, wireStack, gem };
+					mAdd[mcount++] =  CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
+							ItemList.valueOf("Field_Generator_" + GT_Values.VN[tier]).get(1), (tier * 40),
+							((int) GT_Values.V[tier] / 16) * 15);					
+				}
+				for (boolean y : mAdd) {
+					if (y) {
+						added++;
+					}
+				}
+				if (added >= (oreDictList.length / 2)) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
-			else {
-				circuitStack = (ItemStack) CI.getTieredCircuit(tier);
-			}
-			ItemStack Input[] = { circuitStack, wireStack, gem};
-			return CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
-					ItemList.valueOf("Field_Generator_" + GT_Values.VN[tier]).get(1), (tier * 40),
-					((int) GT_Values.V[tier] / 16) * 15);
+			else {				
+				ItemStack Input[] = { ItemUtils.getItemStackOfAmountFromOreDict(CI.getTieredCircuitOreDictName(tier), 4), wireStack, gem };
+				return CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
+						ItemList.valueOf("Field_Generator_" + GT_Values.VN[tier]).get(1), (tier * 40),
+						((int) GT_Values.V[tier] / 16) * 15);
+			}		
+			
 		}
 		catch (Throwable t) {
 			return false;
@@ -344,18 +400,42 @@ public class GregtechComponentAssembler {
 		try {
 			ItemStack cableStack = ItemUtils.getGregtechOreStack(OrePrefixes.cableGt01, cable, 2);
 			ItemStack gemstack = ItemUtils.getGregtechOreStack(OrePrefixes.gem, gem, 1);
-			ItemStack magrodStack = ItemUtils.getGregtechOreStack(OrePrefixes.stick, stick, 4);
-			ItemStack circuitStack;
-			if (CI.getTieredCircuit(tier) instanceof String) {
-				circuitStack = ItemUtils.getItemStackOfAmountFromOreDict((String) CI.getTieredCircuit(tier), 2);
+			ItemStack magrodStack = ItemUtils.getGregtechOreStack(OrePrefixes.stick, stick, 4);			
+			
+			boolean mAdd[];
+			final ItemStack oreDictList[] = CI.getAllCircuitsOfTier(tier);
+			if (oreDictList.length > 0) {
+				int mcount = 0, added = 0;
+				mAdd = new boolean[oreDictList.length];
+				for (ItemStack mCircuitType : oreDictList) {
+					final ItemStack returnValue = mCircuitType.copy();
+					returnValue.stackSize = 2;					
+					ItemStack Input[] = { returnValue, cableStack, gemstack, magrodStack };
+					mAdd[mcount++] = CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
+							ItemList.valueOf("Emitter_" + GT_Values.VN[tier]).get(1), (tier * 40),
+							((int) GT_Values.V[tier] / 16) * 15);					
+				}
+				for (boolean y : mAdd) {
+					if (y) {
+						added++;
+					}
+				}
+				if (added >= (oreDictList.length / 2)) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 			else {
-				circuitStack = (ItemStack) CI.getTieredCircuit(tier);
-			}
-			ItemStack Input[] = { circuitStack, cableStack, gemstack, magrodStack};
-			return CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
-					ItemList.valueOf("Emitter_" + GT_Values.VN[tier]).get(1), (tier * 40),
-					((int) GT_Values.V[tier] / 16) * 15);
+				ItemStack Input[] = { ItemUtils.getItemStackOfAmountFromOreDict(CI.getTieredCircuitOreDictName(tier), 2), cableStack, gemstack, magrodStack };
+				return CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
+						ItemList.valueOf("Emitter_" + GT_Values.VN[tier]).get(1), (tier * 40),
+						((int) GT_Values.V[tier] / 16) * 15);
+			}	
+			
+			
+			
 		}
 		catch (Throwable t) {
 			return false;
@@ -366,28 +446,41 @@ public class GregtechComponentAssembler {
 		try {
 			ItemStack cableStack = ItemUtils.getGregtechOreStack(OrePrefixes.plate, plate, 4);
 			ItemStack magrodStack = ItemUtils.getGregtechOreStack(OrePrefixes.stick, rod, 1);
-			ItemStack gemStack = ItemUtils.getGregtechOreStack(OrePrefixes.gem, gem, 1);
+			ItemStack gemStack = ItemUtils.getGregtechOreStack(OrePrefixes.gem, gem, 1);			
 
-			if (tier == 0) {
-				if (CI.getTieredCircuit(tier+1) instanceof String) {
-					gemStack = ItemUtils.getItemStackOfAmountFromOreDict((String) CI.getTieredCircuit(tier+1), 1);
+			boolean mAdd[];
+			final ItemStack oreDictList[] = CI.getAllCircuitsOfTier(tier);
+			if (oreDictList.length > 0) {
+				int mcount = 0, added = 0;
+				mAdd = new boolean[oreDictList.length];
+				for (ItemStack mCircuitType : oreDictList) {
+					final ItemStack returnValue = mCircuitType.copy();
+					returnValue.stackSize = 1;					
+					ItemStack Input[] = { gemStack, cableStack, returnValue, magrodStack };
+					mAdd[mcount++] = CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
+							ItemList.valueOf("Sensor_" + GT_Values.VN[tier]).get(1), (tier * 40),
+							((int) GT_Values.V[tier] / 16) * 15);					
+				}
+				for (boolean y : mAdd) {
+					if (y) {
+						added++;
+					}
+				}
+				if (added >= (oreDictList.length / 2)) {
+					return true;
 				}
 				else {
-					gemStack = (ItemStack) CI.getTieredCircuit(tier+1);
+					return false;
 				}
 			}
-
-			ItemStack circuitStack2;
-			if (CI.getTieredCircuit(tier) instanceof String) {
-				circuitStack2 = ItemUtils.getItemStackOfAmountFromOreDict((String) CI.getTieredCircuit(tier), 1);
-			}
 			else {
-				circuitStack2 = (ItemStack) CI.getTieredCircuit(tier);
+				ItemStack Input[] = { gemStack, cableStack, magrodStack, ItemUtils.getItemStackOfAmountFromOreDict(CI.getTieredCircuitOreDictName(tier), 1) };
+				return CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
+						ItemList.valueOf("Sensor_" + GT_Values.VN[tier]).get(1), (tier * 40),
+						((int) GT_Values.V[tier] / 16) * 15);
 			}
-			ItemStack Input[] = { gemStack, cableStack, circuitStack2, magrodStack };
-			return CORE.RA.addComponentMakerRecipe(Input, GT_Values.NF,
-					ItemList.valueOf("Sensor_" + GT_Values.VN[tier]).get(1), (tier * 40),
-					((int) GT_Values.V[tier] / 16) * 15);
+			
+			
 		}
 		catch (Throwable t) {
 			return false;

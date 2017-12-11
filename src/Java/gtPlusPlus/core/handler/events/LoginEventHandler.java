@@ -1,5 +1,7 @@
 package gtPlusPlus.core.handler.events;
 
+import static gtPlusPlus.core.lib.CORE.mLocalProfile;
+
 import java.util.*;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -28,7 +30,10 @@ public class LoginEventHandler {
 		//Set this for easier use elsewhere.
 		if (event.player.getEntityWorld().isRemote){
 			ClientProxy.playerName = this.localPlayersName;
-		}
+			if (mLocalProfile == null){
+				mLocalProfile = this.localPlayerRef.getGameProfile();
+			}
+		}		
 
 		try {
 
@@ -39,7 +44,15 @@ public class LoginEventHandler {
 				if (!this.localPlayerRef.worldObj.isRemote){
 					PlayerCache.appendParamChanges(this.localPlayersName, this.localPlayersUUID.toString());
 
-					if (CORE.configSwitches.enableUpdateChecker){
+					//Submit Analytics
+					try {
+						CORE.mAnalytics.submitInitData();
+					}
+					catch (Throwable t){
+						Utils.LOG_INFO("Failed to submit analytics data.");
+					}
+					
+					if (CORE.ConfigSwitches.enableUpdateChecker){
 						if (!Utils.isModUpToDate()){
 							Utils.LOG_INFO("[GT++] You're not using the latest recommended version of GT++, consider updating.");
 							if (!CORE.MASTER_VERSION.toLowerCase().equals("offline")) {
