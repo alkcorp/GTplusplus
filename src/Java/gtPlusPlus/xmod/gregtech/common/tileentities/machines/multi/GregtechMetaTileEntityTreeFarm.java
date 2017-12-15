@@ -15,10 +15,7 @@ import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.items.GT_MetaGenerated_Tool;
 import gregtech.api.metatileentity.MetaTileEntity;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Energy;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Maintenance;
-import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_MultiBlockBase;
+import gregtech.api.metatileentity.implementations.*;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_ModHandler;
@@ -35,6 +32,7 @@ import gtPlusPlus.core.util.particles.BlockBreakParticles;
 import gtPlusPlus.xmod.forestry.trees.TreefarmManager;
 import gtPlusPlus.xmod.gregtech.api.gui.CONTAINER_TreeFarmer;
 import gtPlusPlus.xmod.gregtech.api.gui.GUI_TreeFarmer;
+import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.base.GregtechMeta_MultiBlockBase;
 import gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtBlock;
 import gtPlusPlus.xmod.gregtech.common.helpers.TreeFarmHelper;
 import net.minecraft.block.Block;
@@ -48,7 +46,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
-public class GregtechMetaTileEntityTreeFarm extends GT_MetaTileEntity_MultiBlockBase {
+public class GregtechMetaTileEntityTreeFarm extends GregtechMeta_MultiBlockBase {
 
 	/* private */ private int treeCheckTicks = 0;
 	/* private */ private int plantSaplingTicks = 0;
@@ -251,15 +249,8 @@ public class GregtechMetaTileEntityTreeFarm extends GT_MetaTileEntity_MultiBlock
 	public boolean isCorrectMachinePart(final ItemStack aStack) {
 		boolean isValid = false;
 		final SAWTOOL currentInputItem = TreeFarmHelper.isCorrectMachinePart(aStack);
-		if (currentInputItem != SAWTOOL.NONE){
-			if (currentInputItem == SAWTOOL.SAW){
-			}
-			else {
-			}
+		if (currentInputItem != SAWTOOL.NONE){			
 			isValid = true;
-		}
-		else {
-			//Utils.LOG_MACHINE_INFO("Found "+aStack.getDisplayName());
 		}
 		return isValid;
 	}
@@ -313,17 +304,17 @@ public class GregtechMetaTileEntityTreeFarm extends GT_MetaTileEntity_MultiBlock
 						//Deal with Bottom edges (Add Hatches/Busses first, othercheck make sure it's dirt) //TODO change the casings to not dirt~?
 						else if (h == 0) {
 							if (tTileEntity != null)
-							if ((!this.addMaintenanceToMachineList(tTileEntity, TAE.GTPP_INDEX(TEX_INDEX))) && (!this.addInputToMachineList(tTileEntity, TAE.GTPP_INDEX(TEX_INDEX))) && (!this.addOutputToMachineList(tTileEntity, TAE.GTPP_INDEX(TEX_INDEX))) && (!this.addEnergyInputToMachineList(tTileEntity, TAE.GTPP_INDEX(TEX_INDEX)))) {
-								if (((xDir + i) != 0) || ((zDir + j) != 0)) {//no controller
+								if ((!this.addMaintenanceToMachineList(tTileEntity, TAE.GTPP_INDEX(TEX_INDEX))) && (!this.addInputToMachineList(tTileEntity, TAE.GTPP_INDEX(TEX_INDEX))) && (!this.addOutputToMachineList(tTileEntity, TAE.GTPP_INDEX(TEX_INDEX))) && (!this.addEnergyInputToMachineList(tTileEntity, TAE.GTPP_INDEX(TEX_INDEX)))) {
+									if (((xDir + i) != 0) || ((zDir + j) != 0)) {//no controller
 
-									if (tTileEntity.getMetaTileID() != 752) {
-										Utils.LOG_MACHINE_INFO("Farm Keeper Casings Missing from one of the edges on the bottom edge. x:"+(xDir+i)+" y:"+h+" z:"+(zDir+j)+" | "+aBaseMetaTileEntity.getClass());
-										Utils.LOG_MACHINE_INFO("Instead, found "+aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j).getLocalizedName()+" "+tTileEntity.getMetaTileID());
-										return false;
+										if (tTileEntity.getMetaTileID() != 752) {
+											Utils.LOG_MACHINE_INFO("Farm Keeper Casings Missing from one of the edges on the bottom edge. x:"+(xDir+i)+" y:"+h+" z:"+(zDir+j)+" | "+aBaseMetaTileEntity.getClass());
+											Utils.LOG_MACHINE_INFO("Instead, found "+aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j).getLocalizedName()+" "+tTileEntity.getMetaTileID());
+											return false;
+										}
+										Utils.LOG_WARNING("Found a farm keeper.");
 									}
-									Utils.LOG_WARNING("Found a farm keeper.");
 								}
-							}
 						}
 					}
 				}
@@ -364,8 +355,7 @@ public class GregtechMetaTileEntityTreeFarm extends GT_MetaTileEntity_MultiBlock
 			}
 		}
 		this.mSolderingTool = true;
-		//turnCasingActive(true);
-		//Utils.LOG_MACHINE_INFO("Multiblock Formed.");
+		Utils.LOG_MACHINE_INFO("Multiblock Formed.");
 		return true;
 	}
 
@@ -674,12 +664,13 @@ public class GregtechMetaTileEntityTreeFarm extends GT_MetaTileEntity_MultiBlock
 		//Utils.LOG_MACHINE_INFO("Cutting Log");
 		try {
 			//Actually damage item...
-			if(!GT_ModHandler.damageOrDechargeItem(this.mInventory[1], 1, 10, this.farmerAI)){
+			if (!isToolCreative(this.mInventory[1])){
+				if(!GT_ModHandler.damageOrDechargeItem(this.mInventory[1], 1, 10, this.farmerAI)){
+					if (mInventory[1].stackSize == 0) mInventory[1] = null;
+					return false;
+				}
 				if (mInventory[1].stackSize == 0) mInventory[1] = null;
-				return false;
 			}
-			if (mInventory[1].stackSize == 0) mInventory[1] = null;
-
 			final Block block = world.getBlock(x, y, z);
 			int chanceForLeaves = 1000;
 			//is it leaves or a log? if leaves, heavily reduce chance to obtain rubber/output
@@ -967,7 +958,7 @@ public class GregtechMetaTileEntityTreeFarm extends GT_MetaTileEntity_MultiBlock
 						//Plant Some Saplings
 
 						if (aBaseMetaTileEntity != null){
-						this.plantSaplings(aBaseMetaTileEntity);
+							this.plantSaplings(aBaseMetaTileEntity);
 						}
 					}
 					else if (this.plantSaplingTicks == 200){
