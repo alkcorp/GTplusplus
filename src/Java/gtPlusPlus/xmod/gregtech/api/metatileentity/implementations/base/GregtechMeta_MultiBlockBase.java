@@ -419,35 +419,4 @@ GT_MetaTileEntity_MultiBlockBase {
 		return 0;
 	}
 
-	public boolean polluteEnvironment(int aPollutionLevel) {
-		int mPollution = 0;
-		Field f = FieldUtils.getDeclaredField(this.getClass(), "mPollution", true);
-		if (f != null){
-			try {
-				mPollution = (int) f.get(this);
-			}
-			catch (IllegalArgumentException | IllegalAccessException e) {}
-		}	
-		
-		if (CORE.MAIN_GREGTECH_5U_EXPERIMENTAL_FORK && f != null){
-			mPollution += aPollutionLevel;
-			for (final GT_MetaTileEntity_Hatch_Muffler tHatch : this.mMufflerHatches) {
-				if (isValidMetaTileEntity(tHatch)) {
-					if (mPollution < 10000) {
-						break;
-					}
-					if (!tHatch.polluteEnvironment()) {
-						continue;
-					}
-					mPollution -= 10000;
-				}
-			}
-			return mPollution < 10000;
-		}
-		else {
-			return false;
-		}
-		
-	}
-
 }
