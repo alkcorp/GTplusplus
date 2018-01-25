@@ -1,6 +1,10 @@
 package gtPlusPlus.xmod.gregtech.common.tileentities.machines.multi;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import gregtech.api.enums.TAE;
 import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
@@ -24,6 +28,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class GregtechMetaTileEntity_IndustrialWashPlant
 extends GregtechMeta_MultiBlockBase {
@@ -86,70 +91,135 @@ extends GregtechMeta_MultiBlockBase {
 	}
 
 	@Override
-	public boolean checkRecipe(final ItemStack aStack) { //TODO - Add Check to make sure Fluid output isn't full
-		ArrayList<ItemStack> tInputList = getStoredInputs();
+	public boolean checkRecipe(final ItemStack aStack) {
+		// Based on the Processing Array. A bit overkill.
+		ArrayList<ItemStack> tItemInputs = getStoredInputs();
 		ArrayList<FluidStack> tFluidInputs = getStoredFluids();
-		for (ItemStack tInput : tInputList) {
+		final int maxParallelRecipes = 2;
+		int parallelRecipes = 0;
 
-			if (tInput.stackSize >= 2){
+		for (ItemStack tInput : tItemInputs) {
+			long tVoltage = getMaxInputVoltage();
+			byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
+			GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.findRecipe(getBaseMetaTileEntity(), this.mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluidInputs.isEmpty() ? null : new FluidStack[]{tFluidInputs.get(0)}, new ItemStack[]{tInput});
 
-				long tVoltage = getMaxInputVoltage();
-				byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-				GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sOreWasherRecipes.findRecipe(getBaseMetaTileEntity(), this.mLastRecipe, false, gregtech.api.enums.GT_Values.V[tTier], tFluidInputs.isEmpty() ? null : new FluidStack[]{tFluidInputs.get(0)}, new ItemStack[]{tInput});
+			if (tRecipe == null) {
+				continue;
+			}
 
-				if ((tRecipe == null && !mRunningOnLoad)) {
-					this.mLastRecipe = null;
-					return false;
+			FluidStack[] mFluidInputList = new FluidStack[tFluidInputs.size()];
+			int tri = 0;
+			for (FluidStack f : tFluidInputs) {
+				mFluidInputList[tri] = f;
+				tri++;
+			}
+
+			// Count recipes to do in parallel
+			this.mEUt = 0;
+			for (; parallelRecipes < maxParallelRecipes; parallelRecipes++) {
+				if (!tRecipe.isRecipeInputEqual(true, mFluidInputList, tInput)) {
+					break;
 				}
+				this.mEUt += tRecipe.mEUt;
+			}
 
-				if (tRecipe != null) {
-					FluidStack[] mFluidInputList = new FluidStack[tFluidInputs.size()];
-					int tri = 0;
-					for (FluidStack f : tFluidInputs){
-						mFluidInputList[tri] = f;
-						tri++;
-					}
-					if (tRecipe.isRecipeInputEqual(true, mFluidInputList, tInput)) {
-						this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
-						this.mEfficiencyIncrease = 10000;
-						this.mEUt = tRecipe.mEUt;
+			if (parallelRecipes == 0) {
+				continue;
+			}
 
-						if (tRecipe.mEUt <= 16) {
-							this.mEUt = (tRecipe.mEUt * (1 << tTier - 1) * (1 << tTier - 1));
-							this.mMaxProgresstime = (tRecipe.mDuration / (1 << tTier - 1));
-						} else {
-							this.mEUt = tRecipe.mEUt;
-							this.mMaxProgresstime = tRecipe.mDuration;
-							while (this.mEUt <= gregtech.api.enums.GT_Values.V[(tTier - 1)]) {
-								this.mEUt *= 4;
-								this.mMaxProgresstime /= 2;
-							}
-						}
-						if (this.mEUt > 0) {
-							this.mEUt = (-this.mEUt);
-						}
-						this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
+			this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+			this.mEfficiencyIncrease = 10000;
 
-						if (mRunningOnLoad || tRecipe.isRecipeInputEqual(true, mFluidInputList, new ItemStack[]{tInput})) {
-							Logger.WARNING("Recipe Complete.");
-							this.mLastRecipe = tRecipe;
-							this.mEUt = MathUtils.findPercentageOfInt(this.mLastRecipe.mEUt, 80);
-							this.mMaxProgresstime = MathUtils.findPercentageOfInt(this.mLastRecipe.mDuration, 20);
-							this.mEfficiencyIncrease = 10000;
-							this.addOutput(tRecipe.getOutput(0));
-							this.addOutput(tRecipe.getOutput(0));
-							this.addOutput(tRecipe.getOutput(1));
-							this.addOutput(tRecipe.getOutput(1));
-							mRunningOnLoad = false;	
-							this.updateSlots();
-							return true;
-						}
+			// Washing Plant discounts
+			this.mEUt = MathUtils.findPercentageOfInt(this.mEUt, 80);
+			this.mMaxProgresstime = MathUtils.findPercentageOfInt(tRecipe.mDuration, 20);
 
+			// Overclock
+			if (this.mEUt <= 16) {
+				this.mEUt = (this.mEUt * (1 << tTier - 1) * (1 << tTier - 1));
+				this.mMaxProgresstime = (this.mMaxProgresstime / (1 << tTier - 1));
+			} else {
+				while (this.mEUt <= gregtech.api.enums.GT_Values.V[(tTier - 1)]) {
+					this.mEUt *= 4;
+					this.mMaxProgresstime /= 2;
+				}
+			}
+
+			if (this.mEUt > 0) {
+				this.mEUt = (-this.mEUt);
+			}
+
+			this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
+
+			// Collect output item types
+			ItemStack[] tOutputItems = new ItemStack[tRecipe.mOutputs.length];
+			for (int h = 0; h < tRecipe.mOutputs.length; h++) {
+				if (tRecipe.getOutput(h) != null) {
+					tOutputItems[h] = tRecipe.getOutput(h).copy();
+					tOutputItems[h].stackSize = 0;
+				}
+			}
+
+			// Set output item stack sizes (taking output chance into account)
+			for (int f = 0; f < tOutputItems.length; f++) {
+				if (tRecipe.mOutputs[f] != null && tOutputItems[f] != null) {
+					for (int g = 0; g < parallelRecipes; g++) {
+						if (getBaseMetaTileEntity().getRandomNumber(10000) < tRecipe.getOutputChance(f))
+							tOutputItems[f].stackSize += tRecipe.mOutputs[f].stackSize;
 					}
 				}
 			}
+
+
+			// Collect fluid output (not applicable for Washing Plant)
+			FluidStack tOutputFluid = null;
+			if (tRecipe.getFluidOutput(0) != null) tOutputFluid = tRecipe.getFluidOutput(0).copy();
+
+			if (tOutputFluid != null) {
+				int tSize = tOutputFluid.amount;
+				tOutputFluid.amount = tSize * parallelRecipes;
+			}
+
+
+			tOutputItems = removeNulls(tOutputItems);
+
+			// Sanitize item stack size, splitting any stacks greater than max stack size
+			List<ItemStack> splitStacks = new ArrayList<ItemStack>();
+			for (ItemStack tItem : tOutputItems) {
+				while (tItem.getMaxStackSize() < tItem.stackSize) {
+					ItemStack tmp = tItem.copy();
+					tmp.stackSize = tmp.getMaxStackSize();
+					tItem.stackSize = tItem.stackSize - tItem.getMaxStackSize();
+					splitStacks.add(tmp);
+				}
+			}
+
+			if (splitStacks.size() > 0) {
+				ItemStack[] tmp = new ItemStack[splitStacks.size()];
+				tmp = splitStacks.toArray(tmp);
+				tOutputItems = ArrayUtils.addAll(tOutputItems, tmp);
+			}
+
+			// Strip empty stacks
+			List<ItemStack> tSList = new ArrayList<ItemStack>();
+			for (ItemStack tS : tOutputItems) {
+				if (tS.stackSize > 0) tSList.add(tS);
+			}
+			tOutputItems = tSList.toArray(new ItemStack[tSList.size()]);
+
+			// Commit outputs
+			this.mOutputItems = tOutputItems;
+			this.mOutputFluids = new FluidStack[]{tOutputFluid};
+			updateSlots();
+			return true;
 		}
 		return false;
+	}
+
+	private static ItemStack[] removeNulls(final ItemStack[] v) {
+		List<ItemStack> list = new ArrayList<ItemStack>(Arrays.asList(v));
+		list.removeAll(Collections.singleton((ItemStack)null));
+		return list.toArray(new ItemStack[list.size()]);
 	}
 
 	@Override
@@ -246,7 +316,7 @@ extends GregtechMeta_MultiBlockBase {
 
 	@Override
 	public int getPollutionPerTick(final ItemStack aStack) {
-		return 20;
+		return 0;
 	}
 
 	@Override
