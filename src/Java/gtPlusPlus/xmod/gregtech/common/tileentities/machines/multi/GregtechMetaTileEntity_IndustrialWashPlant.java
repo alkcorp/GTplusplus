@@ -170,6 +170,17 @@ extends GregtechMeta_MultiBlockBase {
 				}
 			}
 
+
+			// Collect fluid output (not applicable for Washing Plant)
+			FluidStack tOutputFluid = null;
+			if (tRecipe.getFluidOutput(0) != null) tOutputFluid = tRecipe.getFluidOutput(0).copy();
+
+			if (tOutputFluid != null) {
+				int tSize = tOutputFluid.amount;
+				tOutputFluid.amount = tSize * parallelRecipes;
+			}
+
+
 			tOutputItems = removeNulls(tOutputItems);
 
 			// Sanitize item stack size, splitting any stacks greater than max stack size
@@ -198,6 +209,7 @@ extends GregtechMeta_MultiBlockBase {
 
 			// Commit outputs
 			this.mOutputItems = tOutputItems;
+			this.mOutputFluids = new FluidStack[]{tOutputFluid};
 			updateSlots();
 			return true;
 		}
