@@ -1,7 +1,7 @@
 package gtPlusPlus.xmod.gregtech.common.tileentities.machines.multi;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.TAE;
@@ -9,12 +9,13 @@ import gregtech.api.enums.Textures;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBus;
 import gregtech.api.objects.GT_RenderedTexture;
 import gregtech.api.util.GT_Recipe;
 import gregtech.api.util.GT_Utility;
-import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.block.ModBlocks;
 import gtPlusPlus.core.lib.CORE;
+import gtPlusPlus.core.util.math.MathUtils;
 import gtPlusPlus.xmod.gregtech.api.gui.GUI_MultiMachine;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.base.GregtechMeta_MultiBlockBase;
 import net.minecraft.block.Block;
@@ -22,9 +23,14 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
+import org.apache.commons.lang3.ArrayUtils;
+
+import static gtPlusPlus.core.util.array.ArrayUtils.removeNulls;
 
 public class GregtechMetaTileEntity_IndustrialPlatePress
 extends GregtechMeta_MultiBlockBase {
+	public GT_Recipe mLastRecipe;
+
 	public GregtechMetaTileEntity_IndustrialPlatePress(final int aID, final String aName, final String aNameRegional) {
 		super(aID, aName, aNameRegional);
 	}
@@ -41,15 +47,17 @@ extends GregtechMeta_MultiBlockBase {
 	@Override
 	public String[] getDescription() {
 		return new String[]{"Controller Block for the Material Press",
+				"Performs Bending Machine recipes",
 				"50% faster than using single block machines of the same voltage",
 				"Circuit for recipe goes in the Input Bus",
+				"Each Input Bus can have a different Circuit",
 				"Size: 3x3x3 (Hollow)",
 				"Controller (front centered)",
 				"1x Input Bus (anywhere)",
 				"1x Output Bus (anywhere)",
 				"1x Energy Hatch (anywhere)",
 				"1x Maintenance Hatch (anywhere)",
-				"1x Muffler (anywhere)",
+				"1x Muffler Hatch (anywhere)",
 				"Material Press Machine Casings for the rest (16 at least!)",
 				CORE.GT_Tooltip};
 	}
@@ -78,69 +86,123 @@ extends GregtechMeta_MultiBlockBase {
 	}
 
 	@Override
-	public boolean checkRecipe(final ItemStack aStack) { //TODO - Add Check to make sure Fluid output isn't full
-		final ArrayList<ItemStack> tInputList = this.getStoredInputs();
-		for (int i = 0; i < (tInputList.size() - 1); i++) {
-			for (int j = i + 1; j < tInputList.size(); j++) {
-				if (GT_Utility.areStacksEqual(tInputList.get(i), tInputList.get(j))) {
-					if (tInputList.get(i).stackSize >= tInputList.get(j).stackSize) {
-						tInputList.remove(j--);
-					} else {
-						tInputList.remove(i--);
-						break;
-					}
+	public boolean checkRecipe(final ItemStack aStack) {
+		for (GT_MetaTileEntity_Hatch_InputBus tBus : mInputBusses) {
+			ArrayList<ItemStack> tBusItems = new ArrayList<ItemStack>();
+			tBus.mRecipeMap = getRecipeMap();
+			if (isValidMetaTileEntity(tBus)) {
+				for (int i = tBus.getBaseMetaTileEntity().getSizeInventory() - 1; i >= 0; i--) {
+					if (tBus.getBaseMetaTileEntity().getStackInSlot(i) != null)
+						tBusItems.add(tBus.getBaseMetaTileEntity().getStackInSlot(i));
 				}
 			}
-		}
-		final ItemStack[] tInputs = Arrays.copyOfRange(tInputList.toArray(new ItemStack[tInputList.size()]), 0, 2);
 
-		final ArrayList<FluidStack> tFluidList = this.getStoredFluids();
-		for (int i = 0; i < (tFluidList.size() - 1); i++) {
-			for (int j = i + 1; j < tFluidList.size(); j++) {
-				if (GT_Utility.areFluidsEqual(tFluidList.get(i), tFluidList.get(j))) {
-					if (tFluidList.get(i).amount >= tFluidList.get(j).amount) {
-						tFluidList.remove(j--);
-					} else {
-						tFluidList.remove(i--);
-						break;
-					}
-				}
-			}
-		}
-		final FluidStack[] tFluids = Arrays.copyOfRange(tFluidList.toArray(new FluidStack[tInputList.size()]), 0, 1);
-
-		final int tValidOutputSlots = this.getValidOutputSlots(this.getBaseMetaTileEntity(), GT_Recipe.GT_Recipe_Map.sBenderRecipes.findRecipe(this.getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[(byte) Math.max(1, GT_Utility.getTier(this.getMaxInputVoltage()))], tFluids, tInputs), tInputs);
-		Logger.WARNING("Valid Output Slots: "+tValidOutputSlots);
-		//More than or one input
-		if ((tInputList.size() > 0) && (tValidOutputSlots >= 1)) {
-			final long tVoltage = this.getMaxInputVoltage();
-			final byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-			GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sBenderRecipes.findRecipe(this.getBaseMetaTileEntity(), false, gregtech.api.enums.GT_Values.V[tTier], tFluids, tInputs);
-			tRecipe = this.reduceRecipeTimeByPercentage(tRecipe, 50F);
-			if ((tRecipe != null) && (2500 >= tRecipe.mSpecialValue) && (tRecipe.isRecipeInputEqual(true, tFluids, tInputs))) {
-				this.mEfficiency = (10000 - ((this.getIdealStatus() - this.getRepairStatus()) * 1000));
-				this.mEfficiencyIncrease = 10000;
-				if (tRecipe.mEUt <= 16) {
-					this.mEUt = (tRecipe.mEUt * (1 << (tTier - 1)) * (1 << (tTier - 1)));
-					this.mMaxProgresstime = (tRecipe.mDuration / (1 << (tTier - 1)));
-				} else {
-					this.mEUt = tRecipe.mEUt;
-					this.mMaxProgresstime = tRecipe.mDuration;
-					while (this.mEUt <= gregtech.api.enums.GT_Values.V[(tTier - 1)]) {
-						this.mEUt *= 4;
-						this.mMaxProgresstime /= 2;
-					}
-				}
-				if (this.mEUt > 0) {
-					this.mEUt = (-this.mEUt);
-				}
-				this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
-				this.mOutputItems = new ItemStack[]{tRecipe.getOutput(0), tRecipe.getOutput(1)};
-				this.updateSlots();
-				return true;
-			}
+			if (checkBusRecipe(tBusItems.toArray(new ItemStack[]{}))) return true;
 		}
 		return false;
+	}
+
+	private boolean checkBusRecipe(ItemStack[] aBusItems) {
+		// Based on the Processing Array. A bit overkill.
+		final int maxParallelRecipes = 2;
+		int parallelRecipes = 0;
+
+		long tVoltage = getMaxInputVoltage();
+		byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
+		GT_Recipe tRecipe = GT_Recipe.GT_Recipe_Map.sBenderRecipes.findRecipe(
+				getBaseMetaTileEntity(), this.mLastRecipe, false,
+				gregtech.api.enums.GT_Values.V[tTier], null, aBusItems);
+
+		if (tRecipe == null) {
+			return false;
+		}
+
+		// Count recipes to do in parallel
+		this.mEUt = 0;
+		for (; parallelRecipes < maxParallelRecipes; parallelRecipes++) {
+			if (!tRecipe.isRecipeInputEqual(true, new FluidStack[]{}, aBusItems)) {
+				break;
+			}
+			this.mEUt += tRecipe.mEUt;
+		}
+
+		if (parallelRecipes == 0) {
+			return false;
+		}
+
+		this.mEfficiency = (10000 - (getIdealStatus() - getRepairStatus()) * 1000);
+		this.mEfficiencyIncrease = 10000;
+
+		// Plate Press discounts
+		this.mEUt = MathUtils.findPercentageOfInt(this.mEUt, 50);
+		this.mMaxProgresstime = tRecipe.mDuration;
+
+		// Overclock
+		if (this.mEUt <= 16) {
+			this.mEUt = (this.mEUt * (1 << tTier - 1) * (1 << tTier - 1));
+			this.mMaxProgresstime = (this.mMaxProgresstime / (1 << tTier - 1));
+		} else {
+			while (this.mEUt <= gregtech.api.enums.GT_Values.V[(tTier - 1)]) {
+				this.mEUt *= 4;
+				this.mMaxProgresstime /= 2;
+			}
+		}
+
+		if (this.mEUt > 0) {
+			this.mEUt = (-this.mEUt);
+		}
+
+		this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
+
+		// Collect output item types
+		ItemStack[] tOutputItems = new ItemStack[tRecipe.mOutputs.length];
+		for (int h = 0; h < tRecipe.mOutputs.length; h++) {
+			if (tRecipe.getOutput(h) != null) {
+				tOutputItems[h] = tRecipe.getOutput(h).copy();
+				tOutputItems[h].stackSize = 0;
+			}
+		}
+
+		// Set output item stack sizes (taking output chance into account)
+		for (int f = 0; f < tOutputItems.length; f++) {
+			if (tRecipe.mOutputs[f] != null && tOutputItems[f] != null) {
+				for (int g = 0; g < parallelRecipes; g++) {
+					if (getBaseMetaTileEntity().getRandomNumber(10000) < tRecipe.getOutputChance(f))
+						tOutputItems[f].stackSize += tRecipe.mOutputs[f].stackSize;
+				}
+			}
+		}
+
+		tOutputItems = removeNulls(tOutputItems);
+
+		// Sanitize item stack size, splitting any stacks greater than max stack size
+		List<ItemStack> splitStacks = new ArrayList<ItemStack>();
+		for (ItemStack tItem : tOutputItems) {
+			while (tItem.getMaxStackSize() < tItem.stackSize) {
+				ItemStack tmp = tItem.copy();
+				tmp.stackSize = tmp.getMaxStackSize();
+				tItem.stackSize = tItem.stackSize - tItem.getMaxStackSize();
+				splitStacks.add(tmp);
+			}
+		}
+
+		if (splitStacks.size() > 0) {
+			ItemStack[] tmp = new ItemStack[splitStacks.size()];
+			tmp = splitStacks.toArray(tmp);
+			tOutputItems = ArrayUtils.addAll(tOutputItems, tmp);
+		}
+
+		// Strip empty stacks
+		List<ItemStack> tSList = new ArrayList<ItemStack>();
+		for (ItemStack tS : tOutputItems) {
+			if (tS.stackSize > 0) tSList.add(tS);
+		}
+		tOutputItems = tSList.toArray(new ItemStack[tSList.size()]);
+
+		// Commit outputs
+		this.mOutputItems = tOutputItems;
+		updateSlots();
+		return true;
 	}
 
 	@Override
