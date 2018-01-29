@@ -273,6 +273,10 @@ public class GregtechMetaTileEntityTreeFarm extends GregtechMeta_MultiBlockBase 
 				for (int h = 0; h <= 1; h++) {
 					Logger.WARNING("Step 4");
 					final IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, h, zDir + j);
+                    if( tTileEntity == null )
+                    {
+                      return false;
+                    }
 					//Farm Floor inner 14x14
 					if (((i != -7) && (i != 7)) && ((j != -7) && (j != 7))) {
 						Logger.WARNING("Step 5 - H:"+h);
