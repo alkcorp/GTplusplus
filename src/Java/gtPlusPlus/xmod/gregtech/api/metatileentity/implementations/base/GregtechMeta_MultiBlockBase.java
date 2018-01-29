@@ -16,7 +16,9 @@ import gregtech.api.util.GT_Recipe;
 import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.lib.LoadedMods;
+import gtPlusPlus.core.util.PollutionUtils;
 import gtPlusPlus.core.util.math.MathUtils;
+import gtPlusPlus.core.util.reflect.ReflectionUtils;
 import gtPlusPlus.xmod.gregtech.api.gui.CONTAINER_MultiMachine;
 import gtPlusPlus.xmod.gregtech.api.gui.GUI_MultiMachine;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBattery;
@@ -213,7 +215,7 @@ GT_MetaTileEntity_MultiBlockBase {
 		}
 		super.updateSlots();
 	}
-	
+
 	public boolean isToolCreative(ItemStack mStack){
 		Materials t1 = GT_MetaGenerated_Tool.getPrimaryMaterial(mStack);
 		Materials t2 = GT_MetaGenerated_Tool.getSecondaryMaterial(mStack);
@@ -250,7 +252,7 @@ GT_MetaTileEntity_MultiBlockBase {
 				return this.mMultiDynamoHatches.add(
 						(GT_MetaTileEntity_Hatch) aMetaTileEntity);
 			}
-			
+
 		}
 		return super.addToMachineList(aTileEntity, aBaseCasingIndex);
 	}
@@ -320,19 +322,19 @@ GT_MetaTileEntity_MultiBlockBase {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * Enable Texture Casing Support if found in GT 5.09
 	 */
-	
+
 	public boolean updateTexture(final IGregTechTileEntity aTileEntity, int aCasingID){
 		try {
 			Method mProper = Class.forName("gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch").getDeclaredMethod("updateTexture", int.class);
 			if (mProper != null){
 				if (aTileEntity instanceof GT_MetaTileEntity_Hatch){				
-				mProper.setAccessible(true);
-				mProper.invoke(this, aCasingID);
-				return true;
+					mProper.setAccessible(true);
+					mProper.invoke(this, aCasingID);
+					return true;
 				}					
 			}
 			else {
@@ -342,33 +344,33 @@ GT_MetaTileEntity_MultiBlockBase {
 		catch (NoSuchMethodException | SecurityException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {}		
 		return false;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
 	/**
 	 * TecTech Support
 	 */
-	
-	
+
+
 	/**
 	 * This is the array Used to Store the Tectech Multi-Amp hatches.
 	 */
-	
+
 	public ArrayList<GT_MetaTileEntity_Hatch> mMultiDynamoHatches = new ArrayList();	
-	
+
 	/**
 	 * TecTech Multi-Amp Dynamo Support
 	 * @param aTileEntity - The Dynamo Hatch
 	 * @param aBaseCasingIndex - Casing Texture
 	 * @return
 	 */
-	
+
 	public boolean addMultiAmpDynamoToMachineList(final IGregTechTileEntity aTileEntity, final int aBaseCasingIndex){
 		//GT_MetaTileEntity_Hatch_DynamoMulti
 		if (aTileEntity == null) {
@@ -384,7 +386,7 @@ GT_MetaTileEntity_MultiBlockBase {
 		}
 		return false;
 	}
-	
+
 	public boolean isThisHatchMultiDynamo(){
 		Class mDynamoClass;
 		try {
@@ -405,12 +407,12 @@ GT_MetaTileEntity_MultiBlockBase {
 			if (isThisHatchMultiDynamo()) {
 				addMultiAmpDynamoToMachineList(aTileEntity, aBaseCasingIndex);
 			}
-			
+
 		}
 		return super.addDynamoToMachineList(aTileEntity, aBaseCasingIndex);
 	}
 
-	
+
 	/**
 	 * Pollution Management
 	 */
