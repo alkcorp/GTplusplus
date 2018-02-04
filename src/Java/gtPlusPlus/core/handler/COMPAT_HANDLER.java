@@ -44,19 +44,14 @@ public class COMPAT_HANDLER {
 
 			//Free IDs
 			/*
-			829
 			---
-			//837
-			//to
-			//839
-			---
-			851
+			859
 			to
 			868
 			---
-			890
+			899
 			to
-			950
+			945
 			*/
 
 			new RECIPES_LaserEngraver();
@@ -102,6 +97,8 @@ public class COMPAT_HANDLER {
 			GregtechMiniRaFusion.run();
 			GregtechComponentAssembler.run();
 			GregtechTeslaTower.run();
+			GregtechSuperTanks.run();
+			GregtechIndustrialFishPond.run();
 			
 			//New Horizons Content
 			NewHorizonsAccelerator.run();
