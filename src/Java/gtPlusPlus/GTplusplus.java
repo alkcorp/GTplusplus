@@ -16,6 +16,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import gregtech.api.enums.Materials;
 import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.Recipe_GT;
 import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gtPlusPlus.api.analytics.SegmentAnalytics;
 import gtPlusPlus.api.analytics.SegmentHelper;
@@ -35,6 +36,7 @@ import gtPlusPlus.core.util.geo.GeoUtils;
 import gtPlusPlus.core.util.item.ItemUtils;
 import gtPlusPlus.core.util.networking.NetworkUtils;
 import gtPlusPlus.core.util.player.PlayerUtils;
+import gtPlusPlus.plugin.manager.Core_Manager;
 import gtPlusPlus.xmod.gregtech.common.Meta_GT_Proxy;
 import gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtBlock;
 import gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtTools;
@@ -107,6 +109,7 @@ public class GTplusplus implements ActionListener {
 
 
 		proxy.preInit(event);
+		Core_Manager.preInit();
 	}
 
 	// Init
@@ -120,6 +123,7 @@ public class GTplusplus implements ActionListener {
 		BlockEventHandler.oreLimestone = OreDictionary.getOres("oreLimestone");
 		BlockEventHandler.blockLimestone = OreDictionary.getOres("limestone");
 		BlockEventHandler.fluoriteOre = FLUORIDES.FLUORITE.getOre(1);
+		Core_Manager.init();
 
 	}
 
@@ -128,11 +132,13 @@ public class GTplusplus implements ActionListener {
 	public void postInit(final FMLPostInitializationEvent event) {
 		proxy.postInit(event);
 		BookHandler.runLater();
+		Core_Manager.postInit();
 		Logger.INFO("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		Logger.INFO("| Recipes succesfully Loaded: " + RegistrationHandler.recipesSuccess + " | Failed: "
 				+ RegistrationHandler.recipesFailed + " |");
 		Logger.INFO("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 		Logger.INFO("Finally, we are finished. Have some cripsy bacon as a reward.");
+		dumpGtRecipeMap(Recipe_GT.Gregtech_Recipe_Map.sSlowFusion2Recipes);
 	}
 
 	@EventHandler
