@@ -1040,14 +1040,6 @@ public class RECIPES_GREGTECH {
 
 		//LFTR Fuel Related Compounds
 
-		//Hydroxide
-		GT_Values.RA.addChemicalRecipe(
-				ItemUtils.getItemStackOfAmountFromOreDict("cellOxygen", 1),
-				ItemUtils.getItemStackOfAmountFromOreDict("cellHydrogen", 1),
-				GT_Values.NF,
-				FluidUtils.getFluidStack("hydroxide", 2000),
-				ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 2),
-				8*20);
 		if(CORE.GTNH){
 			//Hydroxide
 			GT_Values.RA.addChemicalRecipeForBasicMachineOnly(
@@ -1058,6 +1050,7 @@ public class RECIPES_GREGTECH {
 					ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 2),
 					GT_Values.NI,
 					8*20, 30);
+			//Beryllium Hydroxide
 			GT_Values.RA.addChemicalRecipe(
 					ItemUtils.getItemStackOfAmountFromOreDict("dustBeryllium", 7),
 					ItemUtils.getGregtechCircuit(3),
@@ -1085,6 +1078,14 @@ public class RECIPES_GREGTECH {
 		}
 
 		if (!CORE.GTNH) {
+			//Hydroxide
+		       GT_Values.RA.addChemicalRecipe(
+				ItemUtils.getItemStackOfAmountFromOreDict("cellOxygen", 1),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellHydrogen", 1),
+				GT_Values.NF,
+				FluidUtils.getFluidStack("hydroxide", 2000),
+				ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 2),
+				8*20);
 			//Ammonia (moved to GTNH core mod)
 			GT_Values.RA.addChemicalRecipe(
 					ItemUtils.getItemStackOfAmountFromOreDict("cellHydrogen", 3),
