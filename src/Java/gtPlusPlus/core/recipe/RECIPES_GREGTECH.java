@@ -1060,7 +1060,7 @@ public class RECIPES_GREGTECH {
 					8*20, 30);
 			GT_Values.RA.addChemicalRecipe(
 					ItemUtils.getItemStackOfAmountFromOreDict("dustBeryllium", 7),
-					GT_Utility.getIntegratedCircuit(3),
+					ItemUtils.getGregtechCircuit(3),
 					FluidUtils.getFluidStack("hydroxide", 1000),
 					FluidUtils.getFluidStack("berylliumhydroxide", 2000),
 					GT_Values.NI,
@@ -1068,7 +1068,7 @@ public class RECIPES_GREGTECH {
 			//Ammonium Bifluoride
 			GT_Values.RA.addChemicalRecipe(
 					ItemUtils.getItemStackOfAmountFromOreDict("cellHydrofluoricAcid", 1),
-					GT_Utility.getIntegratedCircuit(3),
+					ItemUtils.getGregtechCircuit(3),
 					FluidUtils.getFluidStack("ammonium", 1000),
 					FluidUtils.getFluidStack("ammoniumbifluoride", 2000),
 					ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 1),
