@@ -15,7 +15,6 @@ import gtPlusPlus.core.lib.LoadedMods;
 import gtPlusPlus.core.material.ALLOY;
 import gtPlusPlus.core.material.ELEMENT;
 import gtPlusPlus.core.material.nuclear.FLUORIDES;
-import gtPlusPlus.core.material.nuclear.NUCLIDE;
 import gtPlusPlus.core.recipe.common.CI;
 import gtPlusPlus.core.util.math.MathUtils;
 import gtPlusPlus.core.util.minecraft.FluidUtils;
@@ -58,7 +57,17 @@ public class RECIPES_GREGTECH {
 		sifterRecipes();
 		electroMagneticSeperatorRecipes();
 		extruderRecipes();
+		cuttingSawRecipes();
 		addFuels();
+	}
+
+	private static void cuttingSawRecipes() {
+		GT_Values.RA.addCutterRecipe(
+				ItemUtils.getItemStackOfAmountFromOreDict("blockMeatRaw", 1), //Input
+				ItemUtils.getItemStackOfAmountFromOreDict("plateMeatRaw", 9), //Output
+				null,
+				16, //Time
+				8); //EU
 	}
 
 	private static void electrolyzerRecipes() {
@@ -92,14 +101,14 @@ public class RECIPES_GREGTECH {
 
 	private static void blastSmelterRecipes() {
 
-		// Black Bronze
+		/*// Black Bronze
 		CORE.RA.addBlastSmelterRecipe(
 				new ItemStack[] { ItemUtils.getGregtechCircuit(13),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustGold", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustSilver", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustCopper", 3), },
 				FluidUtils.getFluidStack("molten.blackbronze", 5 * 144), 0, MathUtils.findPercentageOfInt(200 * 20, 80),
-				120);
+				!CORE.GTNH ? 120 : 480);
 
 		// Black Steel
 		CORE.RA.addBlastSmelterRecipe(
@@ -110,7 +119,7 @@ public class RECIPES_GREGTECH {
 						ItemUtils.getItemStackOfAmountFromOreDict("dustSilver", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustCopper", 3) },
 				FluidUtils.getFluidStack("molten.blacksteel", 25 * 144), 0, MathUtils.findPercentageOfInt(60 * 20, 80),
-				120);
+				!CORE.GTNH ? 120 : 480);
 
 		// Red Steel
 		CORE.RA.addBlastSmelterRecipe(
@@ -122,7 +131,7 @@ public class RECIPES_GREGTECH {
 						ItemUtils.getItemStackOfAmountFromOreDict("dustSteel", 10),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustBlackSteel", 20) },
 				FluidUtils.getFluidStack("molten.redsteel", 40 * 144), 0, MathUtils.findPercentageOfInt(65 * 20, 80),
-				120);
+				!CORE.GTNH ? 120 : 480);
 
 		// Blue Steel
 		CORE.RA.addBlastSmelterRecipe(new ItemStack[] { ItemUtils.getGregtechCircuit(5),
@@ -132,15 +141,7 @@ public class RECIPES_GREGTECH {
 				ItemUtils.getItemStackOfAmountFromOreDict("dustSteel", 30),
 				ItemUtils.getItemStackOfAmountFromOreDict("dustBlackSteel", 60)
 
-		}, FluidUtils.getFluidStack("molten.bluesteel", 125 * 144), 0, MathUtils.findPercentageOfInt(70 * 20, 80), 120);
-
-		// TungstenSteel
-		CORE.RA.addBlastSmelterRecipe(
-				new ItemStack[] { ItemUtils.getGregtechCircuit(2),
-						ItemUtils.getItemStackOfAmountFromOreDict("ingotTungsten", 1),
-						ItemUtils.getItemStackOfAmountFromOreDict("ingotSteel", 1) },
-				FluidUtils.getFluidStack("molten.tungstensteel", 2 * 144), 0,
-				MathUtils.findPercentageOfInt(300 * 20, 80), 120);
+		}, FluidUtils.getFluidStack("molten.bluesteel", 125 * 144), 0, MathUtils.findPercentageOfInt(70 * 20, 80), !CORE.GTNH ? 120 : 480);
 
 		// Stainless Steel
 		CORE.RA.addBlastSmelterRecipe(
@@ -150,7 +151,7 @@ public class RECIPES_GREGTECH {
 						ItemUtils.getItemStackOfAmountFromOreDict("dustManganese", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustChrome", 1) },
 				FluidUtils.getFluidStack("molten.stainlesssteel", 9 * 144), 0,
-				MathUtils.findPercentageOfInt(85 * 20, 80), 120);
+				MathUtils.findPercentageOfInt(85 * 20, 80), !CORE.GTNH ? 120 : 480);
 
 		// Eglin
 		CORE.RA.addBlastSmelterRecipe(
@@ -164,7 +165,16 @@ public class RECIPES_GREGTECH {
 						ItemUtils.getItemStackOfAmountFromOreDict("dustSilicon", 12) },
 				FluidUtils.getFluidStack("molten.eglinsteel", 48 * 144), 0, MathUtils.findPercentageOfInt(30 * 20, 80),
 				120);
-		if (!CORE.GTNH) {
+		if (!CORE.GTNH) {			
+
+			// TungstenSteel
+			CORE.RA.addBlastSmelterRecipe(
+					new ItemStack[] { ItemUtils.getGregtechCircuit(2),
+							ItemUtils.getItemStackOfAmountFromOreDict("ingotTungsten", 1),
+							ItemUtils.getItemStackOfAmountFromOreDict("ingotSteel", 1) },
+					FluidUtils.getFluidStack("molten.tungstensteel", 2 * 144), 0,
+					MathUtils.findPercentageOfInt(75 * 20, 80), 480);
+			
 			// HSS-G
 			CORE.RA.addBlastSmelterRecipe(
 					new ItemStack[] { ItemUtils.getGregtechCircuit(14),
@@ -311,7 +321,7 @@ public class RECIPES_GREGTECH {
 						FluidUtils.getFluidStack("molten.vibrantalloy", 144), 0,
 						MathUtils.findPercentageOfInt(16 * 20, 80), 480);
 			}
-		}
+		}*/
 	}
 
 	private static void fluidcannerRecipes() {
@@ -1074,9 +1084,9 @@ public class RECIPES_GREGTECH {
 
 	private static void centrifugeRecipes() {
 		GT_Values.RA.addCentrifugeRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustThorium", 8), GT_Values.NI,
-				GT_Values.NF, GT_Values.NF, NUCLIDE.getInstance().THORIUM232.getDust(2),
+				GT_Values.NF, GT_Values.NF, ELEMENT.getInstance().THORIUM232.getDust(2),
 				ItemUtils.getItemStackOfAmountFromOreDict("dustSmallThorium", 20),
-				NUCLIDE.getInstance().URANIUM232.getDust(1), GT_Values.NI, GT_Values.NI, GT_Values.NI,
+				ELEMENT.getInstance().URANIUM232.getDust(1), GT_Values.NI, GT_Values.NI, GT_Values.NI,
 				new int[] { 0, 0, 10 }, 500 * 20, 2000);
 
 	}
@@ -1218,11 +1228,18 @@ public class RECIPES_GREGTECH {
 	private static void compressorRecipes() {
 		GT_ModHandler.addCompressionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustSmallClay", 4),
 				ItemUtils.getItemStackOfAmountFromOreDict("plateClay", 1));
+		GT_ModHandler.addCompressionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustSmallMeatRaw", 4),
+				ItemUtils.getItemStackOfAmountFromOreDict("plateMeatRaw", 1));
+		GT_ModHandler.addCompressionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustMeatRaw", 9),
+				ItemUtils.getItemStackOfAmountFromOreDict("blockMeatRaw", 1));
 	}
 
 	private static void macerationRecipes() {
 		GT_ModHandler.addPulverisationRecipe(ItemUtils.getItemStackOfAmountFromOreDict("pelletZirconium", 1),
 				ItemUtils.getItemStackOfAmountFromOreDict("dustZrCl4", 1));
+		
+		GT_ModHandler.addPulverisationRecipe(ItemUtils.getItemStackOfAmountFromOreDict("blockMeatRaw", 1),
+				ItemUtils.getItemStackOfAmountFromOreDict("dustMeatRaw", 9));
 		/*
 		 * GT_ModHandler.addPulverisationRecipe( FLUORIDES.FLUORITE.getOre(1),
 		 * FLUORIDES.FLUORITE.getDust(4));

@@ -41,10 +41,10 @@ public class ItemUtils {
 		return getSimpleStack(x, 1);
 	}
 	public static ItemStack getSimpleStack(final Block x){
-		return getSimpleStack(Item.getItemFromBlock(x), 1);
+		return simpleMetaStack(Item.getItemFromBlock(x), 0, 1);
 	}
-	public static ItemStack getSimpleStack(final Block x, final int i){
-		return getSimpleStack(Item.getItemFromBlock(x), i);
+	public static ItemStack getSimpleStack(final Block x, int meta){
+		return simpleMetaStack(Item.getItemFromBlock(x), meta, 1);
 	}
 	public static ItemStack getSimpleStack(final Item x, final int i){
 		try {
@@ -264,40 +264,13 @@ public class ItemUtils {
 		if (oredictName.toLowerCase().contains("vanadiumsteel")){
 			mTemp = oredictName.replace("VanadiumSteel", "StainlessSteel");
 		}			
-		//Use Cache		
-		if (mOreDictCache.containsKey(mTemp) && mOreDictCache.get(mTemp) != null) {
-			//Logger.INFO("[ODC] Returning mOreDictCache value.");
-			return getCachedValue(mTemp, amount);
+		final ArrayList<ItemStack> oreDictList = OreDictionary.getOres(mTemp);
+		if (!oreDictList.isEmpty()){
+			final ItemStack returnValue = oreDictList.get(0).copy();
+			returnValue.stackSize = amount;
+			return returnValue;
 		}
-		else if (mDustCache.containsKey(oredictName) && mDustCache.get(mTemp) != null) {
-			//Logger.INFO("[ODC] Returning mDustCache value.");
-			return getSimpleStack(mDustCache.get(oredictName), amount);
-		}
-		else {
-			//Logger.INFO("[ODC] Setting mOreDictCache value.");
-			final ArrayList<ItemStack> oreDictList = OreDictionary.getOres(mTemp);
-			if (!oreDictList.isEmpty()){
-				final ItemStack returnValue = oreDictList.get(0).copy();
-				returnValue.stackSize = amount;
-				setCachedValue(mTemp, returnValue);
-				//Logger.INFO("[ODC] Setting and Returning mOreDictCache value.");
-				return returnValue;
-			}
-			setCachedValue(oredictName, getSimpleStack(ModItems.AAA_Broken));
-			//Logger.INFO("[ODC] Returning AAA_Broken.");
-			return getSimpleStack(ModItems.AAA_Broken, amount);
-		}
-		
-	}
-
-	private static Map<String, ItemStack> mOreDictCache = new HashMap();
-
-	private static ItemStack getCachedValue(String string, int amount) {
-		return getSimpleStack(mOreDictCache.get(string), amount);
-	}
-
-	private static void setCachedValue(String string, ItemStack stack) {
-		mOreDictCache.put(string, stack);
+		return getSimpleStack(ModItems.AAA_Broken, amount);
 	}
 
 	public static ItemStack getItemStackOfAmountFromOreDictNoBroken(final String oredictName, final int amount){
@@ -309,15 +282,6 @@ public class ItemUtils {
 			Logger.WARNING("Looking up: "+oredictName+" - from method: "+ReflectionUtils.getMethodName(5));
 		}	
 		
-		//Use Cache
-		if (mDustCache.containsKey(oredictName)) {
-			return getSimpleStack(mDustCache.get(oredictName), amount);
-		}	
-		if (mOreDictCache.containsKey(oredictName)) {
-			return getCachedValue(oredictName, amount);
-		}
-		
-
 		try{
 
 			//Adds a check to grab dusts using GT methodology if possible.
@@ -327,7 +291,6 @@ public class ItemUtils {
 				final Materials m = Materials.get(MaterialName);
 				returnValue = getGregtechDust(m, amount);
 				if (returnValue != null){
-					setCachedValue(oredictName, returnValue);
 					return returnValue;
 				}
 			}
@@ -336,17 +299,14 @@ public class ItemUtils {
 				returnValue = getItemStackOfAmountFromOreDict(oredictName, amount);
 				if (returnValue != null){
 					if ((returnValue.getItem().getClass() != ModItems.AAA_Broken.getClass()) || (returnValue.getItem() != ModItems.AAA_Broken)){
-						setCachedValue(oredictName, returnValue);
 						return returnValue.copy();
 					}
 				}
 			}
 			Logger.WARNING(oredictName+" was not valid.");
-			setCachedValue(oredictName, null);
 			return null;
 		}
 		catch (final Throwable t){
-			setCachedValue(oredictName, null);
 			return null;
 		}
 	}
@@ -689,15 +649,8 @@ public class ItemUtils {
 		return getModId(key.getItem());
 	}
 
-	private static Map<String, ItemStack> mDustCache = new HashMap<String, ItemStack>();
-	
 	//Take 2 - GT/GT++ Dusts
 	public static ItemStack getGregtechDust(final String oredictName, final int amount){
-		
-		if (mDustCache.containsKey(oredictName)) {
-			return getSimpleStack(mDustCache.get(oredictName), amount);
-		}
-		
 		final ArrayList<ItemStack> oreDictList = OreDictionary.getOres(oredictName);
 		if (!oreDictList.isEmpty()){
 			ItemStack returnvalue;
@@ -705,7 +658,6 @@ public class ItemUtils {
 				final String modid = getModId(oreDictList.get(xrc).getItem());
 				if (modid != null && (modid.equals("gregtech") || modid.equals(CORE.MODID))){
 					returnvalue = oreDictList.get(xrc).copy();
-					mDustCache.put(oredictName, returnvalue);
 					returnvalue.stackSize = amount;
 					return returnvalue;
 				}
@@ -716,11 +668,6 @@ public class ItemUtils {
 
 	//Anything But Tinkers Dust
 	public static ItemStack getNonTinkersDust(final String oredictName, final int amount){
-		
-		if (mDustCache.containsKey(oredictName)) {
-			return getSimpleStack(mDustCache.get(oredictName), amount);
-		}
-		
 		final ArrayList<ItemStack> oreDictList = OreDictionary.getOres(oredictName);
 		if (!oreDictList.isEmpty()){
 			ItemStack returnvalue;
@@ -728,7 +675,6 @@ public class ItemUtils {
 				final String modid = getModId(oreDictList.get(xrc).getItem());
 				if (modid  != null && !modid.equals("tconstruct")){
 					returnvalue = oreDictList.get(xrc).copy();
-					mDustCache.put(oredictName, returnvalue);
 					returnvalue.stackSize = amount;
 					return returnvalue;
 				}
@@ -737,6 +683,7 @@ public class ItemUtils {
 		//If only Tinkers dust exists, bow down and just use it.
 		return getItemStackOfAmountFromOreDictNoBroken(oredictName, amount);
 	}
+
 	public static ItemStack getGregtechOreStack(OrePrefixes mPrefix, Materials mMat, int mAmount) {
 
 		String mName = MaterialUtils.getMaterialName(mMat);
@@ -779,6 +726,10 @@ public class ItemUtils {
 		else {
 			return null;
 		}
+	}
+	
+	public static boolean registerFuel(ItemStack aBurnable, int burn){
+		return CORE.burnables.add(new Pair<Integer, ItemStack>(burn, aBurnable));
 	}
 
 

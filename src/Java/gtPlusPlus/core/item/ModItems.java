@@ -8,10 +8,14 @@ import net.minecraft.item.*;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.util.EnumChatFormatting;
 
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.TextureSet;
 import gregtech.api.util.GT_OreDictUnificator;
 
 import gtPlusPlus.api.objects.Logger;
+import gtPlusPlus.core.block.base.BlockBaseModular;
+import gtPlusPlus.core.block.base.BasicBlock.BlockTypes;
 import gtPlusPlus.core.common.compat.COMPAT_Baubles;
 import gtPlusPlus.core.creative.AddToCreativeTab;
 import gtPlusPlus.core.item.base.*;
@@ -42,17 +46,13 @@ import gtPlusPlus.core.item.tool.staballoy.*;
 import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.lib.CORE.ConfigSwitches;
 import gtPlusPlus.core.lib.LoadedMods;
-import gtPlusPlus.core.material.ALLOY;
-import gtPlusPlus.core.material.ELEMENT;
-import gtPlusPlus.core.material.MaterialGenerator;
+import gtPlusPlus.core.material.*;
 import gtPlusPlus.core.material.nuclear.FLUORIDES;
 import gtPlusPlus.core.material.nuclear.NUCLIDE;
 import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.data.StringUtils;
 import gtPlusPlus.core.util.debug.DEBUG_INIT;
-import gtPlusPlus.core.util.minecraft.FluidUtils;
-import gtPlusPlus.core.util.minecraft.ItemUtils;
-import gtPlusPlus.core.util.minecraft.MaterialUtils;
+import gtPlusPlus.core.util.minecraft.*;
 import gtPlusPlus.everglades.GTplusplus_Everglades;
 import gtPlusPlus.xmod.eio.material.MaterialEIO;
 import net.minecraftforge.common.util.EnumHelper;
@@ -65,8 +65,8 @@ public final class ModItems {
 
 	public static Item ZZZ_Empty;
 	public static Item AAA_Broken;
-	
-	
+
+
 	public static Item itemAlkalusDisk;
 	public static Item itemDebugShapeSpawner;
 	public static Item itemBaseSpawnEgg;
@@ -217,6 +217,7 @@ public final class ModItems {
 	//Possibly missing base items that GT may be missing.
 
 	public static Item itemSmallWroughtIronGear;
+	public static Item itemPlateRawMeat;
 	public static Item itemPlateClay;
 	public static Item itemPlateLithium;
 	public static Item itemPlateEuropium;
@@ -224,7 +225,8 @@ public final class ModItems {
 	public static Item itemDoublePlateClay;
 	public static Item itemDoublePlateEuropium;
 	public static Item itemFoilUranium235;
-
+	public static BlockBaseModular blockRawMeat;
+	
 	public static Item itemBoilerChassis;
 	public static Item itemDehydratorCoilWire;
 	public static Item itemDehydratorCoil;
@@ -260,14 +262,12 @@ public final class ModItems {
 
 	static {
 		Logger.INFO("Items!");
+		//Default item used when recipes fail, handy for debugging. Let's make sure they exist when this class is called upon.
+		AAA_Broken = new BaseItemIngot_OLD("AAA_Broken", "Errors - Tell Alkalus", Utils.rgbtoHexValue(128, 128, 128), 0);
+		ZZZ_Empty = new ItemEmpty();
 	}
 
 	public static final void init(){
-
-		//Default item used when recipes fail, handy for debugging.
-		AAA_Broken = new BaseItemIngot_OLD("AAA_Broken", "Errors - Tell Alkalus", Utils.rgbtoHexValue(128, 128, 128), 0);
-		ZZZ_Empty = new ItemEmpty();
-
 		itemAlkalusDisk = new BaseItemDamageable("itemAlkalusDisk", AddToCreativeTab.tabMisc, 1, 0, "Unknown Use", EnumRarity.rare, EnumChatFormatting.AQUA, false, null);
 
 		//Debug Loading
@@ -393,25 +393,25 @@ public final class ModItems {
 			//The large neutron-absorption cross-section of lithium-6 (about 940 barns[5]) as compared with the very small
 			//neutron cross-section of lithium-7 (about 45 millibarns) makes high separation of lithium-7 from natural lithium a
 			//strong requirement for the possible use in lithium fluoride reactors.
-			MaterialGenerator.generate(NUCLIDE.getInstance().LITHIUM7, false);
+			MaterialGenerator.generate(ELEMENT.getInstance().LITHIUM7, false);
 			//Thorium-232 is the most stable isotope of Thorium, purified for nuclear fuel use in this case.
-			MaterialGenerator.generateNuclearMaterial(NUCLIDE.getInstance().THORIUM232);
+			MaterialGenerator.generateNuclearMaterial(ELEMENT.getInstance().THORIUM232);
 			//Production of 233U (through the neutron irradiation of 232Th) invariably produces small amounts of 232U as an impurity
 			//because of parasitic (n,2n) reactions on uranium-233 itself, or on protactinium-233, or on thorium-232:
-			MaterialGenerator.generate(NUCLIDE.getInstance().URANIUM232);
+			MaterialGenerator.generate(ELEMENT.getInstance().URANIUM232);
 			//Uranium-233 is a fissile isotope of uranium that is bred from thorium-232 as part of the thorium fuel cycle.
-			MaterialGenerator.generate(NUCLIDE.getInstance().URANIUM233);
+			MaterialGenerator.generate(ELEMENT.getInstance().URANIUM233);
 			//Plutonium-238 is a very powerful alpha emitter. This makes the plutonium-238 isotope suitable for usage in radioisotope thermoelectric generators (RTGs)
 			//and radioisotope heater units - one gram of plutonium-238 generates approximately 0.5 W of thermal power.
-			MaterialGenerator.generateNuclearMaterial(NUCLIDE.getInstance().PLUTONIUM238, false);
+			MaterialGenerator.generateNuclearMaterial(ELEMENT.getInstance().PLUTONIUM238, false);
 			if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("dustPlutonium239", 1) == null || Utils.getGregtechVersionAsInt() < 50931) {
-				MaterialGenerator.generateNuclearMaterial(NUCLIDE.getInstance().PLUTONIUM239, false);
+				MaterialGenerator.generateNuclearMaterial(ELEMENT.getInstance().PLUTONIUM239, false);
 			}
 
 			//RTG Fuel Materials
-			MaterialGenerator.generateNuclearMaterial(NUCLIDE.getInstance().STRONTIUM90, false);
-			MaterialGenerator.generateNuclearMaterial(NUCLIDE.getInstance().POLONIUM210, false);
-			MaterialGenerator.generateNuclearMaterial(NUCLIDE.getInstance().AMERICIUM241, false);
+			MaterialGenerator.generateNuclearMaterial(ELEMENT.getInstance().STRONTIUM90, false);
+			MaterialGenerator.generateNuclearMaterial(ELEMENT.getInstance().POLONIUM210, false);
+			MaterialGenerator.generateNuclearMaterial(ELEMENT.getInstance().AMERICIUM241, false);
 
 
 			//Carbides - Tungsten Carbide exists in .09 so don't generate it. - Should still come before alloys though
@@ -668,6 +668,24 @@ public final class ModItems {
 		if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("gearGtSmallWroughtIron", 1) == null){
 			itemSmallWroughtIronGear = new BaseItemSmallGear(MaterialUtils.generateMaterialFromGtENUM(Materials.WroughtIron));
 		}
+
+		//Special Sillyness
+		if (true) {
+			
+			Material meatRaw = MaterialUtils.generateMaterialFromGtENUM(Materials.MeatRaw);
+			meatRaw.setTextureSet(TextureSet.SET_ROUGH);
+			// A plate of Meat.
+			if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("plateMeatRaw", 1) == null){
+				itemPlateRawMeat = new BaseItemPlate(meatRaw);
+				RecipeUtils.generateMortarRecipe(ItemUtils.getSimpleStack(itemPlateRawMeat), ItemUtils.getItemStackOfAmountFromOreDict("dustMeatRaw", 1));
+				ItemUtils.registerFuel(ItemUtils.getSimpleStack(itemPlateRawMeat), 100);
+			}
+			// A Block of Meat.
+			if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("blockMeatRaw", 1) == null){
+				blockRawMeat  = new BlockBaseModular(meatRaw.getUnlocalizedName(), meatRaw.getLocalizedName(), BlockTypes.STANDARD, meatRaw.getRgbAsHex());
+				ItemUtils.registerFuel(ItemUtils.getSimpleStack(blockRawMeat), 900);
+			}
+		}
 		
 
 		// A plate of Vanadium.
@@ -688,10 +706,10 @@ public final class ModItems {
 			itemDoublePlateEuropium = new BaseItemPlateDouble(MaterialUtils.generateMaterialFromGtENUM(Materials.Europium));
 		}
 
-		dustNeptunium238 = new DustDecayable("dustNeptunium238", Utils.rgbtoHexValue(175, 240, 75), 50640, new String[] {""+StringUtils.superscript("238Np"), "Result: Plutonium 238 ("+StringUtils.superscript("238Pu")+")"}, NUCLIDE.getInstance().PLUTONIUM238.getDust(1).getItem(), 5);
+		dustNeptunium238 = new DustDecayable("dustNeptunium238", Utils.rgbtoHexValue(175, 240, 75), 50640, new String[] {""+StringUtils.superscript("238Np"), "Result: Plutonium 238 ("+StringUtils.superscript("238Pu")+")"}, ELEMENT.getInstance().PLUTONIUM238.getDust(1).getItem(), 5);
 		dustDecayedRadium226 = ItemUtils.generateSpecialUseDusts("DecayedRadium226", "Decayed Radium-226", ""+StringUtils.superscript("226Ra"), ELEMENT.getInstance().RADIUM.getRgbAsHex())[0];
 		dustRadium226 = new DustDecayable("dustRadium226", ELEMENT.getInstance().RADIUM.getRgbAsHex(), 90000, new String[] {""+StringUtils.superscript("226Ra"), "Result: Radon 222 ("+StringUtils.superscript("222Rn")+")"}, ItemUtils.getSimpleStack(dustDecayedRadium226).getItem(), 5);
-		
+
 		itemBoilerChassis = new ItemBoilerChassis();
 		itemDehydratorCoilWire = new ItemDehydratorCoilWire();
 		itemDehydratorCoil = new ItemDehydratorCoil();

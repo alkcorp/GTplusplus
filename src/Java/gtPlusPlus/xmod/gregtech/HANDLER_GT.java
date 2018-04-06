@@ -16,9 +16,7 @@ import gtPlusPlus.xmod.gregtech.api.world.GTPP_Worldgen;
 import gtPlusPlus.xmod.gregtech.common.blocks.fluid.GregtechFluidHandler;
 import gtPlusPlus.xmod.gregtech.common.items.MetaGeneratedGregtechItems;
 import gtPlusPlus.xmod.gregtech.common.items.MetaGeneratedGregtechTools;
-import gtPlusPlus.xmod.gregtech.loaders.Gregtech_Blocks;
-import gtPlusPlus.xmod.gregtech.loaders.ProcessingToolHeadChoocher;
-import gtPlusPlus.xmod.gregtech.loaders.RecipeGen_BlastSmelterGT_Ex;
+import gtPlusPlus.xmod.gregtech.loaders.*;
 import gtPlusPlus.xmod.gregtech.registration.gregtech.GregtechConduits;
 import gtPlusPlus.xmod.gregtech.registration.gregtech.GregtechNitroDieselFix;
 
@@ -47,14 +45,15 @@ public class HANDLER_GT {
 
 	public static void init(){
 
-		//Load General Blocks and set up some Basic Meta Tile Entitie states
+		//Load General Blocks and set up some Basic Meta Tile Entity states
 		Gregtech_Blocks.run();
-
-		//Register Tile Entities
-		COMPAT_HANDLER.registerGregtechMachines();
 
 		//Add Custom Pipes, Wires and Cables.
 		GregtechConduits.run();
+		
+		//Register Tile Entities
+		COMPAT_HANDLER.registerGregtechMachines();
+
 
 		//Only loads if the config option is true (default: true)
 		if (CORE.ConfigSwitches.enableSkookumChoochers){
@@ -68,7 +67,7 @@ public class HANDLER_GT {
 		
 		//Generates recipes for all gregtech smelting and alloy smelting combinations.
 		//RecipeGen_BlastSmelterGT.generateRecipes();
-		new RecipeGen_BlastSmelterGT_Ex();
+		//new RecipeGen_BlastSmelterGT_Ex();
 
 	}
 

@@ -132,6 +132,11 @@ GT_MetaTileEntity_MultiBlockBase {
 	}
 
 	@Override
+	public boolean explodesOnComponentBreak(ItemStack p0) {
+		return false;
+	}
+	
+	@Override
 	public void startSoundLoop(final byte aIndex, final double aX, final double aY, final double aZ) {
 		super.startSoundLoop(aIndex, aX, aY, aZ);
 		if (aIndex == 1) {
@@ -239,12 +244,14 @@ GT_MetaTileEntity_MultiBlockBase {
 
 		long tVoltage = getMaxInputVoltage();
 		byte tTier = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
+		Logger.WARNING("Running checkRecipeGeneric(0)");
 
 
 		GT_Recipe tRecipe = this.getRecipeMap().findRecipe(
 				getBaseMetaTileEntity(), mLastRecipe, false,
 				gregtech.api.enums.GT_Values.V[tTier], aFluidInputs, aItemInputs);
 
+		Logger.WARNING("Running checkRecipeGeneric(1)");
 		// Remember last recipe - an optimization for findRecipe()
 		this.mLastRecipe = tRecipe;
 
@@ -476,6 +483,11 @@ GT_MetaTileEntity_MultiBlockBase {
 			}
 		}
 		return mMode;
+	}
+	
+	protected ItemStack getGUIItemStack() {
+		ItemStack guiSlot = this.mInventory[1];		
+		return guiSlot;
 	}
 
 	@Override
