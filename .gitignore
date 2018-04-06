@@ -30,6 +30,9 @@ mods/
 resourcepacks/
 saves/
 VillageWiper/
+/eclipse
+/libs
+.project
 
 # Windows shortcuts
 *.lnk

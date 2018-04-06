@@ -20,6 +20,8 @@ public enum MB_FrameType implements IBeeModifier
 	MUTAGENIC("Mutagenic", 3, 1f, 5f, 0.0001f, 10f, 1f),
 	BUSY("Busy", 2000, 1f, 0f, 3f, 4f, 1f),
 	USELESS("Useless", 100, 1f, 0f, 1f, 1f, 1f),
+	
+	// Frame Items added by bartimaeusnek
 	DECAYING("Decaying", 240, 1f, 1f, 1f, 1f, 10f), //enhanches decay to 10x
 	SLOWING("Slowing", 175, 1f, 0.5f, 2f, 0.5f, 1f), //reduces mutation, production rate and enhanches lifespan
 	STABILIZING("Stabilizing", 60, 1f, 0.1f, 1f, 0.1f, 0.5f), //reduces mutation, production and decay
