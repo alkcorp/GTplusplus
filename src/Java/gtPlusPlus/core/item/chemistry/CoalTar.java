@@ -20,6 +20,8 @@ import gtPlusPlus.core.util.reflect.AddGregtechRecipe;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
+import static gtPlusPlus.core.lib.CORE.GTNH;
+
 public class CoalTar {
 
 	private static Fluid Coal_Gas;
@@ -178,13 +180,25 @@ public class CoalTar {
 	}
 
 	public static void recipeCreateEthylbenzene(){
-		GT_Values.RA.addChemicalRecipe(
-				ItemUtils.getItemStackOfAmountFromOreDict("cellEthylene", 2), 
-				ItemUtils.getItemStackOfAmountFromOreDict("cellBenzene", 2), 
-				null,
-				FluidUtils.getFluidStack("fluid.ethylbenzene", 4000),
-				ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 4), 
-				300);
+		if (!CORE.GTNH) {
+			GT_Values.RA.addChemicalRecipe(
+					ItemUtils.getItemStackOfAmountFromOreDict("cellEthylene", 2),
+					ItemUtils.getItemStackOfAmountFromOreDict("cellBenzene", 2),
+					null,
+					FluidUtils.getFluidStack("fluid.ethylbenzene", 4000),
+					ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 4),
+					300);
+		}
+			if(GTNH){ //Otherwise Styrene recipe not loaded in LCR
+				GT_Values.RA.addChemicalRecipeForBasicMachineOnly(
+						ItemUtils.getItemStackOfAmountFromOreDict("cellEthylene", 2),
+						ItemUtils.getItemStackOfAmountFromOreDict("cellBenzene", 2),
+						null,
+						FluidUtils.getFluidStack("fluid.ethylbenzene", 4000),
+						ItemUtils.getItemStackOfAmountFromOreDict("cellEmpty", 4),
+						null,
+						300, 30);
+			}
 	}
 
 
