@@ -248,9 +248,6 @@ public class RECIPES_Machines {
 				EV_MACHINE_OreWasher = ItemList.Machine_IV_OreWasher.get(1);
 				EV_MACHINE_AlloySmelter = ItemList.Machine_IV_AlloySmelter.get(1);  
 			}
-
-
-
 		}
 		if (CORE.ConfigSwitches.enableMultiblock_IndustrialCokeOven){
 			if(LoadedMods.Railcraft){
