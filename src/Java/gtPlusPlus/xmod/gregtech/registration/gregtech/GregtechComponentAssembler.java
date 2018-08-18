@@ -76,6 +76,33 @@ public class GregtechComponentAssembler {
 						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.PISTON, 'C',
 						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.CIRCUIT, 'W',
 						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.WIRE4 }).getStackForm(1L));
+		GregtechItemList.Machine_IV_Component_Maker.set(new GT_MetaTileEntity_BasicMachine_GT_Recipe(991,
+				"basicmachine.componentmaker.tier.06", "Advanced Component Maker V", 6, "Components, Unite!",
+				Recipe_GT.Gregtech_Recipe_Map.sComponentAssemblerRecipes, 6, 1, 24000, 0, 1, "Assembler.png", "", false,
+				false, 0, "ASSEMBLER",
+				new Object[] { "ACA", "VMV", "WCW", 'M', GT_MetaTileEntity_BasicMachine_GT_Recipe.X.HULL, 'V',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.ROBOT_ARM, 'A',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.PISTON, 'C',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.CIRCUIT, 'W',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.WIRE4 }).getStackForm(1L));
+		GregtechItemList.Machine_IV_Component_Maker.set(new GT_MetaTileEntity_BasicMachine_GT_Recipe(992,
+				"basicmachine.componentmaker.tier.07", "Advanced Component Maker VI", 7, "Components, Unite!",
+				Recipe_GT.Gregtech_Recipe_Map.sComponentAssemblerRecipes, 6, 1, 32000, 0, 1, "Assembler.png", "", false,
+				false, 0, "ASSEMBLER",
+				new Object[] { "ACA", "VMV", "WCW", 'M', GT_MetaTileEntity_BasicMachine_GT_Recipe.X.HULL, 'V',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.ROBOT_ARM, 'A',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.PISTON, 'C',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.CIRCUIT, 'W',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.WIRE4 }).getStackForm(1L));
+		GregtechItemList.Machine_IV_Component_Maker.set(new GT_MetaTileEntity_BasicMachine_GT_Recipe(993,
+				"basicmachine.componentmaker.tier.08", "Advanced Component Maker VII", 8, "Components, Unite!",
+				Recipe_GT.Gregtech_Recipe_Map.sComponentAssemblerRecipes, 6, 1, 48000, 0, 1, "Assembler.png", "", false,
+				false, 0, "ASSEMBLER",
+				new Object[] { "ACA", "VMV", "WCW", 'M', GT_MetaTileEntity_BasicMachine_GT_Recipe.X.HULL, 'V',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.ROBOT_ARM, 'A',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.PISTON, 'C',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.CIRCUIT, 'W',
+						GT_MetaTileEntity_BasicMachine_GT_Recipe.X.WIRE4 }).getStackForm(1L));
 
 		// Motors
 		// addRecipeMotor(0, Materials.Lead, 1, Materials.RedAlloy, 1,
