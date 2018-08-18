@@ -281,7 +281,8 @@ public enum GregtechItemList implements GregtechItemContainer {
 	
 	//Component Makers
 	Machine_LV_Component_Maker, Machine_MV_Component_Maker, Machine_HV_Component_Maker, 
-	Machine_EV_Component_Maker, Machine_IV_Component_Maker, 
+	Machine_EV_Component_Maker, Machine_IV_Component_Maker, Machine_LuV_Component_Maker,
+	Machine_ZPM_Component_Maker, Machine_UV_Component_Maker,
 	
 	//Tesla Tower
 	TelsaTower, 
