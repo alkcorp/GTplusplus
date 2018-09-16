@@ -1,0 +1,6 @@
+[submodule "src/Java/com"]
+	path = src/Java/com
+	url = https://github.com/bartimaeusnek/bartworks-code.git
+[submodule "src/resources/assets/bartworks"]
+	path = src/resources/assets/bartworks
+	url = https://github.com/bartimaeusnek/bartworks-assets.git
