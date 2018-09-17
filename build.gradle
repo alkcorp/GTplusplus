@@ -58,6 +58,8 @@ minecraft.version = "1.7.10-10.13.4.1614-1.7.10"
 minecraft {
     version = "1.7.10-10.13.4.1614-1.7.10"
     runDir = "$projectDir"
+	replaceIn "MainMod.java"
+    replace "@version@", "0.0.1"
 }
 
 //Gradle Tweak
