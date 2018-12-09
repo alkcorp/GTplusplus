@@ -1,6 +1,7 @@
 package GTplusplus.proxy;
 
 import GTplusplus.GTplusplus;
+import GTplusplus.recipes.GTppMachineRecipes;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -41,6 +42,6 @@ public class CommonProxy {
 
     @SubscribeEvent()
     public static void registerRecipes(RegistryEvent.Register<IRecipe> event) {
-
+        GTppMachineRecipes.init();
     }
 }

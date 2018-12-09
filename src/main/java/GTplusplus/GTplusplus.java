@@ -1,5 +1,7 @@
 package GTplusplus;
 
+import GTplusplus.materials.Elements;
+import GTplusplus.materials.GTppMaterials;
 import GTplusplus.proxy.CommonProxy;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -29,6 +31,8 @@ public class GTplusplus {
     public static Logger logger;
 
     public GTplusplus() {
+        Elements.preInit();
+        new GTppMaterials();
     }
 
     @EventHandler
