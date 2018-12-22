@@ -2026,7 +2026,6 @@ entity.miscutils.constructStaballoy.name=Staballoy Construct
 entity.miscutils.sickBlaze.name=Infected Zealot
 
 //Added 15/9/8
-
 item.ZirconiumTetrafluoride.name=Zirconium Tetrafluoride Cell
 item.Formaldehyde.name=Formaldehyde Cell
 item.RocketFuelMixA.name=H8N4C2O4 Rocket Fuel Cell
