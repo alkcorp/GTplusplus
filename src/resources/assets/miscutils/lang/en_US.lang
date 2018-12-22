@@ -157,8 +157,8 @@ item.backpackWhite.name=White Backpack
 item.itemBlueprint.name=Blueprint [I am useless]
 item.itemGemShards.name=Diamond Shards
 item.itemHalfCompleteCasings.name=Half Complete Casing
-item.itemSulfuricPotion.name=Thowable Vial of Sulfuric Acid
-item.itemHydrofluoricPotion.name=Thowable Vial of Hydrofluoric Acid
+item.itemSulfuricPotion.name=Throwable Vial of Sulfuric Acid
+item.itemHydrofluoricPotion.name=Throwable Vial of Hydrofluoric Acid
 item.itemIngotRaisinBread.name=A Serving of Raisin Bread
 item.itemHotIngotRaisinBread.name=A Serving of Hot Raisin Bread
 item.itemFoodRaisinToast.name=A Serving of Raisin Toast
@@ -2018,3 +2018,25 @@ description.villager.profession.miscutils.aboriginal=Native Australian
 
 //Added 23/8/18
 item.itemHatTinFoil.name=Tin Foil Hat
+
+//Added 13/9/18
+entity.WiseVillager.name=Wise Villager
+entity.Aboriginal.name=Native
+entity.miscutils.constructStaballoy.name=Staballoy Construct
+entity.miscutils.sickBlaze.name=Infected Zealot
+
+//Added 15/9/8
+item.ZirconiumTetrafluoride.name=Zirconium Tetrafluoride Cell
+item.Formaldehyde.name=Formaldehyde Cell
+item.RocketFuelMixA.name=H8N4C2O4 Rocket Fuel Cell
+item.RocketFuelMixB.name=RP-1 Rocket Fuel Cell
+item.RocketFuelMixC.name=CN3H7O3 Rocket Fuel Cell
+item.RocketFuelMixD.name=Dense Hydrazine Rocket Fuel Cell
+item.RP1Fuel.name=RP-1 Fuel Cell
+item.Monomethylhydrazine.name=Monomethylhydrazine Cell
+item.Hydrazine.name=Hydrazine Cell
+item.NitrogenTetroxide.name=Nitrogen Tetroxide Cell
+item.NitrousOxide.name=Nitrous Oxide Cell
+item.AmmoniumNitrateSlurry.name=Ammonium Nitrate Slurry Cell
+item.Kerosene.name=Kerosene Cell
+item.LiquidOxygen.name=Liquid Oxygen Cell [LOX]
