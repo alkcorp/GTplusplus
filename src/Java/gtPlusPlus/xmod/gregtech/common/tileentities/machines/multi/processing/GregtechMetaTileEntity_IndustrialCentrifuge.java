@@ -8,18 +8,25 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Maintenance;
 import gregtech.api.objects.GT_RenderedTexture;
-import gregtech.api.util.*;
+import gregtech.api.util.GT_Recipe;
+import gregtech.api.util.GT_Utility;
+import gregtech.api.util.Recipe_GT;
 import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.block.ModBlocks;
-import gtPlusPlus.core.lib.CORE;
+import gtPlusPlus.core.util.Utils;
+import gtPlusPlus.core.util.minecraft.PlayerUtils;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.base.GregtechMeta_MultiBlockBase;
 import gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtBlock.CustomIcon;
 import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.util.ForgeDirection;
 
 public class GregtechMetaTileEntity_IndustrialCentrifuge
 extends GregtechMeta_MultiBlockBase {
+	
+	private boolean mIsAnimated = true;
 	private static ITexture frontFace;
 	private static ITexture frontFaceActive;
 	private static CustomIcon GT9_5_Active = new CustomIcon("iconsets/LARGECENTRIFUGE_ACTIVE5");
@@ -47,7 +54,7 @@ extends GregtechMeta_MultiBlockBase {
 	}
 
 	@Override
-	public String[] getDescription() {
+	public String[] getTooltip() {
 		return new String[]{
 				"Controller Block for the Industrial Centrifuge",
 				"125% faster than using single block machines of the same voltage",
@@ -64,14 +71,12 @@ extends GregtechMeta_MultiBlockBase {
 				"1x Muffler Hatch",
 				"1x Energy Hatch [Blue]",
 				"Centrifuge Casings for the rest (10 at least)",
-				getPollutionTooltip(),
-				getMachineTooltip(),
-				CORE.GT_Tooltip};
+				};
 	}
 
 	@Override
 	public ITexture[] getTexture(final IGregTechTileEntity aBaseMetaTileEntity, final byte aSide, final byte aFacing, final byte aColorIndex, final boolean aActive, final boolean aRedstone) {
-		return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[TAE.GTPP_INDEX(0)], aFacing == aSide ? aActive ? frontFaceActive : frontFace : Textures.BlockIcons.CASING_BLOCKS[TAE.GTPP_INDEX(0)]};
+		return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[TAE.GTPP_INDEX(0)], aFacing == aSide ? aActive ? getFrontFacingTurbineTexture(aActive) : getFrontFacingTurbineTexture(aActive) : Textures.BlockIcons.CASING_BLOCKS[TAE.GTPP_INDEX(0)]};
 	}
 
 	@Override
@@ -186,6 +191,43 @@ extends GregtechMeta_MultiBlockBase {
 	@Override
 	public boolean explodesOnComponentBreak(final ItemStack aStack) {
 		return false;
+	}
+
+	@Override
+	public void onModeChangeByScrewdriver(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
+		this.mIsAnimated = Utils.invertBoolean(mIsAnimated);
+		if (this.mIsAnimated) {
+			PlayerUtils.messagePlayer(aPlayer, "Using Animated Turbine Texture.");
+		}
+		else {
+			PlayerUtils.messagePlayer(aPlayer, "Using Static Turbine Texture.");			
+		}	
+		super.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);			
+	}
+
+	@Override
+	public void saveNBTData(NBTTagCompound aNBT) {
+		super.saveNBTData(aNBT);
+		aNBT.setBoolean("mIsAnimated", mIsAnimated);
+	}
+
+	@Override
+	public void loadNBTData(NBTTagCompound aNBT) {
+		super.loadNBTData(aNBT);
+		mIsAnimated = aNBT.getBoolean("mIsAnimated");
+	}
+	
+	public boolean usingAnimations() {
+		return mIsAnimated;
+	}
+	
+	private ITexture getFrontFacingTurbineTexture(boolean isActive) {
+		if (usingAnimations()) {
+			if (isActive) {
+				return frontFaceActive;
+			}
+		}
+		return frontFace;
 	}
 
 }

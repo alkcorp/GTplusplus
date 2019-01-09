@@ -13,6 +13,7 @@ import gtPlusPlus.api.interfaces.RunnableWithInfo;
 import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.material.Material;
 import gtPlusPlus.core.material.MaterialGenerator;
+import gtPlusPlus.core.util.minecraft.ItemUtils;
 
 public class RecipeGen_Extruder extends RecipeGen_Base {
 
@@ -35,7 +36,7 @@ public class RecipeGen_Extruder extends RecipeGen_Base {
 
 		final int tVoltageMultiplier = material.getMeltingPointK() >= 2800 ? 60 : 15;
 		final ItemStack itemIngot = material.getIngot(1);
-		final ItemStack plate_Single = material.getPlate(1);
+		final ItemStack itemPlate = material.getPlate(1);
 		final ItemStack itemGear = material.getGear(1);
 
 		final ItemStack shape_Plate = ItemList.Shape_Extruder_Plate.get(0);
@@ -48,37 +49,42 @@ public class RecipeGen_Extruder extends RecipeGen_Base {
 
 		Logger.WARNING("Generating Extruder recipes for "+material.getLocalizedName());
 
-		//Ingot Recipe
-		if (addExtruderRecipe(
-				material.getBlock(1),
-				shape_Ingot,
-				material.getIngot(9),
-				(int) Math.max(material.getMass() * 2L * 1, 1),
-				4 * material.vVoltageMultiplier)){
-			Logger.WARNING("Extruder Ingot Recipe: "+material.getLocalizedName()+" - Success");
-		}
-		else {
-			Logger.WARNING("Extruder Ingot Recipe: "+material.getLocalizedName()+" - Failed");
+		
+		if (ItemUtils.checkForInvalidItems(material.getIngot(1)) && ItemUtils.checkForInvalidItems(material.getBlock(1))) {
+			//Ingot Recipe
+			if (addExtruderRecipe(
+					material.getBlock(1),
+					shape_Ingot,
+					material.getIngot(9),
+					(int) Math.max(material.getMass() * 2L * 1, 1),
+					4 * material.vVoltageMultiplier)){
+				Logger.WARNING("Extruder Ingot Recipe: "+material.getLocalizedName()+" - Success");
+			}
+			else {
+				Logger.WARNING("Extruder Ingot Recipe: "+material.getLocalizedName()+" - Failed");
+			}
+
+			//Block Recipe
+			if (addExtruderRecipe(
+					material.getIngot(9),
+					shape_Block,
+					material.getBlock(1),
+					(int) Math.max(material.getMass() * 2L * 1, 1),
+					8 * material.vVoltageMultiplier)){
+				Logger.WARNING("Extruder Block Recipe: "+material.getLocalizedName()+" - Success");
+			}
+			else {
+				Logger.WARNING("Extruder Block Recipe: "+material.getLocalizedName()+" - Failed");
+			}
 		}
 
-		//Block Recipe
-		if (addExtruderRecipe(
-				material.getIngot(9),
-				shape_Block,
-				material.getBlock(1),
-				(int) Math.max(material.getMass() * 2L * 1, 1),
-				8 * material.vVoltageMultiplier)){
-			Logger.WARNING("Extruder Block Recipe: "+material.getLocalizedName()+" - Success");
-		}
-		else {
-			Logger.WARNING("Extruder Block Recipe: "+material.getLocalizedName()+" - Failed");
-		}
 
 		//Plate Recipe
+		if (ItemUtils.checkForInvalidItems(material.getIngot(1)) && ItemUtils.checkForInvalidItems(material.getPlate(1)))
 		if (addExtruderRecipe(
 				itemIngot,
 				shape_Plate,
-				plate_Single,
+				itemPlate,
 				10, 4 * tVoltageMultiplier)){
 			Logger.WARNING("Extruder Plate Recipe: "+material.getLocalizedName()+" - Success");
 		}
@@ -87,6 +93,7 @@ public class RecipeGen_Extruder extends RecipeGen_Base {
 		}
 
 		//Ring Recipe
+		if (ItemUtils.checkForInvalidItems(material.getIngot(1)) && ItemUtils.checkForInvalidItems(material.getRing(1)))
 		if (!material.isRadioactive){
 			if (addExtruderRecipe(
 					itemIngot,
@@ -103,6 +110,7 @@ public class RecipeGen_Extruder extends RecipeGen_Base {
 
 
 		//Gear Recipe
+		if (ItemUtils.checkForInvalidItems(material.getIngot(1)) && ItemUtils.checkForInvalidItems(material.getGear(1)))
 		if (!material.isRadioactive){
 			if (addExtruderRecipe(
 					material.getIngot(4),
@@ -119,6 +127,7 @@ public class RecipeGen_Extruder extends RecipeGen_Base {
 
 
 		//Rod Recipe
+		if (ItemUtils.checkForInvalidItems(material.getIngot(1)) && ItemUtils.checkForInvalidItems(material.getRod(1)))
 		if (addExtruderRecipe(
 				itemIngot,
 				shape_Rod,
@@ -133,6 +142,7 @@ public class RecipeGen_Extruder extends RecipeGen_Base {
 
 
 		//Bolt Recipe
+		if (ItemUtils.checkForInvalidItems(material.getIngot(1)) && ItemUtils.checkForInvalidItems(material.getBolt(1)))
 		if (!material.isRadioactive){
 			if (addExtruderRecipe(
 					itemIngot,

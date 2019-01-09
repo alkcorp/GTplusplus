@@ -15,10 +15,12 @@ import gtPlusPlus.core.lib.LoadedMods;
 import gtPlusPlus.core.material.ALLOY;
 import gtPlusPlus.core.material.ELEMENT;
 import gtPlusPlus.core.material.nuclear.FLUORIDES;
+import gtPlusPlus.core.material.nuclear.NUCLIDE;
 import gtPlusPlus.core.recipe.common.CI;
 import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.minecraft.FluidUtils;
 import gtPlusPlus.core.util.minecraft.ItemUtils;
+import gtPlusPlus.core.util.minecraft.MaterialUtils;
 import gtPlusPlus.core.util.reflect.AddGregtechRecipe;
 import gtPlusPlus.xmod.gregtech.api.enums.GregtechItemList;
 import net.minecraftforge.fluids.FluidStack;
@@ -42,7 +44,11 @@ public class RECIPES_GREGTECH {
 		chemicalReactorRecipes();
 		dehydratorRecipes();
 		blastFurnaceRecipes();
-		largeChemReactorRecipes();
+
+		if (CORE.MAIN_GREGTECH_5U_EXPERIMENTAL_FORK) {
+			largeChemReactorRecipes();
+		}
+
 		fissionFuelRecipes();
 		autoclaveRecipes();
 		compressorRecipes();
@@ -74,7 +80,7 @@ public class RECIPES_GREGTECH {
 				ItemUtils.getSimpleStack(ModItems.dustDecayedRadium226, 1),
 				null,
 				null,
-				FluidUtils.getFluidStack("radon", 500),
+				FluidUtils.getFluidStack("radon", !CORE.GTNH ? 500 : 144),
 				null,
 				null, 
 				null, 
@@ -115,8 +121,171 @@ public class RECIPES_GREGTECH {
 							ELEMENT.getInstance().CERIUM.getDust(8)
 					},
 					FluidUtils.getFluidStack("molten.trinium", 136 * 144), 0, 20 * 3000,
-					2040);
+					2040*4);
 		}
+		
+		//Eglin Steel
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(6),
+						ELEMENT.getInstance().IRON.getDust(4),
+						ALLOY.KANTHAL.getDust(1),
+						ALLOY.INVAR.getDust(5),
+						ELEMENT.getInstance().SULFUR.getDust(1),
+						ELEMENT.getInstance().CARBON.getDust(1),
+						ELEMENT.getInstance().SILICON.getDust(4)
+				},
+				ALLOY.EGLIN_STEEL.getFluid(16 * 144),
+				0, 
+				20 * 45,
+				120);
+
+		// Germanium Roasting
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(15),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedSphalerite", 8),
+						ELEMENT.getInstance().CARBON.getDust(32),
+				},
+				Materials.SulfuricAcid.getFluid(2000),
+				ELEMENT.getInstance().GERMANIUM.getFluid(288),
+				0,
+				20 * 300,
+				4000);
+
+		// Selenium Roasting
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(16),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedPyrite", 8),
+						ELEMENT.getInstance().CARBON.getDust(32),
+				},
+				Materials.SulfuricAcid.getFluid(4000),
+				ELEMENT.getInstance().SELENIUM.getFluid(144),
+				0,
+				20 * 300,
+				2000);
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(17),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedChalcopyrite", 8),
+						ELEMENT.getInstance().CARBON.getDust(32),
+				},
+				Materials.SulfuricAcid.getFluid(4000),
+				ELEMENT.getInstance().SELENIUM.getFluid(144),
+				0,
+				20 * 300,
+				2000);
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(18),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedGalena", 8),
+						ELEMENT.getInstance().CARBON.getDust(32),
+				},
+				Materials.SulfuricAcid.getFluid(4000),
+				ELEMENT.getInstance().SELENIUM.getFluid(144),
+				0,
+				20 * 300,
+				2000);
+		
+
+		// Ruthenium Roasting
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(19),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedIridium", 8),
+						ELEMENT.getInstance().CARBON.getDust(32),
+				},
+				Materials.SulfuricAcid.getFluid(2000),
+				ELEMENT.getInstance().RUTHENIUM.getFluid(288),
+				0,
+				20 * 300,
+				8000);
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(19),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedOsmium", 8),
+						ELEMENT.getInstance().CARBON.getDust(32),
+				},
+				Materials.SulfuricAcid.getFluid(2000),
+				ELEMENT.getInstance().RUTHENIUM.getFluid(288),
+				0,
+				20 * 300,
+				8000);
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(19),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedPlatinum", 8),
+						ELEMENT.getInstance().CARBON.getDust(32),
+				},
+				Materials.SulfuricAcid.getFluid(2000),
+				ELEMENT.getInstance().RUTHENIUM.getFluid(288),
+				0,
+				20 * 300,
+				8000);
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(19),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedCooperite", 8),
+						ELEMENT.getInstance().CARBON.getDust(32),
+				},
+				Materials.SulfuricAcid.getFluid(8000),
+				ELEMENT.getInstance().RUTHENIUM.getFluid(144),
+				0,
+				20 * 300,
+				8000);
+		
+		// Rhenium Roasting
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(20),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedScheelite", 8),
+						ELEMENT.getInstance().CARBON.getDust(32),
+				},
+				Materials.SulfuricAcid.getFluid(10000),
+				ELEMENT.getInstance().RHENIUM.getFluid(144),
+				0,
+				20 * 300,
+				4000);
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(20),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedMolybdenite", 8),
+						ELEMENT.getInstance().CARBON.getDust(32),
+				},
+				Materials.SulfuricAcid.getFluid(7500),
+				ELEMENT.getInstance().RHENIUM.getFluid(144),
+				0,
+				20 * 300,
+				4000);
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(20),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedMolybdenum", 8),
+						ELEMENT.getInstance().CARBON.getDust(32),
+				},
+				Materials.SulfuricAcid.getFluid(5000),
+				ELEMENT.getInstance().RHENIUM.getFluid(288),
+				0,
+				20 * 300,
+				4000);
+		
+		//Thallium Roasting
+		CORE.RA.addBlastSmelterRecipe(
+				new ItemStack[] { 
+						ItemUtils.getGregtechCircuit(21),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedIron", 12),
+						ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedPyrite", 16),
+						ELEMENT.getInstance().CARBON.getDust(64),
+				},
+				Materials.SulfuricAcid.getFluid(5000),
+				ELEMENT.getInstance().THALLIUM.getFluid(288+144),
+				0,
+				20 * 300,
+				8000);
+		
+		
+		
 
 	}
 
@@ -279,16 +448,20 @@ public class RECIPES_GREGTECH {
 		// Raisins from Grapes
 		try {
 
+			ItemStack cropGrape = ItemUtils.getItemStackOfAmountFromOreDictNoBroken("cropGrape", 1);
+			ItemStack foodRaisins = ItemUtils.getItemStackOfAmountFromOreDictNoBroken("foodRaisins", 1);
+			
+			if (cropGrape != null && foodRaisins != null)			
 			CORE.RA.addDehydratorRecipe(new ItemStack[] { 
-					ItemUtils.getItemStackOfAmountFromOreDict("cropGrape", 1)
+					cropGrape
 			}, // Item
 					null, // Fluid input (slot 1)
 					null, // Fluid output (slot 2)
 					new ItemStack[] { 
-							ItemUtils.getItemStackOfAmountFromOreDict("foodRaisins", 1)
+							foodRaisins
 			}, // Output
-					new int[] { 0 }, 10 * 20, // Time in ticks
-					8); // EU
+					new int[] { 0 }, 10, // Time in ticks
+					2); // EU
 
 		}
 		catch (final NullPointerException e) {
@@ -394,7 +567,8 @@ public class RECIPES_GREGTECH {
 					FluidUtils.getFluidStack("hydrofluoricacid", 9 * 144), 
 					null, 
 					new ItemStack[] { ItemUtils.getItemStackOfAmountFromOreDict("cellHydrogenChloride", 9),
-							ItemUtils.getItemStackOfAmountFromOreDict("dustZrF4", 9) },
+							FLUORIDES.ZIRCONIUM_TETRAFLUORIDE.getDust(9)
+							},
 					new int[] { 0 }, 120 * 20, // Time in ticks
 					500); // EU
 
@@ -406,7 +580,7 @@ public class RECIPES_GREGTECH {
 						FluidUtils.getFluidStack("hydrofluoricacid_gt5u", 18 * 144),
 						null,
 						new ItemStack[] { ItemUtils.getItemStackOfAmountFromOreDict("cellHydrogenChloride", 9),
-								ItemUtils.getItemStackOfAmountFromOreDict("dustZrF4", 9) },						
+								FLUORIDES.ZIRCONIUM_TETRAFLUORIDE.getDust(9) },						
 						new int[] { 0 },
 						120 * 20, // Time in ticks
 						500); // EU
@@ -501,27 +675,27 @@ public class RECIPES_GREGTECH {
 
 	private static void largeChemReactorRecipes() {
 		//Styrene
-		GT_Values.RA.addMultiblockChemicalRecipe(
-				new ItemStack[]{GT_Utility.getIntegratedCircuit(24)},
+		CORE.RA.addMultiblockChemicalRecipe(
+				new ItemStack[]{CI.getNumberedCircuit(24)},
 				new FluidStack[]{
 						FluidUtils.getFluidStack("fluid.ethylbenzene", 1000)
 				},
 				new FluidStack[]{
-						Materials.Styrene.getFluid(1000),
+						MaterialUtils.getMaterial("Styrene").getFluid(1000),
 						Materials.Hydrogen.getGas(2000)
 				},
 				null,
 				30,
 				30);
 		//Short-cut Styrene
-		GT_Values.RA.addMultiblockChemicalRecipe(
-				new ItemStack[]{GT_Utility.getIntegratedCircuit(24)},
+		CORE.RA.addMultiblockChemicalRecipe(
+				new ItemStack[]{CI.getNumberedCircuit(24)},
 				new FluidStack[]{
-						Materials.Ethylene.getGas(500), 
-						Materials.Benzene.getFluid(500)
+						MaterialUtils.getMaterial("Ethylene").getGas(500), 
+						MaterialUtils.getMaterial("Benzene").getFluid(500)
 				},
 				new FluidStack[]{
-						Materials.Styrene.getFluid(500),
+						MaterialUtils.getMaterial("Styrene").getFluid(500),
 						Materials.Hydrogen.getGas(1000)
 				},
 				null,
@@ -542,7 +716,7 @@ public class RECIPES_GREGTECH {
 			// FluidStacks
 			final FluidStack ThoriumFluoride = FluidUtils.getFluidStack("molten.thoriumtetrafluoride", 100); // Re-usable
 			// FluidStacks
-			final FluidStack ZirconiumFluoride = FluidUtils.getFluidStack("molten.zirconiumtetrafluoride", 100); // Re-usable
+			final FluidStack ZirconiumFluoride = FluidUtils.getFluidStack("zirconiumtetrafluoride", 100); // Re-usable
 			// FluidStacks
 			final FluidStack UraniumTetraFluoride = FluidUtils.getFluidStack("molten.uraniumtetrafluoride", 100); // Re-usable
 			// FluidStacks
@@ -753,25 +927,45 @@ public class RECIPES_GREGTECH {
 	private static void fluidExtractorRecipes() {		
 		//FLiBe fuel
 		GT_Values.RA.addFluidExtractionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustLi2BeF4", 1), null,
-				FluidUtils.getFluidStack("molten.li2bef4", 144), 10000, 100, 500);
+				FluidUtils.getFluidStack("li2bef4", 144), 10000, 100, 500);
 		//LFTR Fuel 1
-		GT_Values.RA.addFluidExtractionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustLiBeF2ZrF4U235", 1), null,
+		GT_Values.RA.addFluidExtractionRecipe(NUCLIDE.LiFBeF2ZrF4U235.getDust(1), null,
+				NUCLIDE.LiFBeF2ZrF4U235.getFluid(144), 10000, 250, 1000);
+		GT_Values.RA.addFluidExtractionRecipe(NUCLIDE.LiFBeF2ZrF4UF4.getDust(1), null,
+				NUCLIDE.LiFBeF2ZrF4UF4.getFluid(144), 10000, 150, 2000);
+		GT_Values.RA.addFluidExtractionRecipe(NUCLIDE.LiFBeF2ThF4UF4.getDust(1), null,
+				NUCLIDE.LiFBeF2ThF4UF4.getFluid(144), 10000, 200, 1500);
+		
+		//ZIRCONIUM_TETRAFLUORIDE
+		GT_Values.RA.addFluidExtractionRecipe(FLUORIDES.ZIRCONIUM_TETRAFLUORIDE.getDust(1), null,
+				FluidUtils.getFluidStack(ModItems.fluidZrF4, 144), 10000, 200, 512+256);
+		
+		
+		
+/*		GT_Values.RA.addFluidExtractionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustLiBeF2ZrF4U235", 1), null,
 				FluidUtils.getFluidStack("molten.libef2zrf4u235", 144), 10000, 250, 1000);
 		//LFTR Fuel 2
 		GT_Values.RA.addFluidExtractionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustLiBeF2ZrF4UF4", 1), null,
 				FluidUtils.getFluidStack("molten.libef2zrf4uf4", 144), 10000, 150, 2000);
 		//LFTR Fuel 2
 		GT_Values.RA.addFluidExtractionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustLiBeF2ThF4UF4", 1), null,
-				FluidUtils.getFluidStack("molten.libef2thf4uf4", 144), 10000, 200, 1500);
+				FluidUtils.getFluidStack("molten.libef2thf4uf4", 144), 10000, 200, 1500);*/
 	}
 
 	private static void chemicalBathRecipes() {
-		final int[] chances = {};
+		int[] chances = {9000, 6000, 3000};
 		GT_Values.RA.addChemicalBathRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustTin", 12),
 				FluidUtils.getFluidStack("chlorine", 2400),
 				ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 3),
+				ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 4),
+				ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 5), chances, 30 * 20, 480);
+		chances = new int[]{9000, 3000, 1000};
+		GT_Values.RA.addChemicalBathRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustRutile", 5),
+				FluidUtils.getFluidStack("chlorine", 4000),
 				ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 3),
-				ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 3), chances, 30 * 20, 240);
+				ItemUtils.getItemStackOfAmountFromOreDict("dustTitanium", 1),
+				ItemUtils.getItemStackOfAmountFromOreDict("dustHafnium", 1),
+				chances, 30 * 20, 1024);		
 
 		GT_Values.RA.addChemicalBathRecipe(FLUORIDES.FLUORITE.getCrushed(2), FluidUtils.getFluidStack("hydrogen", 2000),
 				FLUORIDES.FLUORITE.getCrushedPurified(8), FLUORIDES.FLUORITE.getDustImpure(4),
@@ -896,14 +1090,25 @@ public class RECIPES_GREGTECH {
 					CI.emptyCells(2), 20 * 20);
 		}
 
-		//Refine GT HF into GT++ HF
-		GT_Values.RA.addChemicalRecipe(
-				ItemUtils.getItemStackOfAmountFromOreDict("cellHydrofluoricAcid", 2),
-				ItemUtils.getItemStackOfAmountFromOreDict("cellHydrofluoricAcid_GT5U", 5),
-				null, // Fluid Input
-				FluidUtils.getFluidStack("hydrofluoricacid", 6000), // Fluid Output
-				CI.emptyCells(7),
-				2 * 20);
+		ItemStack temp_GT5u_SA = ItemUtils.getItemStackOfAmountFromOreDictNoBroken("cellHydrofluoricAcid_GT5U", 5);
+		if (temp_GT5u_SA != null) {
+			//Refine GT HF into GT++ HF
+			GT_Values.RA.addChemicalRecipe(
+					ItemUtils.getItemStackOfAmountFromOreDict("cellHydrofluoricAcid", 2),
+					temp_GT5u_SA,
+					null, // Fluid Input
+					FluidUtils.getFluidStack("hydrofluoricacid", 6000), // Fluid Output
+					CI.emptyCells(7),
+					2 * 20);
+		}
+		
+		
+		//Technetium
+		GT_Values.RA.addChemicalRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustTechnetium99", 1), null,
+				FluidUtils.getFluidStack("sulfuricacid", 1000), FluidUtils.getFluidStack("sulfuricacid", 144 * 2),
+				ItemUtils.getItemStackOfAmountFromOreDict("dustTechnetium", 1), 100 * 20);
+		
+
 
 	}
 
@@ -1016,7 +1221,18 @@ public class RECIPES_GREGTECH {
 
 	}
 
-	private static void sifterRecipes() {
+	private static void sifterRecipes() {		
+
+		// Zirconium
+		GT_Values.RA.addSifterRecipe(ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedIlmenite", 1),
+				new ItemStack[] { ItemUtils.getItemStackOfAmountFromOreDict("dustIron", 1),
+						ItemUtils.getItemStackOfAmountFromOreDict("dustTinyWroughtIron", 1),
+						ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 1),
+						ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 1),
+						ItemUtils.getItemStackOfAmountFromOreDict("dustHafnium", 1),
+						ItemUtils.getItemStackOfAmountFromOreDict("dustHafnium", 1) },
+				new int[] { 5000, 2500, 1000, 1000, 300, 300 }, 20 * 30, 500);
+		
 		// Zirconium
 		GT_Values.RA.addSifterRecipe(ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedTin", 1),
 				new ItemStack[] { ItemUtils.getItemStackOfAmountFromOreDict("dustTin", 1),
@@ -1025,7 +1241,7 @@ public class RECIPES_GREGTECH {
 						ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 1) },
-				new int[] { 10000, 5000, 1500, 1000, 500, 500 }, 20 * 30, 60);
+				new int[] { 10000, 5000, 1500, 1000, 500, 500 }, 20 * 30, 500);
 
 		// Zirconium
 		GT_Values.RA.addSifterRecipe(ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedCassiterite", 1),
@@ -1035,7 +1251,7 @@ public class RECIPES_GREGTECH {
 						ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustZirconium", 1) },
-				new int[] { 10000, 5000, 1500, 1000, 500, 500 }, 20 * 30, 60);
+				new int[] { 10000, 5000, 1500, 1000, 500, 500 }, 20 * 30, 500);
 
 		// Radium
 		GT_Values.RA.addSifterRecipe(ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedUranium", 1),
@@ -1045,7 +1261,7 @@ public class RECIPES_GREGTECH {
 						ItemUtils.getItemStackOfAmountFromOreDict("dustRadium226", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustRadium226", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustRadium226", 1) },
-				new int[] { 10000, 5000, 1000, 500, 500, 500 }, 20 * 30, 60);
+				new int[] { 10000, 5000, 1000, 500, 500, 500 }, 20 * 30, 500);
 		// Radium
 		GT_Values.RA.addSifterRecipe(ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedUraninite", 1),
 				new ItemStack[] { ItemUtils.getItemStackOfAmountFromOreDict("dustUraninite", 1),
@@ -1054,7 +1270,7 @@ public class RECIPES_GREGTECH {
 						ItemUtils.getItemStackOfAmountFromOreDict("dustRadium226", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustRadium226", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustRadium226", 1) },
-				new int[] { 10000, 5000, 500, 250, 250, 250 }, 20 * 30, 60);
+				new int[] { 10000, 5000, 500, 250, 250, 250 }, 20 * 30, 500);
 		// Radium
 		GT_Values.RA.addSifterRecipe(ItemUtils.getItemStackOfAmountFromOreDict("crushedPurifiedPitchblende", 1),
 				new ItemStack[] { ItemUtils.getItemStackOfAmountFromOreDict("dustPitchblende", 1),
@@ -1063,7 +1279,7 @@ public class RECIPES_GREGTECH {
 						ItemUtils.getItemStackOfAmountFromOreDict("dustRadium226", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustRadium226", 1),
 						ItemUtils.getItemStackOfAmountFromOreDict("dustRadium226", 1) },
-				new int[] { 10000, 5000, 500, 250, 250, 250 }, 20 * 30, 60);
+				new int[] { 10000, 5000, 500, 250, 250, 250 }, 20 * 30, 500);
 	}
 
 	private static void electroMagneticSeperatorRecipes() {

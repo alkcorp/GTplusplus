@@ -356,6 +356,12 @@ public class TexturesGtBlock {
 	//Discharger Texture
 	private static final CustomIcon Internal_Overlay_Hatch_Discharger = new CustomIcon("TileEntities/cover_discharge");
 	public static final CustomIcon Overlay_Hatch_Discharger = Internal_Overlay_Hatch_Discharger;
+	//Advanced Muffler
+	private static final CustomIcon Internal_Overlay_Hatch_Muffler_Adv = new CustomIcon("iconsets/OVERLAY_MUFFLER_ADV");
+	public static final CustomIcon Overlay_Hatch_Muffler_Adv = Internal_Overlay_Hatch_Muffler_Adv;
+	//Control Core Bus 
+	private static final CustomIcon Internal_Overlay_Hatch_Control_Core = new CustomIcon("iconsets/OVERLAY_CONTROL_CORE_BUS");
+	public static final CustomIcon Overlay_Hatch_Control_Core = Internal_Overlay_Hatch_Control_Core;
 	
 	//Dimensional
 	private static final CustomIcon Internal_Overlay_Machine_Dimensional_Blue = new CustomIcon("TileEntities/adv_machine_dimensional_cover_blue");
@@ -385,6 +391,7 @@ public class TexturesGtBlock {
 	public static final CustomIcon TEXTURE_METAL_PANEL_E = new CustomIcon("metro/TEXTURE_METAL_PANEL_E");
 	public static final CustomIcon TEXTURE_MAGIC_PANEL_A = new CustomIcon("metro/TEXTURE_MAGIC_A");
 	public static final CustomIcon TEXTURE_ORGANIC_PANEL_A = new CustomIcon("metro/TEXTURE_ORGANIC_PANEL_A");
+	public static final CustomIcon TEXTURE_ORGANIC_PANEL_A_GLOWING = new CustomIcon("metro/TEXTURE_ORGANIC_PANEL_A_GLOWING");
 	public static final CustomIcon TEXTURE_STONE_BIRD_A = new CustomIcon("metro/TEXTURE_STONE_BIRD_A");
 	public static final CustomIcon TEXTURE_STONE_BIRD_A_LEFT = new CustomIcon("metro/TEXTURE_STONE_BIRD_A_LEFT");
 	public static final CustomIcon TEXTURE_STONE_BIRD_A_RIGHT = new CustomIcon("metro/TEXTURE_STONE_BIRD_A_RIGHT");
@@ -517,6 +524,10 @@ public class TexturesGtBlock {
 			TEXTURE_CASING_FUSION_COIL_II_4, TEXTURE_CASING_FUSION_COIL_II_5,	TEXTURE_CASING_FUSION_COIL_II_6, 
 			TEXTURE_CASING_FUSION_COIL_II_7, TEXTURE_CASING_FUSION_COIL_II_8, TEXTURE_CASING_FUSION_COIL_II_9,
 			TEXTURE_CASING_FUSION_COIL_II_10, TEXTURE_CASING_FUSION_COIL_II_11, TEXTURE_CASING_FUSION_COIL_II_12};
+
+
+
+	public static Object Casing_Material_Turbine;
 
 
 

@@ -21,12 +21,15 @@ import net.minecraftforge.fluids.Fluid;
 
 public final class ModBlocks {
 
+	public static Block blockCircuitProgrammer;
 	public static Block blockFakeMiningPipe;
 	public static Block blockFakeMiningHead;
 	
 	public static Block blockFishTrap;
 	public static Block blockWorkbench;
 	public static Block blockWorkbenchAdvanced;
+	public static Block blockDecayablesChest;
+	
 	//Blocks
 	//public static Block blockBloodSteel;
 	//public static Block blockStaballoy;
@@ -64,6 +67,12 @@ public final class ModBlocks {
 	public static Block blockXpConverter;
 	public static Block blockCompressedObsidian;
 	public static Block blockNet;
+
+	public static Block blockPlayerDoorWooden;
+	public static Block blockPlayerDoorIron;
+	public static Block blockPlayerDoorCustom_Glass;
+	public static Block blockPlayerDoorCustom_Ice;
+	public static Block blockPlayerDoorCustom_Cactus;
 	
 	public static Block blockCustomMobSpawner;
 
@@ -89,7 +98,7 @@ public final class ModBlocks {
 		blockFirePit = new FirePit();
 		blockFishTrap = new FishTrap();
 		blockInfiniteFLuidTank = new FluidTankInfinite();
-		blockOreFluorite = new BlockBaseOre.oldOreBlock("oreFluorite", "Fluorite", Material.rock, BlockTypes.ORE, Utils.rgbtoHexValue(120, 120, 30), 3);
+		//blockOreFluorite = new BlockBaseOre.oldOreBlock("oreFluorite", "Fluorite", Material.rock, BlockTypes.ORE, Utils.rgbtoHexValue(120, 120, 30), 3);
 		blockMiningExplosive = new MiningExplosives();
 		blockHellfire = new HellFire();
 		blockProjectTable =  new Machine_ProjectTable();
@@ -102,6 +111,16 @@ public final class ModBlocks {
 
 		blockFakeMiningPipe = new Mining_Pipe_Fake();
 		blockFakeMiningHead = new Mining_Head_Fake();
+		
+		blockCircuitProgrammer = new CircuitProgrammer();
+		
+		blockDecayablesChest = new DecayablesChest();
+		
+		blockPlayerDoorWooden = new PlayerDoors(Material.wood, "door_wood", true);
+		blockPlayerDoorIron = new PlayerDoors(Material.iron, "door_iron", true);
+		blockPlayerDoorCustom_Glass = new PlayerDoors(Material.glass, "door_glass", false);
+		blockPlayerDoorCustom_Ice = new PlayerDoors(Material.ice, "door_ice", false);
+		blockPlayerDoorCustom_Cactus = new PlayerDoors(Material.cactus, "door_cactus", false, 0.6f, Block.soundTypeGrass, "Cactus");
 
 	}
 

@@ -17,6 +17,7 @@ import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
 
 import gtPlusPlus.core.lib.CORE;
+import gtPlusPlus.core.util.minecraft.gregtech.PollutionUtils;
 import net.minecraftforge.fluids.FluidStack;
 
 public abstract class GregtechRocketFuelGeneratorBase extends GT_MetaTileEntity_BasicTank {
@@ -56,8 +57,21 @@ public abstract class GregtechRocketFuelGeneratorBase extends GT_MetaTileEntity_
 
 
 	@Override
-	public String[] getDescription() {
-		return new String[]{this.mDescription, "Fuel Efficiency: " + this.getEfficiency() + "%", CORE.GT_Tooltip};
+	public String[] getDescription() {		
+		if (CORE.MAIN_GREGTECH_5U_EXPERIMENTAL_FORK) {
+			int pollMin = mTier == 4 ? 250 : (mTier == 5 ? 500 : 750);
+			int pollMax = mTier == 4 ? 2000 : (mTier == 5 ? 4000 : 6000);			
+			String aPollution = "Causes between "+pollMin+" and "+pollMax+ " Pollution per second";			
+			return new String[]{
+					this.mDescription,
+					"Fuel Efficiency: " + this.getEfficiency()*2 + "%",
+					aPollution,
+					CORE.GT_Tooltip};
+		}		
+		return new String[]{
+				this.mDescription,
+				"Fuel Efficiency: " + this.getEfficiency()*2 + "%",
+				CORE.GT_Tooltip};
 	}
 
 
@@ -147,7 +161,7 @@ public abstract class GregtechRocketFuelGeneratorBase extends GT_MetaTileEntity_
 
 	@Override
 	public long maxEUStore() {
-		return Math.max(this.getEUVar(), (V[this.mTier] * 80) + this.getMinimumStoredEU());
+		return Math.max(this.getEUVar(), (V[this.mTier] * 500) + this.getMinimumStoredEU());
 	}
 
 	@Override
@@ -209,6 +223,7 @@ public abstract class GregtechRocketFuelGeneratorBase extends GT_MetaTileEntity_
 						else {
 							this.useFuel = true;
 						}
+						PollutionUtils.addPollution(getBaseMetaTileEntity(), 10 * getPollution());
 					}
 				}
 			}
@@ -219,6 +234,7 @@ public abstract class GregtechRocketFuelGeneratorBase extends GT_MetaTileEntity_
 					if (aBaseMetaTileEntity.addStackToSlot(this.getOutputSlot(), tEmptyContainer)) {
 						aBaseMetaTileEntity.increaseStoredEnergyUnits(tFuelValue, true);
 						aBaseMetaTileEntity.decrStackSize(this.getInputSlot(), 1);
+						PollutionUtils.addPollution(getBaseMetaTileEntity(), 10 * getPollution());
 					}
 				}
 			}
@@ -228,6 +244,8 @@ public abstract class GregtechRocketFuelGeneratorBase extends GT_MetaTileEntity_
 			aBaseMetaTileEntity.setActive(aBaseMetaTileEntity.isAllowedToWork() && (aBaseMetaTileEntity.getUniversalEnergyStored() >= (this.maxEUOutput() + this.getMinimumStoredEU())));
 		}
 	}
+
+	public abstract int getPollution();
 
 	public abstract GT_Recipe_Map getRecipes();
 

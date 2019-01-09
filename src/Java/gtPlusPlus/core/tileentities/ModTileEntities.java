@@ -23,6 +23,9 @@ public class ModTileEntities {
 		GameRegistry.registerTileEntity(TileEntityModularityTable.class, "TileEntityModularityTable");
 		GameRegistry.registerTileEntity(TileEntityXpConverter.class, "TileEntityXpConverter");
 		GameRegistry.registerTileEntity(TileEntityGenericSpawner.class, "TileEntityGenericSpawner");
+		GameRegistry.registerTileEntity(TileEntityCircuitProgrammer.class, "TileCircuitProgrammer");
+		GameRegistry.registerTileEntity(TileEntityPlayerDoorBase.class, "TilePlayerDoorBase");
+		GameRegistry.registerTileEntity(TileEntityDecayablesChest.class, "TileDecayablesChest");
 
 		
 		//Mod TEs

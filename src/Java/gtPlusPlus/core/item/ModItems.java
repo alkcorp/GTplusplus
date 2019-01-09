@@ -2,6 +2,8 @@ package gtPlusPlus.core.item;
 import static gtPlusPlus.core.creative.AddToCreativeTab.*;
 import static gtPlusPlus.core.lib.CORE.LOAD_ALL_CONTENT;
 
+import com.ibm.icu.util.RangeValueIterator.Element;
+
 import cpw.mods.fml.common.registry.GameRegistry;
 
 import net.minecraft.item.*;
@@ -20,19 +22,25 @@ import gtPlusPlus.core.common.compat.COMPAT_Baubles;
 import gtPlusPlus.core.creative.AddToCreativeTab;
 import gtPlusPlus.core.handler.OldCircuitHandler;
 import gtPlusPlus.core.item.base.*;
+import gtPlusPlus.core.item.base.BaseItemComponent.ComponentTypes;
 import gtPlusPlus.core.item.base.foil.BaseItemFoil;
 import gtPlusPlus.core.item.base.foods.BaseItemFood;
 import gtPlusPlus.core.item.base.foods.BaseItemHotFood;
 import gtPlusPlus.core.item.base.gears.BaseItemSmallGear;
+import gtPlusPlus.core.item.base.ingots.BaseItemIngot;
 import gtPlusPlus.core.item.base.ingots.BaseItemIngot_OLD;
 import gtPlusPlus.core.item.base.misc.BaseItemMisc;
 import gtPlusPlus.core.item.base.misc.BaseItemMisc.MiscTypes;
+import gtPlusPlus.core.item.base.misc.BaseItemParticle;
 import gtPlusPlus.core.item.base.plates.BaseItemPlate;
 import gtPlusPlus.core.item.base.plates.BaseItemPlateDouble;
 import gtPlusPlus.core.item.bauble.HealthBoostBauble;
 import gtPlusPlus.core.item.bauble.ModularBauble;
 import gtPlusPlus.core.item.chemistry.CoalTar;
+import gtPlusPlus.core.item.chemistry.IonParticles;
 import gtPlusPlus.core.item.chemistry.NuclearChem;
+import gtPlusPlus.core.item.chemistry.RocketFuels;
+import gtPlusPlus.core.item.chemistry.StandardBaseParticles;
 import gtPlusPlus.core.item.effects.RarityUncommon;
 import gtPlusPlus.core.item.general.*;
 import gtPlusPlus.core.item.general.books.ItemBaseBook;
@@ -44,6 +52,9 @@ import gtPlusPlus.core.item.init.ItemsFoods;
 import gtPlusPlus.core.item.init.ItemsMultiTools;
 import gtPlusPlus.core.item.materials.DustDecayable;
 import gtPlusPlus.core.item.tool.misc.SandstoneHammer;
+import gtPlusPlus.core.item.tool.misc.box.AutoLunchBox;
+import gtPlusPlus.core.item.tool.misc.box.MagicToolBag;
+import gtPlusPlus.core.item.tool.misc.box.UniversalToolBox;
 import gtPlusPlus.core.item.tool.misc.GregtechPump;
 import gtPlusPlus.core.item.tool.staballoy.*;
 import gtPlusPlus.core.item.wearable.WearableLoader;
@@ -53,6 +64,7 @@ import gtPlusPlus.core.lib.LoadedMods;
 import gtPlusPlus.core.material.*;
 import gtPlusPlus.core.material.nuclear.FLUORIDES;
 import gtPlusPlus.core.material.nuclear.NUCLIDE;
+import gtPlusPlus.core.recipe.common.CI;
 import gtPlusPlus.core.util.Utils;
 import gtPlusPlus.core.util.data.StringUtils;
 import gtPlusPlus.core.util.debug.DEBUG_INIT;
@@ -270,6 +282,22 @@ public final class ModItems {
 
 	public static Item itemGenericToken;
 
+	public static Item itemControlCore;
+
+	public static ItemStack itemHotTitaniumIngot;
+
+	public static Fluid fluidZrF4;
+
+	public static Item boxTools;
+	public static Item boxFood;
+	public static Item boxMagic;
+
+	private static DustDecayable dustMolybdenum99;
+
+	private static DustDecayable dustTechnetium99;
+
+	private static DustDecayable dustTechnetium99M;
+
 	static {
 		Logger.INFO("Items!");
 		//Default item used when recipes fail, handy for debugging. Let's make sure they exist when this class is called upon.
@@ -336,13 +364,19 @@ public final class ModItems {
 		backpack_Gray = new BaseItemBackpack("backpackGray", Utils.rgbtoHexValue(128, 128, 128));
 		backpack_Black = new BaseItemBackpack("backpackBlack", Utils.rgbtoHexValue(20, 20, 20));
 		backpack_White = new BaseItemBackpack("backpackWhite", Utils.rgbtoHexValue(240, 240, 240));
+		
+		
+		//Load Custom Box/bags
+		boxTools = new UniversalToolBox("Tool Box");
+		boxFood = new AutoLunchBox("Eatotron-9000");
+		boxMagic = new MagicToolBag("Mystic Bag");
 
 		itemBlueprintBase = new ItemBlueprint("itemBlueprint");
 
 		itemGemShards = new ItemGemShards("itemGemShards", "Gem Shards", AddToCreativeTab.tabMisc, 32, 0, "They glitter in the light", EnumRarity.rare, EnumChatFormatting.GRAY, false, Utils.rgbtoHexValue(182, 114, 18)).setTextureName(CORE.MODID + ":itemHeliumBlob");
 		itemHalfCompleteCasings = new ItemHalfCompleteCasings("itemHalfCompleteCasings", AddToCreativeTab.tabMisc, 32, 0, "This isn't quite finished yet.", EnumRarity.common, EnumChatFormatting.GRAY, false, Utils.rgbtoHexValue(255, 255, 255)).setTextureName("gregtech" + ":" + "gt.metaitem.01/" + "761");
 		itemSulfuricPotion = new ItemSulfuricAcidPotion("itemSulfuricPotion", "Throwable Vial of Sulfuric Acid", "Burn your foes alive!").setTextureName(CORE.MODID + ":itemSulfuricAcidPotion");
-		itemHydrofluoricPotion = new ItemHydrofluoricAcidPotion("itemHydrofluoricPotion", "Thowable Vial of Hydrofluoric Acid", "They won't see this coming, nor anything after!").setTextureName(CORE.MODID + ":itemPotion");
+		itemHydrofluoricPotion = new ItemHydrofluoricAcidPotion("itemHydrofluoricPotion", "Throwable Vial of Hydrofluoric Acid", "They won't see this coming, nor anything after!").setTextureName(CORE.MODID + ":itemPotion");
 		//Start meta Item Generation
 		ItemsFoods.load();
 
@@ -353,21 +387,21 @@ public final class ModItems {
 			 * Try generate dusts for missing rare earth materials if they don't exist
 			 */
 
-			if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("dustGadolinium", 1) == null){
+			if (!ItemUtils.checkForInvalidItems(ItemUtils.getItemStackOfAmountFromOreDictNoBroken("dustGadolinium", 1))){
 				ItemUtils.generateSpecialUseDusts("Gadolinium", "Gadolinium", Materials.Gadolinium.mElement.name(), Utils.rgbtoHexValue(226, 172, 9));
 			}
-			if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("dustYtterbium", 1) == null){
+			if (!ItemUtils.checkForInvalidItems(ItemUtils.getItemStackOfAmountFromOreDictNoBroken("dustYtterbium", 1))){
 				ItemUtils.generateSpecialUseDusts("Ytterbium", "Ytterbium", Materials.Ytterbium.mElement.name(), Utils.rgbtoHexValue(Materials.Yttrium.mRGBa[0]-60, Materials.Yttrium.mRGBa[1]-60, Materials.Yttrium.mRGBa[2]-60));
 			}
-			if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("dustSamarium", 1) == null){
+			if (!ItemUtils.checkForInvalidItems(ItemUtils.getItemStackOfAmountFromOreDictNoBroken("dustSamarium", 1))){
 				ItemUtils.generateSpecialUseDusts("Samarium", "Samarium", Materials.Samarium.mElement.name(), Utils.rgbtoHexValue(161, 168, 114));
 			}
-			if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("dustLanthanum", 1) == null){
+			if (!ItemUtils.checkForInvalidItems(ItemUtils.getItemStackOfAmountFromOreDictNoBroken("dustLanthanum", 1))){
 				ItemUtils.generateSpecialUseDusts("Lanthanum", "Lanthanum", Materials.Lanthanum.mElement.name(), Utils.rgbtoHexValue(106, 127, 163));
 			}
-			/*if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("dustGadolinium", 1) == null){
-		    	ItemUtils.generateSpecialUseDusts("Gadolinium", "Gadolinium", "", Utils.rgbtoHexValue(Materials.Gadolinium.mRGBa[0], Materials.Gadolinium.mRGBa[1], Materials.Gadolinium.mRGBa[2]));
-			}*/
+			if (!ItemUtils.checkForInvalidItems(ItemUtils.getItemStackOfAmountFromOreDictNoBroken("dustGermanium", 1))){
+		    	ItemUtils.generateSpecialUseDusts("Germanium", "Germanium", "Ge", ELEMENT.getInstance().GERMANIUM.getRgbAsHex());
+			}
 
 
 			//Elements generate first so they can be used in compounds.
@@ -429,6 +463,14 @@ public final class ModItems {
 			MaterialGenerator.generateNuclearMaterial(ELEMENT.getInstance().STRONTIUM90, false);
 			MaterialGenerator.generateNuclearMaterial(ELEMENT.getInstance().POLONIUM210, false);
 			MaterialGenerator.generateNuclearMaterial(ELEMENT.getInstance().AMERICIUM241, false);
+			
+			
+			//Custom Materials that will have standalone refinery processes
+			MaterialGenerator.generate(ELEMENT.STANDALONE.ADVANCED_NITINOL, false);
+			MaterialGenerator.generate(ELEMENT.STANDALONE.ASTRAL_TITANIUM);
+			MaterialGenerator.generate(ELEMENT.STANDALONE.CELESTIAL_TUNGSTEN);
+			MaterialGenerator.generate(ELEMENT.STANDALONE.HYPOGEN);
+			MaterialGenerator.generate(ELEMENT.STANDALONE.CHRONOMATIC_GLASS);
 
 
 			//Carbides - Tungsten Carbide exists in .09 so don't generate it. - Should still come before alloys though
@@ -439,6 +481,7 @@ public final class ModItems {
 			MaterialGenerator.generate(ALLOY.ZIRCONIUM_CARBIDE);
 			MaterialGenerator.generate(ALLOY.TANTALUM_CARBIDE);
 			MaterialGenerator.generate(ALLOY.NIOBIUM_CARBIDE);
+			MaterialGenerator.generate(ALLOY.TUNGSTEN_TITANIUM_CARBIDE);
 
 			//LFTR Fuel components
 			MaterialGenerator.generate(FLUORIDES.HYDROXIDE); //LFTR fuel component
@@ -495,6 +538,9 @@ public final class ModItems {
 			MaterialGenerator.generate(ALLOY.MARAGING250);
 			MaterialGenerator.generate(ALLOY.MARAGING300);
 			MaterialGenerator.generate(ALLOY.MARAGING350);
+			MaterialGenerator.generate(ALLOY.AQUATIC_STEEL);
+
+			MaterialGenerator.generate(ALLOY.NITINOL_60);
 
 			//Composite Alloys
 			MaterialGenerator.generate(ALLOY.STELLITE);
@@ -524,13 +570,26 @@ public final class ModItems {
 			}
 			MaterialGenerator.generate(ALLOY.TRINIUM_TITANIUM);
 			MaterialGenerator.generate(ALLOY.TRINIUM_NAQUADAH, false);
-			MaterialGenerator.generate(ALLOY.TRINIUM_NAQUADAH_CARBON);			
+			MaterialGenerator.generate(ALLOY.TRINIUM_NAQUADAH_CARBON);
+			MaterialGenerator.generate(ALLOY.TRINIUM_REINFORCED_STEEL);
+			
+			//Top Tier Alloys
+			MaterialGenerator.generate(ALLOY.LAFIUM);
+			MaterialGenerator.generate(ALLOY.CINOBITE);
+			MaterialGenerator.generate(ALLOY.PIKYONIUM);
+			MaterialGenerator.generate(ALLOY.ABYSSAL);
+			
 
+			MaterialGenerator.generate(ALLOY.TITANSTEEL, false);
+			MaterialGenerator.generate(ALLOY.ARCANITE);
+			MaterialGenerator.generate(ALLOY.OCTIRON);			
+			
 			//Must be the final Alloy to Generate
 			MaterialGenerator.generate(ALLOY.QUANTUM);
 
 			//Ores
 			MaterialGenerator.generateOreMaterial(FLUORIDES.FLUORITE);
+			MaterialGenerator.generateOreMaterial(ALLOY.KOBOLDITE);
 			GTplusplus_Everglades.GenerateOreMaterials();
 
 
@@ -587,7 +646,8 @@ public final class ModItems {
 
 		//FLiBe Fuel Compounds
 		dustLi2BeF4 = ItemUtils.generateSpecialUseDusts("Li2BeF4", "Li2BeF4 Fuel Compound", "Li2BeF4", Utils.rgbtoHexValue(255, 255, 255))[0]; //https://en.wikipedia.org/wiki/FLiBe
-		fluidFLiBeSalt = FluidUtils.generateFluid("Li2BeF4", "Li2BeF4", 7430, new short[]{255, 255, 255, 100});
+		//fluidFLiBeSalt = ("Li2BeF4", "Li2BeF4", 7430, new short[]{255, 255, 255, 100}, 0);
+		fluidFLiBeSalt = FluidUtils.addGTFluidNoPrefix("Li2BeF4", "Li2BeF4", new short[]{255, 255, 255, 100}, 0, 743, null, CI.emptyCells(1), 1000, true);
 
 		//LFTR Control Circuit
 		itemCircuitLFTR = new CoreItem("itemCircuitLFTR", ""+EnumChatFormatting.GREEN+"Control Circuit", AddToCreativeTab.tabMisc, 1, 0,  new String[] {"Keeps Multiblocks Stable"}, EnumRarity.epic, EnumChatFormatting.DARK_GREEN, false, null);
@@ -601,9 +661,11 @@ public final class ModItems {
 		dustZrCl4 = ItemUtils.generateSpecialUseDusts("ZrCl4", "ZrCl4", "ZrCl4", Utils.rgbtoHexValue(180, 180, 180))[0]; //http://www.iaea.org/inis/collection/NCLCollectionStore/_Public/39/036/39036750.pdf
 		dustCookedZrCl4 = ItemUtils.generateSpecialUseDusts("CookedZrCl4", "Cooked ZrCl4", "ZrCl4", Utils.rgbtoHexValue(180, 180, 180))[0]; //http://www.iaea.org/inis/collection/NCLCollectionStore/_Public/39/036/39036750.pdf
 		//Zirconium Tetrafluoride
-		GT_OreDictUnificator.registerOre("cellZrF4", ItemUtils.getItemStackOfAmountFromOreDict("cellZirconiumTetrafluoride", 1));
-		GT_OreDictUnificator.registerOre("dustZrF4", ItemUtils.getItemStackOfAmountFromOreDict("dustZirconiumTetrafluoride", 1));
-		FluidUtils.generateFluid("ZirconiumTetrafluoride", "Zirconium Tetrafluoride [ZrF4]", 500, new short[]{170, 170, 140, 100}); //https://en.wikipedia.org/wiki/Zirconium_tetrafluoride
+		/*GT_OreDictUnificator.registerOre("cellZrF4", ItemUtils.getItemStackOfAmountFromOreDict("cellZirconiumTetrafluoride", 1));
+		GT_OreDictUnificator.registerOre("dustZrF4", ItemUtils.getItemStackOfAmountFromOreDict("dustZirconiumTetrafluoride", 1));*/
+		//GT_OreDictUnificator.registerOre("cellZrF4", ItemUtils.getItemStackOfAmountFromOreDict("cellZirconiumTetrafluoride", 1));
+		//GT_OreDictUnificator.registerOre("dustZrF4", ItemUtils.getItemStackOfAmountFromOreDict("dustZirconiumTetrafluoride", 1));
+		fluidZrF4 = FluidUtils.generateFluidNoPrefix("ZirconiumTetrafluoride", "Zirconium Tetrafluoride", 500, new short[]{170, 170, 140, 100}); //https://en.wikipedia.org/wiki/Zirconium_tetrafluoride
 
 		//Coolant Salt
 		//NaBF4 - NaF - 621C
@@ -625,10 +687,10 @@ public final class ModItems {
 				temp2 = ItemUtils.getCorrectStacktype("Forestry:fertilizerCompound", 1);
 			}
 			if (temp1 != null){
-				FluidUtils.generateFluidNonMolten("Fertiliser", "Fertiliser", 32, new short[]{45, 170, 45, 100}, temp1, temp2);
+				FluidUtils.generateFluidNonMolten("Fertiliser", "Fertiliser", 32, new short[]{45, 170, 45, 100}, temp1, temp2, true);
 			}
-			FluidUtils.generateFluidNonMolten("UN32Fertiliser", "UN-32 Fertiliser", 24, new short[]{55, 190, 55, 100}, null, null);
-			FluidUtils.generateFluidNonMolten("UN18Fertiliser", "UN-18 Fertiliser", 22, new short[]{60, 155, 60, 100}, null, null);
+			FluidUtils.generateFluidNonMolten("UN32Fertiliser", "UN-32 Fertiliser", 24, new short[]{55, 190, 55, 100}, null, null, true);
+			FluidUtils.generateFluidNonMolten("UN18Fertiliser", "UN-18 Fertiliser", 22, new short[]{60, 155, 60, 100}, null, null, true);
 
 			/*GT_Values.RA.addMixerRecipe(
 			arg0, //Item In
@@ -645,7 +707,7 @@ public final class ModItems {
 		}
 
 		//Juice
-		FluidUtils.generateFluidNonMolten("RaisinJuice", "Raisin Juice", 2, new short[]{51, 0, 51, 100}, ItemUtils.getItemStackOfAmountFromOreDictNoBroken("foodRaisins", 1), ItemUtils.getItemStackOfAmountFromOreDictNoBroken("fruitRaisins", 1), 50);
+		FluidUtils.generateFluidNonMolten("RaisinJuice", "Raisin Juice", 2, new short[]{51, 0, 51, 100}, ItemUtils.getItemStackOfAmountFromOreDictNoBroken("foodRaisins", 1), ItemUtils.getItemStackOfAmountFromOreDictNoBroken("fruitRaisins", 1), 50, true);
 
 
 		//Test items
@@ -664,7 +726,7 @@ public final class ModItems {
 		toolGregtechPump.registerPumpType(3, "Ultimate Hand Pump", 512000, 3);
 		
 		//Create Multi-tools
-		ItemsMultiTools.load();
+		//ItemsMultiTools.load();
 
 		//Xp Fluids - Dev
 		if (!FluidRegistry.isFluidRegistered("mobessence")){
@@ -676,10 +738,10 @@ public final class ModItems {
 
 		//Just an unusual plate needed for some black magic.		
 		if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("plateClay", 1) == null){
-			itemPlateClay = new BaseItemPlate(MaterialUtils.generateMaterialFromGtENUM(Materials.Clay));
+			itemPlateClay = new BaseItemPlate(NONMATERIAL.CLAY);
 		}
 		if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("plateDoubleClay", 1) == null){
-			itemDoublePlateClay = new BaseItemPlateDouble(MaterialUtils.generateMaterialFromGtENUM(Materials.Clay));
+			itemDoublePlateClay = new BaseItemPlateDouble(NONMATERIAL.CLAY);
 		}
 
 		//Need this for Mutagenic Frames
@@ -689,27 +751,33 @@ public final class ModItems {
 
 		//A small gear needed for wizardry.
 		if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("gearGtSmallWroughtIron", 1) == null){
-			itemSmallWroughtIronGear = new BaseItemSmallGear(MaterialUtils.generateMaterialFromGtENUM(Materials.WroughtIron));
+			itemSmallWroughtIronGear = new BaseItemSmallGear(NONMATERIAL.WROUGHT_IRON);
 		}
+		//Krypton Processing
+		if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("ingotHotTitanium", 1) == null){
+			itemHotTitaniumIngot = ItemUtils.getSimpleStack(new BaseItemIngot(ELEMENT.getInstance().TITANIUM, ComponentTypes.HOTINGOT));
+		}
+		else {
+			itemHotTitaniumIngot = ItemUtils.getItemStackOfAmountFromOreDictNoBroken("ingotHotTitanium", 1);
+		}
+		GT_Values.RA.addBlastRecipe(ELEMENT.getInstance().TITANIUM.getIngot(1), null, itemHotTitaniumIngot, null, 10 * 20, 512, Materials.Titanium.mBlastFurnaceTemp);
 
 		//Special Sillyness
 		if (true) {
 			
 			if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("plateSodium", 1) == null){
-				new BaseItemPlate(MaterialUtils.generateMaterialFromGtENUM(Materials.Sodium));
+				new BaseItemPlate(ELEMENT.getInstance().SODIUM);
 			}
 			
-			Material meatRaw = MaterialUtils.generateMaterialFromGtENUM(Materials.MeatRaw);
-			meatRaw.setTextureSet(TextureSet.SET_ROUGH);
+			Material meatRaw = NONMATERIAL.MEAT;
 			// A plate of Meat.
 			if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("plateMeatRaw", 1) == null){
 				itemPlateRawMeat = new BaseItemPlate(meatRaw);
-				RecipeUtils.generateMortarRecipe(ItemUtils.getSimpleStack(itemPlateRawMeat), ItemUtils.getItemStackOfAmountFromOreDict("dustMeatRaw", 1));
 				ItemUtils.registerFuel(ItemUtils.getSimpleStack(itemPlateRawMeat), 100);
 			}
 			// A Block of Meat.
 			if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("blockMeatRaw", 1) == null){
-				blockRawMeat  = new BlockBaseModular(meatRaw.getUnlocalizedName(), meatRaw.getLocalizedName(), BlockTypes.STANDARD, meatRaw.getRgbAsHex());
+				blockRawMeat  = new BlockBaseModular(meatRaw, BlockTypes.STANDARD);
 				ItemUtils.registerFuel(ItemUtils.getSimpleStack(blockRawMeat), 900);
 			}
 		}
@@ -722,21 +790,36 @@ public final class ModItems {
 
 		//A plate of Lithium.
 		if (ItemUtils.getItemStackOfAmountFromOreDictNoBroken("plateLithium", 1) == null){
-			itemPlateLithium = new BaseItemPlate(MaterialUtils.generateMaterialFromGtENUM(Materials.Lithium));
+			itemPlateLithium = new BaseItemPlate(ELEMENT.getInstance().LITHIUM);
 		}
 
 		//A plate of Europium.
 		if ((ItemUtils.getItemStackOfAmountFromOreDictNoBroken("plateEuropium", 1) == null) && CORE.ConfigSwitches.enableCustom_Pipes){
-			itemPlateEuropium = new BaseItemPlate(MaterialUtils.generateMaterialFromGtENUM(Materials.Europium));
+			itemPlateEuropium = new BaseItemPlate(ELEMENT.getInstance().EUROPIUM);
 		}
 		if ((ItemUtils.getItemStackOfAmountFromOreDictNoBroken("plateDoubleEuropium", 1) == null) && CORE.ConfigSwitches.enableCustom_Pipes){
-			itemDoublePlateEuropium = new BaseItemPlateDouble(MaterialUtils.generateMaterialFromGtENUM(Materials.Europium));
+			itemDoublePlateEuropium = new BaseItemPlateDouble(ELEMENT.getInstance().EUROPIUM);
 		}
 
+		
+		/*
+		 * Decayable Materials
+		 */
+		
 		dustNeptunium238 = new DustDecayable("dustNeptunium238", Utils.rgbtoHexValue(175, 240, 75), 50640, new String[] {""+StringUtils.superscript("238Np"), "Result: Plutonium 238 ("+StringUtils.superscript("238Pu")+")"}, ELEMENT.getInstance().PLUTONIUM238.getDust(1).getItem(), 5);
-		dustDecayedRadium226 = ItemUtils.generateSpecialUseDusts("DecayedRadium226", "Decayed Radium-226", ""+StringUtils.superscript("226Ra"), ELEMENT.getInstance().RADIUM.getRgbAsHex())[0];
-		dustRadium226 = new DustDecayable("dustRadium226", ELEMENT.getInstance().RADIUM.getRgbAsHex(), 90000, new String[] {""+StringUtils.superscript("226Ra"), "Result: Radon 222 ("+StringUtils.superscript("222Rn")+")"}, ItemUtils.getSimpleStack(dustDecayedRadium226).getItem(), 5);
+		dustDecayedRadium226 = ItemUtils.generateSpecialUseDusts("DecayedRadium226", "Decayed Radium-226", "Contains Radon ("+StringUtils.superscript("222Rn")+")", ELEMENT.getInstance().RADIUM.getRgbAsHex())[0];
+		dustRadium226 = new DustDecayable("dustRadium226", ELEMENT.getInstance().RADIUM.getRgbAsHex(), 90000, new String[] {""+StringUtils.superscript("226Ra"), "Result: Radon ("+StringUtils.superscript("222Rn")+")"}, ItemUtils.getSimpleStack(dustDecayedRadium226).getItem(), 5);
 
+		dustTechnetium99 = new DustDecayable("dustTechnetium99", ELEMENT.getInstance().TECHNETIUM.getRgbAsHex(), 164500, new String[] {""+StringUtils.superscript("99Mo"), "Result: Ruthenium 99("+StringUtils.superscript("99Ru")+")"}, ELEMENT.getInstance().RUTHENIUM.getDust(1).getItem(), 4);
+		dustTechnetium99M = new DustDecayable("dustTechnetium99M", ELEMENT.getInstance().TECHNETIUM.getRgbAsHex(), 8570, new String[] {""+StringUtils.superscript("99ᵐTc"), "Result: Technicium 99 ("+StringUtils.superscript("99Tc")+")"}, dustTechnetium99, 4);
+		dustMolybdenum99 = new DustDecayable("dustMolybdenum99", ELEMENT.getInstance().MOLYBDENUM.getRgbAsHex(), 16450, new String[] {""+StringUtils.superscript("99Mo"), "Result: Technicium 99ᵐ ("+StringUtils.superscript("99ᵐTc")+")"}, dustTechnetium99M, 4);
+		
+		new IonParticles();
+		new StandardBaseParticles();
+		
+		
+		
+		
 		itemBoilerChassis = new ItemBoilerChassis();
 		itemDehydratorCoilWire = new ItemDehydratorCoilWire();
 		itemDehydratorCoil = new ItemDehydratorCoil();
@@ -746,9 +829,12 @@ public final class ModItems {
 
 		itemGrindleTablet = new BaseItemGrindle();
 		itemDragonJar = new ItemEntityCatcher();
+		
+		itemControlCore = new ItemControlCore();
 
 		//Chemistry
 		CoalTar.run();
+		RocketFuels.run();
 		
 		//Nuclear Processing
 		NuclearChem.run();
@@ -866,7 +952,10 @@ public final class ModItems {
 		//IC2 Exp
 		if (LoadedMods.IndustrialCraft2|| LOAD_ALL_CONTENT){
 			Logger.INFO("IndustrialCraft2 Found - Loading Resources.");
-			RfEuBattery = new RF2EU_Battery();
+			
+			if (LoadedMods.CoFHCore) {
+				RfEuBattery = new RF2EU_Battery();				
+			}
 
 			//Baubles Mod Test
 			try {

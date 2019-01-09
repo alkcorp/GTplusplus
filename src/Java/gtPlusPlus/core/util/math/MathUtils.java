@@ -6,6 +6,7 @@ import java.util.Random;
 import gregtech.api.enums.GT_Values;
 
 import gtPlusPlus.api.objects.Logger;
+import gtPlusPlus.api.objects.data.AutoMap;
 import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.util.Utils;
 
@@ -126,7 +127,7 @@ public class MathUtils {
 	public static double findPercentage(final double current, final double max){
 		return Math.round(((current / max) * 100) * 100.00) / 100.00;
 	}
-	
+
 	public static int findPercentageOfInt(long input, float percentage){
 		return (int)(input*(percentage/100.0f));
 	}
@@ -184,20 +185,20 @@ public class MathUtils {
 		}
 		return result;
 	}
-	
-	
+
+
 	//Smooth Rounding Function
-		/**
-		 * Returns a long.
-		 * The returned number is d rounded to the nearest flat long.
-		 * Supports Doubles as input.
-		 *
-		 * @param current Current value.
-		 * @return long Rounded value.
-		 */
-		public static long roundToClosestLong(final double d) {
-			return (long) (Math.round(d * 2) / 2.0);
-		}
+	/**
+	 * Returns a long.
+	 * The returned number is d rounded to the nearest flat long.
+	 * Supports Doubles as input.
+	 *
+	 * @param current Current value.
+	 * @return long Rounded value.
+	 */
+	public static long roundToClosestLong(final double d) {
+		return (long) (Math.round(d * 2) / 2.0);
+	}
 
 
 	/**
@@ -356,6 +357,14 @@ public class MathUtils {
 		}
 	}
 
+	public static byte safeByte(long number){
+		return number>Byte.MAX_VALUE ? Byte.MAX_VALUE :(byte)number;
+	}
+
+	public static short safeShort(long number){
+		return number>Short.MAX_VALUE ? Short.MAX_VALUE :(short)number;
+	}
+
 	public static int safeInt(long number, int margin){
 		return number>Integer.MAX_VALUE-margin ? Integer.MAX_VALUE-margin :(int)number;
 	}
@@ -372,7 +381,304 @@ public class MathUtils {
 			mLargeChanceArray[g] = mValues[mValueSelection];
 		}
 		return mLargeChanceArray[randInt(0, mLargeChanceArray.length-1)];
+
+	}
+
+
+	/*
+	 * Averages
+	 */
+
+	public static byte getByteAverage(AutoMap<Byte> aDataSet) {
+		byte[] aNewSet = new byte[aDataSet.size()];		
+		for (int u=0;u<aDataSet.size();u++) {
+			byte b = getSafeByte(aDataSet.get(u));
+			aNewSet[u] = b;
+		}		
+		return getByteAverage(aNewSet);
+	}
+
+	public static short getShortAverage(AutoMap<Short> aDataSet) {
+		short[] aNewSet = new short[aDataSet.size()];		
+		for (int u=0;u<aDataSet.size();u++) {
+			short b = getSafeShort(aDataSet.get(u));
+			aNewSet[u] = b;
+		}		
+		return getShortAverage(aNewSet);
+	}
+
+	public static int getIntAverage(AutoMap<Integer> aDataSet) {
+		int[] aNewSet = new int[aDataSet.size()];		
+		for (int u=0;u<aDataSet.size();u++) {
+			int b = getSafeInt(aDataSet.get(u));
+			aNewSet[u] = b;
+		}		
+		return getIntAverage(aNewSet);
+	}
+
+	public static float getFloatAverage(AutoMap<Float> aDataSet) {
+		float[] aNewSet = new float[aDataSet.size()];		
+		for (int u=0;u<aDataSet.size();u++) {
+			float b = getSafeFloat(aDataSet.get(u));
+			aNewSet[u] = b;
+		}		
+		return getFloatAverage(aNewSet);
+	}
+
+	public static long getLongAverage(AutoMap<Long> aDataSet) {
+		long[] aNewSet = new long[aDataSet.size()];		
+		for (int u=0;u<aDataSet.size();u++) {
+			long b = getSafeLong(aDataSet.get(u));
+			aNewSet[u] = b;
+		}		
+		return getLongAverage(aNewSet);
+	}
+
+	public static double getDoubleAverage(AutoMap<Double> aDataSet) {
+		double[] aNewSet = new double[aDataSet.size()];		
+		for (int u=0;u<aDataSet.size();u++) {
+			double b = getSafeDouble(aDataSet.get(u));
+			aNewSet[u] = b;
+		}		
+		return getDoubleAverage(aNewSet);
+	}
+
+
+
+	public static byte getByteAverage(byte[] aDataSet) {
+		if (aDataSet.length <= 0) {
+			return 0;
+		}
+		int divisor = aDataSet.length;
+		byte total = 0;		
+		for (byte i : aDataSet) {
+			total += i;
+		}
+		byte result = safeByte(total/divisor);
+		return result;		
+	}
+
+	public static short getShortAverage(short[] aDataSet) {
+		if (aDataSet.length <= 0) {
+			return 0;
+		}
+		int divisor = aDataSet.length;
+		Logger.INFO("Calculating Average Short. Divisor: "+divisor);
+		short total = 0;		
+		for (short i : aDataSet) {
+			Logger.INFO("Adding "+i);
+			total += i;
+		}
+		short result = safeShort((total/divisor));
+		Logger.INFO("Average: "+result);
+		return result;		
+	}
+	public static int getIntAverage(int[] aDataSet) {
+		if (aDataSet.length <= 0) {
+			return 0;
+		}
+		int divisor = aDataSet.length;
+		int total = 0;		
+		for (int i : aDataSet) {
+			total += i;
+		}
+		int result = safeInt(total/divisor);
+		return result;		
+	}
+	public static float getFloatAverage(float[] aDataSet) {
+		if (aDataSet.length <= 0) {
+			return 0;
+		}
+		int divisor = aDataSet.length;
+		float total = 0;		
+		for (float i : aDataSet) {
+			total += i;
+		}
+		float result = (total/divisor);
+		return result;		
+	}
+	public static long getLongAverage(long[] aDataSet) {
+		if (aDataSet.length <= 0) {
+			return 0;
+		}
+		int divisor = aDataSet.length;
+		long total = 0;		
+		for (long i : aDataSet) {
+			total += i;
+		}
+		long result = (total/divisor);
+		return result;		
+	}
+	public static double getDoubleAverage(double[] aDataSet) {
+		if (aDataSet.length <= 0) {
+			return 0;
+		}
+		int divisor = aDataSet.length;
+		double total = 0;		
+		for (double i : aDataSet) {
+			total += i;
+		}
+		double result = (total/divisor);
+		return result;		
+	}
+
+	public static int howManyPlaces(int aValueForGen) {		
+		if (aValueForGen < 0) {
+			aValueForGen = makeNegative(aValueForGen);
+		}			
+		String a = String.valueOf(aValueForGen);
+		return a.length();
+	}
+
+	/**
+	 * Inverts the value, making Positives into Negatives and vice versa.
+	 * @param aPositive - An int value, either positive or negative.
+	 * @return - Inverted int Value.
+	 */
+	public static int makeNegative(int aPositive) {
+		if (aPositive > 0) {
+			return -aPositive;
+		}
+		else if (aPositive < 0) {
+			return +aPositive;
+		}
+		else {
+			return 0;
+		}
+	}
+	
+	public static <V> V safeCast(Object aNumberType) {
+		long a1;
+		double a2;
+		a1 = Long.parseLong(aNumberType.toString());
+		a2 = Double.parseDouble(aNumberType.toString());
+
+		if ((aNumberType.getClass() ==  byte.class) || (aNumberType instanceof Byte)){
+			if (a1 >= Byte.MIN_VALUE && a1 <= Byte.MAX_VALUE) {
+				String s = ""+a1;
+				Byte s1 = Byte.valueOf(s);
+				return (V) s1;
+			}
+		}
+		else if ((aNumberType.getClass() == short.class) || (aNumberType instanceof Short)){
+			if (a1 >= Short.MIN_VALUE && a1 <= Short.MAX_VALUE) {
+				String s = ""+a1;
+				Short s1 = Short.valueOf(s);
+				return (V) s1;
+				
+			}
+		}
+		else if ((aNumberType.getClass() == int.class) || (aNumberType instanceof Integer)){
+			if (a1 >= Integer.MIN_VALUE && a1 <= Integer.MAX_VALUE) {
+				String s = ""+a1;
+				Integer s1 = Integer.valueOf(s);
+				return (V) s1;
+				
+			}
+		}
+		else if ((aNumberType.getClass() == long.class) || (aNumberType instanceof Long)){
+			if (a1 >= Long.MIN_VALUE && a1 <= Long.MAX_VALUE) {
+				String s = ""+a1;
+				Long s1 = Long.valueOf(s);
+				return (V) s1;				
+			}
+		}
+		else if ((aNumberType.getClass() == float.class) || (aNumberType instanceof Float)){
+			if (a2 >= Float.MIN_VALUE && a2 <= Float.MAX_VALUE) {
+				String s = ""+a1;
+				Float s1 = Float.valueOf(s);
+				return (V) s1;
+				
+			}
+		}
+		else if ((aNumberType.getClass() == double.class) || (aNumberType instanceof Double)){
+			if (a2 >= Double.MIN_VALUE && a2 <= Double.MAX_VALUE) {
+				String s = ""+a1;
+				Double s1 = Double.valueOf(s);
+				return (V) s1;
+				
+			}
+		}
 		
+		Integer o = 0;
+		return (V) o;	
+		
+	}
+	
+	public static byte getSafeByte(Byte b) {
+		Byte a = safeCast(b);
+		return a.byteValue();	
+	}
+	
+	public static short getSafeShort(Short b) {
+		Short a = safeCast(b);
+		return a.shortValue();		
+	}
+	
+	public static int getSafeInt(Integer b) {
+		Integer a = safeCast(b);
+		return a.intValue();	
+	}
+	
+	public static long getSafeLong(Long b) {
+		Long a = safeCast(b);
+		return a.longValue();		
+	}
+	
+	public static float getSafeFloat(Float b) {
+		Float a = safeCast(b);
+		return a.floatValue();		
+	}
+	
+	public static double getSafeDouble(Double b) {
+		Double a = safeCast(b);
+		return a.doubleValue();		
+	}
+
+
+	public static long safeCast_IntToLong(int o) {
+		long i = o;		
+		return i;		
+	}
+
+	public static int safeCast_LongToInt(long o) {
+		if (o > Integer.MAX_VALUE) {
+			return Integer.MAX_VALUE;
+		}
+		else {
+			int i = (int) o;		
+			return i;
+		}			
+	}
+
+	public static short safeCast_IntToShort(int o) {
+		if (o > Short.MAX_VALUE) {
+			return Short.MAX_VALUE;
+		}
+		else {
+			short i = (short) o;		
+			return i;
+		}			
+	}
+
+	public static int safeCast_ShortToInt(short o) {
+		int i = (int) o;		
+		return i;	
+	}
+
+	public static byte safeCast_ShortToByte(short o) {
+		if (o > Byte.MAX_VALUE) {
+			return Byte.MAX_VALUE;
+		}
+		else {
+			byte i = (byte) o;		
+			return i;
+		}			
+	}
+
+	public static short safeCast_ByteToshort(byte o) {
+		short i = (short) o;		
+		return i;	
 	}
 
 }

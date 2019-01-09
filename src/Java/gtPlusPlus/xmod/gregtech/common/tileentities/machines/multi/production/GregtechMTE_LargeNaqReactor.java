@@ -1,5 +1,8 @@
 package gtPlusPlus.xmod.gregtech.common.tileentities.machines.multi.production;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
+
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.TAE;
 import gregtech.api.enums.Textures.BlockIcons;
@@ -9,16 +12,14 @@ import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.objects.GT_RenderedTexture;
+import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
 import gregtech.api.util.GT_Utility;
 import gtPlusPlus.core.block.ModBlocks;
-import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.util.minecraft.ItemUtils;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Naquadah;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.base.GregtechMeta_MultiBlockBase;
 import gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtBlock;
-import gregtech.api.util.GT_Recipe.GT_Recipe_Map;
-import java.util.ArrayList;
-
+import gtPlusPlus.xmod.gregtech.common.tileentities.machines.multi.processing.advanced.GregtechMetaTileEntity_Adv_Fusion_MK4;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
@@ -48,7 +49,7 @@ public class GregtechMTE_LargeNaqReactor extends GregtechMeta_MultiBlockBase {
 		return new GregtechMTE_LargeNaqReactor(this.mName);
 	}
 
-	public String[] getDescription() {
+	public String[] getTooltip() {
 		if (mCasingName[0].toLowerCase().contains(".name")) {
 			mCasingName[0] = ItemUtils.getLocalizedNameOfBlock(getCasing(4), 0);
 		}
@@ -82,9 +83,7 @@ public class GregtechMTE_LargeNaqReactor extends GregtechMeta_MultiBlockBase {
 				"1x " + mHatchName + " (Any bottom layer casing)",
 				"1x " + "Maintenance Hatch" + " (Any bottom layer side casing)",
 				"1x " + "Energy Hatch" + " (Any top layer casing)",				
-				getPollutionTooltip(),
-				getMachineTooltip(),
-				CORE.GT_Tooltip
+				
 				};
 	}
 
@@ -187,7 +186,7 @@ public class GregtechMTE_LargeNaqReactor extends GregtechMeta_MultiBlockBase {
 				}
 
 				tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir, 1, i);
-				if (!this.addEnergyInputToMachineList(tTileEntity, TAE.getIndexFromPage(3, 0))) {
+				if (!this.addDynamoToMachineList(tTileEntity, TAE.getIndexFromPage(3, 0))) {
 					if (aBaseMetaTileEntity.getBlockOffset(xDir, 1, i) != getCasing(4)) {
 						return false;
 					}
@@ -261,7 +260,7 @@ public class GregtechMTE_LargeNaqReactor extends GregtechMeta_MultiBlockBase {
 				}
 
 				tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(i, 1, zDir);
-				if (!this.addEnergyInputToMachineList(tTileEntity, TAE.getIndexFromPage(3, 0))) {
+				if (!this.addDynamoToMachineList(tTileEntity, TAE.getIndexFromPage(3, 0))) {
 					if (aBaseMetaTileEntity.getBlockOffset(i, 1, zDir) != getCasing(4)) {
 						return false;
 					}
@@ -320,7 +319,13 @@ public class GregtechMTE_LargeNaqReactor extends GregtechMeta_MultiBlockBase {
 			if (aMetaTileEntity == null) {
 				return false;
 			} else if (aMetaTileEntity instanceof GT_MetaTileEntity_Hatch_Naquadah) {
-				((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
+				
+				try {
+					GregtechMetaTileEntity_Adv_Fusion_MK4.mUpdateHatchTexture.invoke((GT_MetaTileEntity_Hatch) aMetaTileEntity, aBaseCasingIndex);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {					
+				}
+				
+				//((GT_MetaTileEntity_Hatch) aMetaTileEntity).updateTexture(aBaseCasingIndex);
 				return this.mNaqHatches.add((GT_MetaTileEntity_Hatch_Naquadah) aMetaTileEntity);
 			} else {
 				return false;

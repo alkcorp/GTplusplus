@@ -29,6 +29,7 @@ import gtPlusPlus.xmod.gregtech.common.items.MetaGeneratedGregtechTools;
 import gtPlusPlus.xmod.gregtech.loaders.*;
 import gtPlusPlus.xmod.gregtech.registration.gregtech.GregtechConduits;
 import gtPlusPlus.xmod.gregtech.registration.gregtech.GregtechNitroDieselFix;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
 public class HANDLER_GT {
@@ -69,7 +70,6 @@ public class HANDLER_GT {
 		//Only loads if the config option is true (default: true)
 		if (CORE.ConfigSwitches.enableSkookumChoochers){
 			new MetaGeneratedGregtechTools();
-			new ProcessingToolHeadChoocher().run();
 		}
 
 		if (ConfigSwitches.enableOldGTcircuits && !CORE.GTNH){
@@ -83,6 +83,12 @@ public class HANDLER_GT {
 	}
 
 	public static void postInit(){
+		
+		//Only loads if the config option is true (default: true)
+		if (CORE.ConfigSwitches.enableSkookumChoochers){
+			new ProcessingToolHeadChoocher().run();
+		}
+		
 		if (CORE.ConfigSwitches.enableNitroFix){
 			GregtechNitroDieselFix.run();
 		}
@@ -102,26 +108,34 @@ public class HANDLER_GT {
 	
 	private static int removeCrudeTurbineRotors() {
 		int aRemoved = 0;
-		
+		int CUT = CORE.turbineCutoffBase;
+		Item aU;
 		Collection<GT_Recipe> aAssRecipes = GT_Recipe.GT_Recipe_Map.sAssemblerRecipes.mRecipeList;
 		//170, 172, 174, 176
 		if (aAssRecipes.size() > 0 && (CORE.MAIN_GREGTECH_5U_EXPERIMENTAL_FORK || CORE.GTNH)) {
 			recipe: for (GT_Recipe aG : aAssRecipes) {
 				if (aG.mOutputs != null && aG.mOutputs.length > 0) {
 					outputs: for (ItemStack aI : aG.mOutputs) {
-						if (aI.getItem() instanceof GT_MetaGenerated_Tool_01) {
+						if (aI == null) {
+							continue;
+						}
+						aU = aI.getItem();
+						if (aU == null) {
+							continue;
+						}						
+						if (aU instanceof GT_MetaGenerated_Tool_01) {
 							int aMeta = aI.getItemDamage();
 							//Logger.INFO("Found assembler recipe outputting a GT Tool with a meta value of "+aMeta);
 							if (aMeta >= 170 && aMeta <= 176) {
 								//Found a Turbine
-								int aCutoff = aMeta == 170 ? 75000 : (aMeta == 172 ? 150000 : (aMeta == 174 ? 225000 : 300000));
+								int aCutoff = aMeta == 170 ? CUT : (aMeta == 172 ? CUT*2 : (aMeta == 174 ? CUT*3 : CUT*4));
 								String aType = aMeta == 170 ? "Small " : (aMeta == 172 ? "" : (aMeta == 174 ? "Large " : "Huge "));
 								Materials aMainMaterial = GT_MetaGenerated_Tool.getPrimaryMaterial(aI);
 								Materials aSecondaryMaterial = GT_MetaGenerated_Tool.getSecondaryMaterial(aI);	
 								long rotorDurabilityMax = GT_MetaGenerated_Tool.getToolMaxDamage(aI);								
 								//Logger.INFO("Found "+aType+"Turbine made out of "+getMaterialName(aMainMaterial)+", using "+getMaterialName(aSecondaryMaterial));
 								if (rotorDurabilityMax < aCutoff) {
-									Logger.INFO("[Turbine Cleanup] "+getMaterialName(aMainMaterial)+" "+aType+"Turbines have "+rotorDurabilityMax+", which is below the cutoff durability of "+aCutoff+", disabling.");
+									Logger.WARNING("[Turbine Cleanup] "+getMaterialName(aMainMaterial)+" "+aType+"Turbines have "+rotorDurabilityMax+", which is below the cutoff durability of "+aCutoff+", disabling.");
 									aG.mEnabled = false;
 									aG.mHidden = true;
 									aG.mCanBeBuffered = false;

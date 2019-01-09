@@ -13,6 +13,7 @@ import gregtech.api.objects.GT_RenderedTexture;
 
 import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.lib.CORE;
+import gtPlusPlus.preloader.asm.AsmConfig;
 
 public class GT_MetaTileEntity_TieredTank extends GT_MetaTileEntity_BasicTank {
 
@@ -26,7 +27,17 @@ public class GT_MetaTileEntity_TieredTank extends GT_MetaTileEntity_BasicTank {
 
 	@Override
 	public String[] getDescription() {
-		return new String[] {this.mDescription, "Not a portable tank.", CORE.GT_Tooltip};
+		String[] aTip;
+
+		String aTankPortableness = CORE.GTNH ? "non-portable" : "portable";
+
+		if (this.mFluid == null) {
+			aTip = new String[] {this.mDescription, "A "+aTankPortableness+" tank.", CORE.GT_Tooltip};
+		}
+		else {
+			aTip = new String[] {this.mDescription, "A "+aTankPortableness+" tank.", "Fluid: "+mFluid.getLocalizedName()+" "+mFluid.amount+"L", CORE.GT_Tooltip};
+		}		
+		return aTip;
 	}
 
 	@Override
@@ -122,27 +133,28 @@ public class GT_MetaTileEntity_TieredTank extends GT_MetaTileEntity_BasicTank {
 		aBaseMetaTileEntity.openGUI(aPlayer); 	
 		return true; 	
 	}
-	
+
 	@Override
 	public boolean displaysItemStack() { 	
 		return true; 	
 	} 	
- 	
+
 	@Override 	
 	public boolean displaysStackSize() { 	
 		return false; 	
 	}
-	
+
 	@Override
-    public void setItemNBT(NBTTagCompound aNBT) {
-        super.setItemNBT(aNBT);
-        if (mFluid != null){
-    		Logger.INFO("Setting item fluid nbt");
-        	aNBT.setTag("mFluid", mFluid.writeToNBT(new NBTTagCompound()));
-        	if (aNBT.hasKey("mFluid")) {
-        		Logger.INFO("Set mFluid to NBT.");        		
-        	}
-        }        
-    }
+	public void setItemNBT(NBTTagCompound aNBT) {
+		if (CORE.NBT_PERSISTENCY_PATCH_APPLIED) {		
+			if (mFluid != null){
+				Logger.INFO("Setting item fluid nbt");
+				aNBT.setTag("mFluid", mFluid.writeToNBT(new NBTTagCompound()));
+				if (aNBT.hasKey("mFluid")) {
+					Logger.INFO("Set mFluid to NBT.");        		
+				}
+			}     
+		}
+	}
 
 }

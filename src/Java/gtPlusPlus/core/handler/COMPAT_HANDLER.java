@@ -98,9 +98,9 @@ public class COMPAT_HANDLER {
 			GregtechSemiFluidgenerators.run();
 			GregtechAdvancedMixer.run();
 			GregtechWirelessChargers.run();
-			//GregtechIndustrialGeneratorArray.run();
+			GregtechIndustrialGeneratorArray.run();
 			GregtechIndustrialCuttingFactory.run();
-			//GregtechMiniRaFusion.run();
+			GregtechMiniRaFusion.run();
 			GregtechComponentAssembler.run();
 			GregtechTeslaTower.run();
 			GregtechSuperChests.run();
@@ -117,6 +117,9 @@ public class COMPAT_HANDLER {
 			GregtechIndustrialMixer.run();
 			GregtechCustomHatches.run();
 			GregtechNaqReactor.run();
+			GregtechIndustrialArcFurnace.run();
+			GregtechSolarTower.run();
+			GregtechLargeTurbinesAndHeatExchanger.run();
 
 			//New Horizons Content
 			NewHorizonsAccelerator.run();
@@ -159,6 +162,9 @@ public class COMPAT_HANDLER {
 		}
 		if (LoadedMods.PamsHarvestcraft){
 			COMPAT_HarvestCraft.OreDict();
+		}
+		if (LoadedMods.Witchery) {
+			COMPAT_Witchery.OreDict();
 		}
 	}
 

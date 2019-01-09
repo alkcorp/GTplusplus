@@ -87,6 +87,14 @@ public enum GregtechItemList implements GregtechItemContainer {
 	//Custom Batteries (Unused)
 	Battery_Gem_1, Battery_Gem_2, Battery_Gem_3, 
 	
+	//Compressed Fusion MK3
+	Compressed_Fusion_Reactor,
+	
+	//Carbon Materials
+	NanoTube_Base_Substrate, 
+	NanoTube_Finished,
+	Carbyne_Tube_Finished,
+	Carbyne_Sheet_Finished,
 	
 
 	//----------------------------------------------------------------------------
@@ -271,6 +279,20 @@ public enum GregtechItemList implements GregtechItemContainer {
 	Casing_Naq_Reactor_C,
 	Controller_Naq_Reactor, 
 	Casing_Containment,	
+	
+	//Arc Furnace
+	Industrial_Arc_Furnace,
+	Casing_Industrial_Arc_Furnace, 
+	
+	//Solar Tower
+	Industrial_Solar_Tower,
+	Casing_SolarTower_Structural, 
+	Casing_SolarTower_SaltContainment, 
+	Casing_SolarTower_HeatContainment, 
+	
+	//Larger Turbines
+	Large_Steam_Turbine, Large_HPSteam_Turbine, 
+	Casing_Turbine_Shaft, Casing_Turbine_LP, Casing_Turbine_HP,
 
 
 
@@ -286,6 +308,12 @@ public enum GregtechItemList implements GregtechItemContainer {
 
 	//Air Intake hatch
 	Hatch_Air_Intake,
+	
+	//XL Turbine Rotor Hatch
+	Hatch_Turbine_Rotor,
+	
+	//Control Core
+	Hatch_Control_Core,
 
 	//Custom Fluid Hatches
 	Hatch_Input_Cryotheum,
@@ -298,6 +326,11 @@ public enum GregtechItemList implements GregtechItemContainer {
 	Hatch_Input_Battery_EV, 
 	Hatch_Output_Battery_MV, 
 	Hatch_Output_Battery_EV, 
+	
+	//Advanced Mufflers
+	Hatch_Muffler_Adv_LV, Hatch_Muffler_Adv_MV, Hatch_Muffler_Adv_HV, 
+	Hatch_Muffler_Adv_EV, Hatch_Muffler_Adv_IV, Hatch_Muffler_Adv_LuV, 
+	Hatch_Muffler_Adv_ZPM, Hatch_Muffler_Adv_UV, Hatch_Muffler_Adv_MAX, 
 
 
 
@@ -365,8 +398,9 @@ public enum GregtechItemList implements GregtechItemContainer {
 
 	//Basically is an automatic Cauldron
 	SimpleDustWasher, 
-
-
+	
+	//Solar Tower Reflector
+	Solar_Tower_Reflector,
 
 	//Super Tier Chests
 	Super_Chest_LV, Super_Chest_MV, Super_Chest_HV, Super_Chest_EV, Super_Chest_IV, 
@@ -391,7 +425,10 @@ public enum GregtechItemList implements GregtechItemContainer {
 	Machine_HV_Component_Maker, 
 	Machine_EV_Component_Maker, 
 	Machine_IV_Component_Maker,  
-
+	Machine_LuV_Component_Maker,
+	Machine_ZPM_Component_Maker,
+	Machine_UV_Component_Maker,
+	
 
 	//Solar Generators
 	GT_Solar_ULV, GT_Solar_LV, GT_Solar_MV,
@@ -494,7 +531,8 @@ public enum GregtechItemList implements GregtechItemContainer {
 	 */
 
 	//Fluid Void Covers
-	Cover_Overflow_ULV, Cover_Overflow_LV, Cover_Overflow_MV, Cover_Overflow_HV, Cover_Overflow_EV, Cover_Overflow_IV, 
+	Cover_Overflow_ULV, Cover_Overflow_LV, Cover_Overflow_MV, Cover_Overflow_HV, Cover_Overflow_EV, Cover_Overflow_IV,  
+	
 	
 	
 

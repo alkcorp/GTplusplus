@@ -125,7 +125,7 @@ public class GT4Entity_AutoCrafter extends GregtechMeta_MultiBlockBase {
 	}
 
 	@Override
-	public String[] getDescription() {
+	public String[] getTooltip() {
 		return new String[] { "Highly Advanced Autocrafter", "Right Click with a Screwdriver to change mode",
 				"This Machine Can Autocraft, Assemble, Disassemble or Circuit Assemble",
 				"200% faster than using single block machines of the same voltage",
@@ -135,8 +135,8 @@ public class GT4Entity_AutoCrafter extends GregtechMeta_MultiBlockBase {
 				"Size: 3x3x3 (Hollow)", "1x Input Bus", "1x Input Hatch", "1x Output Bus", "1x Output Hatch",
 				"1x Muffler Hatch", "1x Maintenance Hatch", "1x Energy Hatch",
 				"Hatches & Busses can be placed anywhere", "Rest is Autocrafter Frame",
-				"--------------------------------------", getPollutionTooltip(),
-				getMachineTooltip(), CORE.GT_Tooltip };
+				"--------------------------------------", 
+				};
 	}
 
 	@Override
@@ -224,7 +224,7 @@ public class GT4Entity_AutoCrafter extends GregtechMeta_MultiBlockBase {
 	private boolean isModernGT = true;
 	
 	@Override
-	public void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {		
+	public void onModeChangeByScrewdriver(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {		
 		if (isModernGT && !CORE.MAIN_GREGTECH_5U_EXPERIMENTAL_FORK) {
 			isModernGT = false;
 		}
@@ -232,13 +232,13 @@ public class GT4Entity_AutoCrafter extends GregtechMeta_MultiBlockBase {
 		if (isModernGT && !CORE.GTNH) {
 			mMachineMode = mMachineMode.nextMode();
 			if (mMachineMode == MODE.CRAFTING) {
-				PlayerUtils.messagePlayer(aPlayer, "Running the Auto-Crafter in mode: §dAuto-Crafting");
+				PlayerUtils.messagePlayer(aPlayer, "Running the Auto-Crafter in mode: ï¿½dAuto-Crafting");
 			} else if (mMachineMode == MODE.ASSEMBLY) {
-				PlayerUtils.messagePlayer(aPlayer, "Running the Auto-Crafter in mode: §aAssembly");
+				PlayerUtils.messagePlayer(aPlayer, "Running the Auto-Crafter in mode: ï¿½aAssembly");
 			} else if (mMachineMode == MODE.DISASSEMBLY) {
-				PlayerUtils.messagePlayer(aPlayer, "Running the Auto-Crafter in mode: §cDisassembly");
+				PlayerUtils.messagePlayer(aPlayer, "Running the Auto-Crafter in mode: ï¿½cDisassembly");
 			} else {
-				PlayerUtils.messagePlayer(aPlayer, "Running the Auto-Crafter in mode: §eCircuit Assembly");
+				PlayerUtils.messagePlayer(aPlayer, "Running the Auto-Crafter in mode: ï¿½eCircuit Assembly");
 			}
 		}
 		//5.08 support
@@ -251,11 +251,11 @@ public class GT4Entity_AutoCrafter extends GregtechMeta_MultiBlockBase {
 			}
 			
 			if (mMachineMode == MODE.CRAFTING) {
-				PlayerUtils.messagePlayer(aPlayer, "You are now running the Auto-Crafter in mode: §dAuto-Crafting");
+				PlayerUtils.messagePlayer(aPlayer, "You are now running the Auto-Crafter in mode: ï¿½dAuto-Crafting");
 			} else if (mMachineMode == MODE.ASSEMBLY) {
-				PlayerUtils.messagePlayer(aPlayer, "You are now running the Auto-Crafter in mode: §aAssembly");
+				PlayerUtils.messagePlayer(aPlayer, "You are now running the Auto-Crafter in mode: ï¿½aAssembly");
 			} else {
-				PlayerUtils.messagePlayer(aPlayer, "You are now running the Auto-Crafter in mode: §cDisassembly");
+				PlayerUtils.messagePlayer(aPlayer, "You are now running the Auto-Crafter in mode: ï¿½cDisassembly");
 			}
 		}		
 		super.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);

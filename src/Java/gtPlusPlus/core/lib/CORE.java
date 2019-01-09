@@ -44,6 +44,7 @@ public class CORE {
 
 	public static boolean DEVENV = false;
 	public static boolean DEBUG = false;
+	public static boolean NBT_PERSISTENCY_PATCH_APPLIED = false;
 	//Only can be set in Dev, no config or setting elsewhere.
 	public static final boolean LOAD_ALL_CONTENT = false;;
 
@@ -51,7 +52,7 @@ public class CORE {
 
 	public static final String name = "GT++";
 	public static final String MODID = "miscutils";
-	public static final String VERSION = "1.7.02.09";
+	public static final String VERSION = "1.7.02.24";
 	public static String MASTER_VERSION = NetworkUtils.getContentFromURL("https://raw.githubusercontent.com/draknyte1/GTplusplus/master/Recommended.txt").toLowerCase();
 	public static String USER_COUNTRY = GeoUtils.determineUsersCountry();
 	public static boolean isModUpToDate = Utils.isModUpToDate();
@@ -72,6 +73,7 @@ public class CORE {
 	public static final int GREG_FIRST_ID = 760;
 	public static final boolean MAIN_GREGTECH_5U_EXPERIMENTAL_FORK = Meta_GT_Proxy.areWeUsingGregtech5uExperimental();
 	public static final int GREGTECH_API_VERSION = GregTech_API.VERSION;
+	public static int turbineCutoffBase = 75000;
 
 	//GT++ Fake Player Profile
 	public static GameProfile gameProfile = new GameProfile(UUID.nameUUIDFromBytes("gtplusplus.core".getBytes()), "[GT++]");
@@ -114,6 +116,7 @@ public class CORE {
 	public static IGregtech_RecipeAdder sRecipeAdder;
 	public static IGregtech_RecipeAdder RA;
 	public static GregtechRecipe GT_Recipe = new GregtechRecipe();
+
 	public static final GT_Materials[] sMU_GeneratedMaterials = new GT_Materials[1000];
 
 	/**

@@ -51,8 +51,17 @@ public class BaseItemTickable extends CoreItem {
 	public void onUpdate(final ItemStack iStack, final World world, final Entity entityHolding, final int p_77663_4_, final boolean p_77663_5_) {
 		if (world == null || iStack == null) {
 			return;
-		}	
-		tickItemTag(world, iStack);
+		}		
+		if (world.isRemote) {
+			return;
+		}
+		
+
+		boolean active = getIsActive(world, iStack);
+		if (active) {
+			tickItemTag(world, iStack);
+		}
+		
 	}
 
 	/*private final boolean setGregtechItemList() {
@@ -114,7 +123,7 @@ public class BaseItemTickable extends CoreItem {
 		
 		//Try set world time
 		if (world != null) {
-			tagNBT.setLong("CreationDate", world.getTotalWorldTime());
+			//tagNBT.setLong("CreationDate", world.getTotalWorldTime());
 		}
 		
 		tagMain.setTag("TickableItem", tagNBT);		
@@ -160,7 +169,7 @@ public class BaseItemTickable extends CoreItem {
 			}
 		}
 		else {
-			createNBT(world, aStack);
+			return createNBT(world, aStack);
 		}
 		return true;
 	}
@@ -244,13 +253,14 @@ public class BaseItemTickable extends CoreItem {
 			if (aNBT.hasKey("TickableItem")) {
 				aNBT = aNBT.getCompoundTag("TickableItem");
 				
-				if (!aNBT.hasKey("CreationDate") && world != null) {
+				/*if (!aNBT.hasKey("CreationDate") && world != null) {
 					aNBT.setLong("CreationDate", world.getTotalWorldTime());
-				}
+				}*/
 				
 				//Done Ticking
 				if (maxTicks-getFilterDamage(world, aStack) <= 0) {
 					setIsActive(world, aStack, false);
+					return false;
 				}			
 				if (getIsActive(world, aStack)) {
 					if (aNBT != null) {
@@ -263,13 +273,16 @@ public class BaseItemTickable extends CoreItem {
 						
 						return true;
 					}
-				}				
+					else {
+						return false;
+					}
+				}	
+				else {
+					return false;
+				}
 			}					
 		}
-		else {
-			createNBT(world, aStack);
-		}
-		return false;
+		return createNBT(world, aStack);		
 	}
 
 	@Override
@@ -284,7 +297,7 @@ public class BaseItemTickable extends CoreItem {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
+	public void addInformation(ItemStack stack, EntityPlayer player, @SuppressWarnings("rawtypes") List list, boolean bool) {
 		World world = player.getEntityWorld();
 		if (this.descriptionString.length > 0) {
 			list.add(EnumChatFormatting.GRAY+this.descriptionString[0]);

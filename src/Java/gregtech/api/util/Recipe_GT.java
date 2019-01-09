@@ -12,6 +12,7 @@ import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
 import gregtech.api.interfaces.tileentity.IHasWorldObjectAndCoords;
 import gregtech.api.objects.GT_ItemStack;
 import gregtech.api.objects.ItemData;
+import gregtech.api.util.GT_Recipe.GT_Recipe_Map_Fuel;
 import gtPlusPlus.api.interfaces.IComparableRecipe;
 import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.api.objects.data.AutoMap;
@@ -240,7 +241,9 @@ public class Recipe_GT extends GT_Recipe  implements IComparableRecipe{
 		public static final GT_Recipe_Map sCokeOvenRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(200), "gt.recipe.cokeoven", "Coke Oven", null, RES_PATH_GUI + "basicmachines/Dehydrator", 2, 2, 1, 0, 1, E, 1, E, true, true);
 		public static final GT_Recipe_Map sMatterFab2Recipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(200), "gt.recipe.matterfab2", "Matter Fabricator", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, E, 1, E, true, true);
 		//public static final Gregtech_Recipe_Map sMatterFabRecipes = new Gregtech_Recipe_Map(new HashSet<GregtechRecipe>(200), "gt.recipe.matterfab", "Matter Fabricator", null, RES_PATH_GUI + "basicmachines/Massfabricator", 1, 3, 1, 1, 1, E, 1, E, true, true);
-		public static final Gregtech_Recipe_Map_Fuel sRocketFuels = new Gregtech_Recipe_Map_Fuel(new HashSet<Recipe_GT>(10), "gt.recipe.rocketenginefuel", "Rocket Engine Fuel", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 3000, " EU", true, true);
+		
+		public static final GT_Recipe_Map_Fuel sRocketFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(10), "gt.recipe.rocketenginefuel", "Rocket Engine Fuel", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 3000, " EU", true, true);
+       
 		public static final GT_Recipe_Map sGeoThermalFuels = new GT_Recipe_Map(new HashSet<GT_Recipe>(10), "gt.recipe.geothermalfuel", "GeoThermal Fuel", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
 		public static final GT_Recipe_Map sChemicalDehydratorRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(200), "gt.recipe.chemicaldehydrator", "Chemical Dehydrator", null, RES_PATH_GUI + "basicmachines/Dehydrator", 2, 9, 0, 0, 1, E, 1, E, true, true);
 		public static final GT_Recipe_Map sAlloyBlastSmelterRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(200), "gt.recipe.alloyblastsmelter", "Alloy Blast Smelter", null, RES_PATH_GUI + "basicmachines/BlastSmelter", 9, 1, 1, 0, 1, E, 1, E, true, true);
@@ -276,17 +279,15 @@ public class Recipe_GT extends GT_Recipe  implements IComparableRecipe{
 
 
 		//Mini Fusion
-		public static final GT_Recipe_Map sSlowFusionRecipes = new GT_Recipe_Map(new HashSet(50), "gt.recipe.slowfusionreactor",
-				"Slow Fusion Reactor", null, "gregtech:textures/gui/basicmachines/Default", 0, 0, 0, 2, 1, "Start: ", 1,
-				" EU", true, false);
-
-		public static final GT_Recipe_Map sSlowFusion2Recipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(50), "gt.recipe.slowfusionreactor2",
-				"Pocket Fusion", null, "gregtech:textures/gui/basicmachines/LFTR", 2, 0, 0, 0, 4, "Start: ", 1,
-				" EU", true, false);
+		public static final GT_Recipe_Map sSlowFusionRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(50), "gt.recipe.slowfusionreactor",
+				"Mimir - Slow Fusion", null, "gregtech:textures/gui/basicmachines/LFTR", 0, 0, 0, 2, 1, "Start: ", 1,
+				" EU", true, true);
 
 
 		//Component Assembler
 		public static final GT_Recipe_Map sComponentAssemblerRecipes = new GT_Recipe_Map_Assembler(new HashSet<GT_Recipe>(300), "gt.recipe.componentassembler", "Component Assembler", null, RES_PATH_GUI + "basicmachines/Assembler", 6, 1, 1, 0, 1, E, 1, E, true, true);
+		
+		//Special Maps for Multis
 		public static final GT_Recipe_Map sFishPondRecipes = new GT_Recipe_Map(new HashSet<GT_Recipe>(3), "gt.recipe.fishpond", "Zhuhai - Fishing Port", null, RES_PATH_GUI + "basicmachines/PotionBrewer", 0, 1, 0, 0, 1, "Requires Circuit: ", 1, ".", true, true);
 		public static final Gregtech_Recipe_Map sMultiblockCentrifugeRecipes = new GT_Recipe_Map_LargeCentrifuge();
 		public static final Gregtech_Recipe_Map sMultiblockElectrolyzerRecipes = new GT_Recipe_Map_LargeElectrolyzer();
@@ -295,6 +296,10 @@ public class Recipe_GT extends GT_Recipe  implements IComparableRecipe{
 		public static final GT_Recipe_Map sMultiblockCentrifugeRecipes_GT = new GT_Recipe_Map(new HashSet<GT_Recipe>(2000), "gt.recipe.temp2", "temp2", null, RES_PATH_GUI + "basicmachines/PotionBrewer", 0, 0, 0, 0, 0, "", 0, "", false, false);
 		public static final GT_Recipe_Map sMultiblockElectrolyzerRecipes_GT = new GT_Recipe_Map(new HashSet<GT_Recipe>(2000), "gt.recipe.temp3", "temp3", null, RES_PATH_GUI + "basicmachines/PotionBrewer", 0, 0, 0, 0, 0, "", 0, "", false, false);
 
+		//Semi-Fluid Fuel Map 
+		public static final GT_Recipe_Map_Fuel sSemiFluidLiquidFuels = new GT_Recipe_Map_Fuel(new HashSet<GT_Recipe>(10), "gt.recipe.semifluidgeneratorfuels", "Semifluid Generator Fuels", null, RES_PATH_GUI + "basicmachines/Default", 1, 1, 0, 0, 1, "Fuel Value: ", 1000, " EU", true, true);
+        
+		
 
 		/**
 		 * HashMap of Recipes based on their Items
