@@ -1,7 +1,9 @@
 package GTplusplus.proxy;
 
 import GTplusplus.GTplusplus;
+import GTplusplus.block.GTppMetaBlocks;
 import GTplusplus.recipes.GTppMachineRecipes;
+import gregtech.common.blocks.VariantItemBlock;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
@@ -27,11 +29,16 @@ public class CommonProxy {
 
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
+    	IForgeRegistry<Block> registry = event.getRegistry();
+
+        registry.register(GTppMetaBlocks.MULTIBLOCK_CASING);
     }
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        IForgeRegistry<Item> registry = event.getRegistry();
+    	IForgeRegistry<Item> registry = event.getRegistry();
+
+        registry.register(createItemBlock(GTppMetaBlocks.MULTIBLOCK_CASING, VariantItemBlock::new));
     }
 
     private static <T extends Block> ItemBlock createItemBlock(T block, Function<T, ItemBlock> producer) {

@@ -1,0 +1,63 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "minecraft:cube_all",
+    "textures": {
+      "all": "gregtech:blocks/rendering_error"
+    }
+  },
+  "variants": {
+    "variant": {
+      "maceration_casing": {
+        "textures": {
+          "all": "gregtech:blocks/casings/industrial/maceration_casing"
+        }
+      },
+      "thermal_casing": {
+        "textures": {
+          "all": "gregtech:blocks/casings/industrial/thermal_casing"
+        }
+      },
+      "washplant_casing": {
+        "textures": {
+          "all": "gregtech:blocks/casings/industrial/washplant_casing"
+        }
+      },
+      "chemical_casing": {
+        "textures": {
+          "all": "gregtech:blocks/casings/industrial/chemical_casing"
+        }
+      },
+      "fisher_casing": {
+        "textures": {
+          "all": "gregtech:blocks/casings/industrial/fisher_casing"
+        }
+      },
+      "electrolyzer_casing": {
+        "textures": {
+          "all": "gregtech:blocks/casings/industrial/electrolyzer_casing"
+        }
+      },
+      "centrifuge_casing": {
+        "textures": {
+          "all": "gregtech:blocks/casings/industrial/centrifuge_casing"
+        }
+      },
+      "wire_casing": {
+        "textures": {
+          "all": "gregtech:blocks/casings/industrial/wire_casing"
+        }
+      },
+      "sieve_casing": {
+        "textures": {
+          "all": "gregtech:blocks/casings/industrial/sieve_casing"
+        }
+      },
+      "sieve_grate": {
+        "textures": {
+          "all": "gregtech:blocks/casings/industrial/sieve_grate"
+        }
+      }
+    }
+  }
+}

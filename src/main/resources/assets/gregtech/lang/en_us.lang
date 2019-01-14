@@ -33,3 +33,53 @@ material.trinium_naquadah_carbonite=Trinium Naquadah Carbonite
 material.quantum=Quantum
 material.trinium=Trinium
 material.refined_trinium=Refined Trinium
+
+gregtech.multiblock.industrial_machine.parallel=Max parallel operations: %s
+gregtech.multiblock.industrial_machine.efficient.eu=Eu cost: %s%
+gregtech.multiblock.industrial_machine.efficient.duration=Recipe speed: %sx
+gregtech.multiblock.industrial_fisher.speed=Fish per operation: %s
+
+tile.gtpp_multiblock_casing.maceration_casing.name=Maceration Casing
+tile.gtpp_multiblock_casing.thermal_casing.name=Thermal Casing
+tile.gtpp_multiblock_casing.washplant_casing.name=Washing plant Casing
+tile.gtpp_multiblock_casing.chemical_casing.name=Chemically Inert Casing
+tile.gtpp_multiblock_casing.fisher_casing.name=Fisher Casing
+tile.gtpp_multiblock_casing.electrolyzer_casing.name=Electrolyzer Casing
+tile.gtpp_multiblock_casing.centrifuge_casing.name=Centrifuge Casing
+tile.gtpp_multiblock_casing.sieve_casing.name=Sieve Casing
+tile.gtpp_multiblock_casing.sieve_grate.name=Sieve Grate
+tile.gtpp_multiblock_casing.wire_casing.name=Wire Casing
+
+gregtech.machine.disassembler.lv.name=Basic Disassembler
+gregtech.machine.disassembler.mv.name=Advanced Disassembler
+gregtech.machine.disassembler.hv.name=Advanced Disassembler II
+gregtech.machine.disassembler.ev.name=Advanced Disassembler III
+gregtech.machine.disassembler.iv.name=Advanced Disassembler IV
+gregtech.machine.disassembler.luv.name=Epic Disassembler
+gregtech.machine.disassembler.zpm.name=Epic Disassembler II
+gregtech.machine.disassembler.uv.name=Ultimate Disassembler
+
+gregtech.machine.industrial_macerator.name=Industrial Macerator
+gregtech.machine.industrial_orewasher.name=Industrial Ore Washer
+gregtech.machine.industrial_thermalcentrifuge.name=Industrial Thermal Centrifuge
+gregtech.machine.industrial_chemicalreactor.name=Industrial Chemical Reactor
+gregtech.machine.industrial_fisher.name=Industrial Fisher
+gregtech.machine.industrial_electrolyzer.name=Industrial Electrolyzer
+gregtech.machine.industrial_centrifuge.name=Industrial Centrifuge
+gregtech.machine.industrial_wiremill.name=Industrial Wiremill
+gregtech.machine.industrial_sifter.name=Industrial Sifter
+
+gregtech.machine.improved_blast_furnace.name=Electric Blast Furnace
+
+recipemap.disassembler.iv.name=Disassembler
+recipemap.industrialfisher.name=Industrial Fisher
+
+gregtech.multiblock.industrial_macerator.description=The Industrial Macerator works like the single block machine except all byproducts are 100%% chance and each voltage tier works on 4 parallel operations.
+gregtech.multiblock.industrial_orewasher.description=The Industrial Ore Washer works like the single block machine except each voltage tier works on 4 parallel operations.
+gregtech.multiblock.industrial_thermalcentrifuge.description=The Industrial Thermal Centrifuge works like the single block machine except each voltage tier works on 4 parallel operations.
+gregtech.multiblock.industrial_fisher.description=The Industrial Fisher is a multiblock that keeps breeding fish. Place a circuit configuration to select the output.
+gregtech.multiblock.industrial_centrifuge.description=The Industrial Centrifuge works like the single block machine except it works faster with a discount in EU costs.
+gregtech.multiblock.industrial_electrolyzer.description=The Industrial Electrolyzer works like the single block machine except it works faster with a discount in EU costs.
+gregtech.multiblock.industrial_chemicalreactor.description=The Industrial Chemical Reactor works like the single block machine except it works faster with a discount in EU costs.
+gregtech.multiblock.industrial_wiremill.description=The Industrial Wiremill works like the single block machine except each voltage tier works on 4 parallel operations.
+gregtech.multiblock.industrial_sifter.description=The Industrial Sifter works like the single block machine except all gem outputs are 100%% chance and each voltage tier works on 4 parallel operations.

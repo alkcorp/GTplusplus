@@ -3,7 +3,9 @@ package GTplusplus.materials;
 import com.google.common.collect.ImmutableList;
 import gregtech.api.unification.Element;
 import gregtech.api.unification.material.MaterialIconSet;
+import gregtech.api.unification.material.Materials;
 import gregtech.api.unification.material.type.*;
+import gregtech.api.unification.stack.MaterialStack;
 
 public class GTppMaterials {
 
@@ -138,40 +140,47 @@ public class GTppMaterials {
                 gregtech.api.unification.material.type.IngotMaterial.MatFlags.GENERATE_FOIL |
                 gregtech.api.unification.material.type.IngotMaterial.MatFlags.GENERATE_FINE_WIRE;
 
-        Staballoy = new IngotMaterial(501, "staballoy", 0x444B42, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 1400);
-        Tantalloy_60 = new IngotMaterial(502, "tantalloy_60", 0xD5E7ED, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 1400);
-        Tantalloy_61 = new IngotMaterial(503, "tantalloy_61", 0xC1D3D9, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 1400);
-        Tumbaga = new IngotMaterial(504, "tumbaga", 0xFFB00F, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        Potin = new IngotMaterial(505, "potin", 0xC99781, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        Inconel_625 = new IngotMaterial(506, "inconel_625", 0x80FF80, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Inconel_690 = new IngotMaterial(507, "inconel_690", 0x76DC8A, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Inconel_792 = new IngotMaterial(508, "inconel_792", 0x6CF076, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Zeron_100 = new IngotMaterial(509, "zeron_100", 0xB4B414, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 350);
-        Maraging_250 = new IngotMaterial(510, "maraging_250", 0x8C8C8C, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Maraging_300 = new IngotMaterial(511, "maraging_300", 0x969696, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Maraging_350 = new IngotMaterial(512, "maraging_350", 0xA0A0A0, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Stellite = new IngotMaterial(513, "stellite", 0x814B78, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Talonite = new IngotMaterial(514, "talonite", 0xE44B78, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        Hastelloy_X = new IngotMaterial(515, "hastelloy_x", 0xffc125, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        Hastelloy_W = new IngotMaterial(516, "hastelloy_w", 0xdaa520, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        Hastelloy_N = new IngotMaterial(517, "hastelloy_n", 0xecd530, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Hastelloy_C276 = new IngotMaterial(518, "hastelloy_c276", 0xeeb422, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Incoloy_020 = new IngotMaterial(519, "incoloy_020", 0x655147, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        Incoloy_DS = new IngotMaterial(520, "incoloy_ds", 0x476551, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        Incoloy_MA956 = new IngotMaterial(521, "incoloy_ma956", 0x514765, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Silicon_Carbide = new IngotMaterial(522, "silicon_carbide", 0x283024, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        Tantalum_Carbide = new IngotMaterial(523, "tantalum_carbide", 0x8B8878, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Zirconium = new IngotMaterial(524, "zirconium", 0xfffacd, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, Element.Zr);
-        Zirconium_Carbine = new IngotMaterial(525, "zirconium_carbide", 0xfffacd, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 1050);
-        Niobium_Carbine = new IngotMaterial(526, "niobium_carbide", 0xCDC5BF, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 1050);
-        Egline_Steel_Base = new DustMaterial(528, "eglin_steel_base", 0x8B4513, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        Eglin_Steel = new IngotMaterial(529, "eglin_steel", 0x8B4513, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        HG1223 = new FluidMaterial(530, "gh1223", 0x27559F, MaterialIconSet.FLUID, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        Trinium_Titanium = new IngotMaterial(531, "trinium_titanium", 0xEFD2C8, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 350);
-        Trinium_Naquadah = new IngotMaterial(532, "trinium_naquadah", 0xFFF375, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
-        Trinium_Naquadah_Carbonite = new IngotMaterial(533, "trinium_naquadah_carbonite", 0xFFE900, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 350);
-        Quantum = new IngotMaterial(538, "quantum", 0x8080FF, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
-        Trinium = new IngotMaterial(539, "trinium", 0x466E1E, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, Element.valueOf("Ke"));
-        Refined_Trinium = new IngotMaterial(540, "refined_trinium", 0xD2FFAA, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, Element.valueOf("Ke"));
+        Staballoy = new IngotMaterial(501, "staballoy", 0x444B42, MaterialIconSet.METALLIC, 1, ImmutableList.of(new MaterialStack(Materials.Uranium, 9), new MaterialStack(Materials.Titanium, 1)), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 1400);
+        Tantalloy_60 = new IngotMaterial(502, "tantalloy_60", 0xD5E7ED, MaterialIconSet.METALLIC, 1, ImmutableList.of(new MaterialStack(Materials.Tungsten, 2), new MaterialStack(Materials.Tantalum, 23)), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 1400);
+        Tantalloy_61 = new IngotMaterial(503, "tantalloy_61", 0xC1D3D9, MaterialIconSet.METALLIC, 1, ImmutableList.of(new MaterialStack(GTppMaterials.Tantalloy_60, 1), new MaterialStack(Materials.Titanium, 6), new MaterialStack(Materials.Yttrium, 4)), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 1400);
+        Tumbaga = new IngotMaterial(504, "tumbaga", 0xFFB00F, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        Potin = new IngotMaterial(505, "potin", 0xC99781, MaterialIconSet.METALLIC, 1, ImmutableList.of(new MaterialStack(Materials.Lead, 2), new MaterialStack(Materials.Bronze, 2), new MaterialStack(Materials.Tin, 1)), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        Inconel_625 = new IngotMaterial(506, "inconel_625", 0x80FF80, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Inconel_690 = new IngotMaterial(507, "inconel_690", 0x76DC8A, MaterialIconSet.METALLIC, 1, ImmutableList.of(new MaterialStack(Materials.Chrome, 1), new MaterialStack(Materials.Niobium, 2), new MaterialStack(Materials.Molybdenum, 2), new MaterialStack(Materials.Nichrome, 3)), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Inconel_792 = new IngotMaterial(508, "inconel_792", 0x6CF076, MaterialIconSet.METALLIC, 1, ImmutableList.of(new MaterialStack(Materials.Nickel, 2), new MaterialStack(Materials.Niobium, 1), new MaterialStack(Materials.Aluminium, 2), new MaterialStack(Materials.Nichrome, 1)), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Zeron_100 = new IngotMaterial(509, "zeron_100", 0xB4B414, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 350);
+        Maraging_250 = new IngotMaterial(510, "maraging_250", 0x8C8C8C, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Maraging_300 = new IngotMaterial(511, "maraging_300", 0x969696, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Maraging_350 = new IngotMaterial(512, "maraging_350", 0xA0A0A0, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Stellite = new IngotMaterial(513, "stellite", 0x814B78, MaterialIconSet.METALLIC, 1, ImmutableList.of(new MaterialStack(Materials.Cobalt, 7), new MaterialStack(Materials.Chrome, 7), new MaterialStack(Materials.Manganese, 2), new MaterialStack(Materials.Titanium, 2)), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Talonite = new IngotMaterial(514, "talonite", 0xE44B78, MaterialIconSet.METALLIC, 1, ImmutableList.of(new MaterialStack(Materials.Cobalt, 4), new MaterialStack(Materials.Chrome, 4), new MaterialStack(Materials.Phosphor, 2), new MaterialStack(Materials.Molybdenum, 1)), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        Hastelloy_X = new IngotMaterial(515, "hastelloy_x", 0xffc125, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        Hastelloy_W = new IngotMaterial(516, "hastelloy_w", 0xdaa520, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        Hastelloy_N = new IngotMaterial(517, "hastelloy_n", 0xecd530, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Hastelloy_C276 = new IngotMaterial(518, "hastelloy_c276", 0xeeb422, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Incoloy_020 = new IngotMaterial(519, "incoloy_020", 0x655147, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        Incoloy_DS = new IngotMaterial(520, "incoloy_ds", 0x476551, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        Incoloy_MA956 = new IngotMaterial(521, "incoloy_ma956", 0x514765, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Silicon_Carbide = new IngotMaterial(522, "silicon_carbide", 0x283024, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        Tantalum_Carbide = new IngotMaterial(523, "tantalum_carbide", 0x8B8878, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Zirconium = new IngotMaterial(524, "zirconium", 0xfffacd, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, Element.Zr);
+        Zirconium_Carbine = new IngotMaterial(525, "zirconium_carbide", 0xfffacd, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 1050);
+        Niobium_Carbine = new IngotMaterial(526, "niobium_carbide", 0xCDC5BF, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 1050);
+        Egline_Steel_Base = new DustMaterial(528, "eglin_steel_base", 0x8B4513, MaterialIconSet.METALLIC, 1, ImmutableList.of(new MaterialStack(Materials.Iron, 4), new MaterialStack(Materials.Kanthal, 1), new MaterialStack(Materials.Invar, 5)), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        Eglin_Steel = new IngotMaterial(529, "eglin_steel", 0x8B4513, MaterialIconSet.METALLIC, 1, ImmutableList.of(new MaterialStack(GTppMaterials.Egline_Steel_Base, 10), new MaterialStack(Materials.Sulfur, 1), new MaterialStack(Materials.Silicon, 4), new MaterialStack(Materials.Carbon, 1)), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        HG1223 = new FluidMaterial(530, "gh1223", 0x27559F, MaterialIconSet.FLUID, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        Trinium_Titanium = new IngotMaterial(531, "trinium_titanium", 0xEFD2C8, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 350);
+        Trinium_Naquadah = new IngotMaterial(532, "trinium_naquadah", 0xFFF375, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION);
+        Trinium_Naquadah_Carbonite = new IngotMaterial(533, "trinium_naquadah_carbonite", 0xFFE900, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 350);
+        Quantum = new IngotMaterial(538, "quantum", 0x8080FF, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, (Element) null, 700);
+        Trinium = new IngotMaterial(539, "trinium", 0x466E1E, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, Element.valueOf("Ke"));
+        Refined_Trinium = new IngotMaterial(540, "refined_trinium", 0xD2FFAA, MaterialIconSet.METALLIC, 1, ImmutableList.of(), EXT2_METAL | Material.MatFlags.DISABLE_DECOMPOSITION, Element.valueOf("Ke"));
+    
+        Tantalloy_60.setFluidPipeProperties(750, 4250, true);
+        Tantalloy_61.setFluidPipeProperties(900, 5800, true);
+        Staballoy.setFluidPipeProperties(937, 7500, true);
+        Inconel_690.setFluidPipeProperties(1125, 4800, true);
+        Inconel_792.setFluidPipeProperties(1200, 5500, true);
+        Potin.setFluidPipeProperties(72, 2000, true);
     }
 }

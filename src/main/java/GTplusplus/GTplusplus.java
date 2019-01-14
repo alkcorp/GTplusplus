@@ -1,5 +1,7 @@
 package GTplusplus;
 
+import GTplusplus.block.GTppMetaBlocks;
+import GTplusplus.machines.GTppTileEntities;
 import GTplusplus.materials.Elements;
 import GTplusplus.materials.GTppMaterials;
 import GTplusplus.proxy.CommonProxy;
@@ -38,6 +40,8 @@ public class GTplusplus {
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         logger = event.getModLog();
+        GTppMetaBlocks.init();
+        GTppTileEntities.init();
         proxy.preInit();
     }
 

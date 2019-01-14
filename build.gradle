@@ -58,7 +58,7 @@ dependencies {
     deobfCompile "CraftTweaker2:CraftTweaker2-MC${stripped_version}-Main:${crafttweaker_version}"
     deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}"
     deobfCompile "mezz.jei:jei_${minecraft_version}:${jei_version}"
-    deobfCompile "gregtechce:gregtech:${minecraft_version}:${gt_version}"
+    compile files("libs/gregtech-${minecraft_version}-${gt_version}.jar")
 }
 
 processResources {
