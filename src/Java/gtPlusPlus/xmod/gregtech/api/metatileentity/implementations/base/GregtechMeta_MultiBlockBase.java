@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.ArrayUtils;
 
 import gregtech.api.GregTech_API;
+import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
 import gregtech.api.gui.GT_Container_MultiMachine;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
@@ -50,6 +51,7 @@ import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.GT_MetaTileEn
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_InputBattery;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_OutputBattery;
 import gtPlusPlus.xmod.gregtech.api.objects.MultiblockRequirements;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
@@ -57,6 +59,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.fluids.FluidStack;
 
 public abstract class GregtechMeta_MultiBlockBase
@@ -67,14 +70,14 @@ GT_MetaTileEntity_MultiBlockBase {
 
 
 	static {
-		
+
 		Method a08 = findRecipe08 = ReflectionUtils.getMethod(GT_Recipe_Map.class, "findRecipe", IHasWorldObjectAndCoords.class, GT_Recipe.class, boolean.class, long.class, FluidStack[].class, ItemStack.class, ItemStack[].class);
 		Method a09 = findRecipe09 = ReflectionUtils.getMethod(GT_Recipe_Map.class, "findRecipe", IHasWorldObjectAndCoords.class, GT_Recipe.class, boolean.class, boolean.class, long.class, FluidStack[].class, ItemStack.class, ItemStack[].class);
 		Logger.INFO("Found .08 findRecipe method? "+(a08 != null));
 		Logger.INFO("Found .09 findRecipe method? "+(a09 != null));
-		
+
 		//gregtech.api.util.GT_Recipe.GT_Recipe_Map.findRecipe(IHasWorldObjectAndCoords, GT_Recipe, boolean, long, FluidStack[], ItemStack, ItemStack...)
-		
+
 	}
 
 	//Find Recipe Methods
@@ -179,14 +182,68 @@ GT_MetaTileEntity_MultiBlockBase {
 		long minutes = TimeUnit.SECONDS.toMinutes(seconds) - (TimeUnit.SECONDS.toHours(seconds) * 60);
 		long second = TimeUnit.SECONDS.toSeconds(seconds) - (TimeUnit.SECONDS.toMinutes(seconds) *60);
 
+		int mPollutionReduction=0;
+		for (GT_MetaTileEntity_Hatch_Muffler tHatch : mMufflerHatches) {
+			if (isValidMetaTileEntity(tHatch)) {
+				mPollutionReduction=Math.max(calculatePollutionReductionForHatch(tHatch, 100),mPollutionReduction);
+			}
+		}
+
+		long storedEnergy=0;
+		long maxEnergy=0;
+		for(GT_MetaTileEntity_Hatch_Energy tHatch : mEnergyHatches) {
+			if (isValidMetaTileEntity(tHatch)) {
+				storedEnergy+=tHatch.getBaseMetaTileEntity().getStoredEU();
+				maxEnergy+=tHatch.getBaseMetaTileEntity().getEUCapacity();
+			}
+		}
+
+		int tTier = this.getControlCoreTier();
+
 		mInfo.add(getMachineTooltip());
-		mInfo.add("Progress: " + Integer.toString((this.mProgresstime / 20)) +" / "+ Integer.toString((this.mMaxProgresstime / 20)) + " secs");
-		mInfo.add("Efficiency: " + Float.toString((this.mEfficiency / 100.0F)) + "%");
-		mInfo.add("Problems: " + Integer.toString((this.getIdealStatus() - this.getRepairStatus())));
-		mInfo.add("Pollution: "+this.getPollutionPerTick(null)*20+"/second");
-		mInfo.add("Total Time Since Built: " + Integer.toString(weeks)+" Weeks, " + Integer.toString(days) + " Days, ");
-		mInfo.add(Long.toString(hours) + " Hours, " + Long.toString(minutes) + " Minutes, " + Long.toString(second) + " Seconds.");
-		mInfo.add("Total Time in ticks: " + Long.toString(this.mTotalRunTime));
+
+
+
+		//Lets borrow the GTNH handling
+
+		mInfo.add(StatCollector.translateToLocal("GTPP.multiblock.Progress")+": "+
+				EnumChatFormatting.GREEN + Integer.toString(mProgresstime/20) + EnumChatFormatting.RESET +" s / "+
+				EnumChatFormatting.YELLOW + Integer.toString(mMaxProgresstime/20) + EnumChatFormatting.RESET +" s");
+
+		mInfo.add(StatCollector.translateToLocal("GTPP.multiblock.energy")+": "+
+				EnumChatFormatting.GREEN + Long.toString(storedEnergy) + EnumChatFormatting.RESET +" EU / "+
+				EnumChatFormatting.YELLOW + Long.toString(maxEnergy) + EnumChatFormatting.RESET +" EU");
+
+		mInfo.add(StatCollector.translateToLocal("GTPP.multiblock.usage")+": "+
+				EnumChatFormatting.RED + Integer.toString(-mEUt) + EnumChatFormatting.RESET + " EU/t");
+
+		mInfo.add(StatCollector.translateToLocal("GTPP.multiblock.mei")+": "+
+				EnumChatFormatting.YELLOW+Long.toString(getMaxInputVoltage())+EnumChatFormatting.RESET+ " EU/t(*2A) "+StatCollector.translateToLocal("GTPP.machines.tier")+": "+
+				EnumChatFormatting.YELLOW+GT_Values.VN[GT_Utility.getTier(getMaxInputVoltage())]+ EnumChatFormatting.RESET);
+
+		mInfo.add(StatCollector.translateToLocal("GTPP.multiblock.problems")+": "+
+				EnumChatFormatting.RED+ (getIdealStatus() - getRepairStatus())+EnumChatFormatting.RESET+
+				" "+StatCollector.translateToLocal("GTPP.multiblock.efficiency")+": "+
+				EnumChatFormatting.YELLOW+Float.toString(mEfficiency / 100.0F)+EnumChatFormatting.RESET + " %");
+
+
+		mInfo.add(StatCollector.translateToLocal("GTPP.multiblock.pollution")+": "+ EnumChatFormatting.RED + this.getPollutionPerTick(null)*20+ EnumChatFormatting.RESET+"/sec");
+		mInfo.add(StatCollector.translateToLocal("GTPP.multiblock.pollutionreduced")+": "+ EnumChatFormatting.GREEN + mPollutionReduction+ EnumChatFormatting.RESET+" %");
+
+
+		mInfo.add(StatCollector.translateToLocal("GTPP.CC.machinetier")+": "+
+				EnumChatFormatting.GREEN+tTier+EnumChatFormatting.RESET);
+
+		mInfo.add(StatCollector.translateToLocal("GTPP.CC.discount")+": "+
+				EnumChatFormatting.GREEN+(getEuDiscountForParallelism())+EnumChatFormatting.RESET + "%");
+
+		mInfo.add(StatCollector.translateToLocal("GTPP.CC.parallel")+": "+EnumChatFormatting.GREEN+(getMaxParallelRecipes())+EnumChatFormatting.RESET);
+
+
+		mInfo.add("Total Time Since Built: " + EnumChatFormatting.DARK_GREEN + Integer.toString(weeks)+EnumChatFormatting.RESET+" Weeks, " + EnumChatFormatting.DARK_GREEN+ Integer.toString(days) +EnumChatFormatting.RESET+ " Days, ");
+		mInfo.add(EnumChatFormatting.DARK_GREEN + Long.toString(hours) +EnumChatFormatting.RESET + " Hours, " + EnumChatFormatting.DARK_GREEN+ Long.toString(minutes) +EnumChatFormatting.RESET+ " Minutes, " + EnumChatFormatting.DARK_GREEN+ Long.toString(second) +EnumChatFormatting.RESET+ " Seconds.");
+		mInfo.add("Total Time in ticks: " + EnumChatFormatting.DARK_GREEN + Long.toString(this.mTotalRunTime));
+
 
 		String[] mInfo2 = new String[mInfo.size()];
 		mInfo.toArray(mInfo2);
@@ -202,27 +259,53 @@ GT_MetaTileEntity_MultiBlockBase {
 	}
 
 	private String[] aCachedToolTip;
-	
+
+	/*private final String aRequiresMuffler = "1x Muffler Hatch";
+	private final String aRequiresCoreModule = "1x Core Module";
+	private final String aRequiresMaint = "1x Maintanence Hatch";*/
+
 	@Override
 	public final String[] getDescription() {		
-		if (aCachedToolTip != null) {
-			return aCachedToolTip;
-		}		
+		/*if (aCachedToolTip != null) {
+			boolean uuuu = false;
+			for (String s : aCachedToolTip) {
+				if (s.toLowerCase().contains(".")) {
+					uuuu = true;
+					break;
+				}
+			}
+			if (!uuuu) {
+				return aCachedToolTip;				
+			}
+			else {
+				aCachedToolTip = null;
+			}			
+		}*/
+		
+		String aRequiresMuffler = "1x Muffler Hatch";
+		String aRequiresCoreModule = "1x Core Module";
+		String aRequiresMaint = "1x Maintanence Hatch";
+		
 		String[] x = getTooltip();		
 		//Add Stock Tooltip to bottom of list
 		String[] z;		
 		if (getPollutionPerTick(null) > 0) {
 			z = new String[] {
+					aRequiresMaint,
+					aRequiresCoreModule,
+					aRequiresMuffler,
 					getPollutionTooltip(),
 					getMachineTooltip(),
 					CORE.GT_Tooltip};
 		}
 		else {
 			z = new String[] {
-				getMachineTooltip(),
-				CORE.GT_Tooltip};		
+					aRequiresMaint,
+					aRequiresCoreModule,
+					getMachineTooltip(),
+					CORE.GT_Tooltip};		
 		}
-		
+
 		int a2, a3;
 		a2 = x != null ? x.length : 0;
 		a3 = z != null ? z.length : 0; 
@@ -232,7 +315,7 @@ GT_MetaTileEntity_MultiBlockBase {
 		aCachedToolTip = aToolTip;
 		return aToolTip;
 	}
-	
+
 	public abstract String[] getTooltip();
 
 	public synchronized final MultiblockRequirements getRequirements() {
@@ -240,7 +323,7 @@ GT_MetaTileEntity_MultiBlockBase {
 	}
 
 	//public abstract MultiblockRequirements setRequirements();
-	
+
 	public synchronized final void setRequirementsInternal() {
 		//this.mRequirements = setRequirements();
 		this.mRequirements = null;
@@ -249,6 +332,9 @@ GT_MetaTileEntity_MultiBlockBase {
 	public int getAmountOfOutputs() {
 		return 1;
 	}
+
+	public abstract int getMaxParallelRecipes();
+	public abstract int getEuDiscountForParallelism();
 
 	@Override
 	public boolean isCorrectMachinePart(final ItemStack paramItemStack) {
@@ -349,8 +435,8 @@ GT_MetaTileEntity_MultiBlockBase {
 	public static Method aLogger = null;
 
 	public void log(String s) {
-		boolean isDebugLogging = CORE.DEBUG || true;	
-		boolean reset = true;
+		boolean isDebugLogging = CORE.DEBUG;	
+		boolean reset = false;
 		if (aLogger == null || reset) {
 			if (isDebugLogging) {
 				try {
@@ -385,10 +471,32 @@ GT_MetaTileEntity_MultiBlockBase {
 		return checkRecipeGeneric(tItemInputs, tFluidInputs, aMaxParallelRecipes, aEUPercent, aSpeedBonusPercent, aOutputChanceRoll);
 	}
 
+
+	public boolean checkRecipeGeneric(GT_Recipe aRecipe, 
+			int aMaxParallelRecipes, int aEUPercent,
+			int aSpeedBonusPercent, int aOutputChanceRoll) {		
+		if (aRecipe == null) {
+			return false;
+		}		
+		ArrayList<ItemStack> tItems = getStoredInputs();
+		ArrayList<FluidStack> tFluids = getStoredFluids();
+		ItemStack[] tItemInputs = tItems.toArray(new ItemStack[tItems.size()]);
+		FluidStack[] tFluidInputs = tFluids.toArray(new FluidStack[tFluids.size()]);
+		return checkRecipeGeneric(tItemInputs, tFluidInputs, aMaxParallelRecipes, aEUPercent, aSpeedBonusPercent, aOutputChanceRoll, aRecipe);
+	}
+
 	public boolean checkRecipeGeneric(
 			ItemStack[] aItemInputs, FluidStack[] aFluidInputs,
 			int aMaxParallelRecipes, int aEUPercent,
 			int aSpeedBonusPercent, int aOutputChanceRoll) {
+		return checkRecipeGeneric(aItemInputs, aFluidInputs, aMaxParallelRecipes, aEUPercent, aSpeedBonusPercent, aOutputChanceRoll, null);
+	}
+
+
+	public boolean checkRecipeGeneric(
+			ItemStack[] aItemInputs, FluidStack[] aFluidInputs,
+			int aMaxParallelRecipes, int aEUPercent,
+			int aSpeedBonusPercent, int aOutputChanceRoll, GT_Recipe aRecipe) {
 		// Based on the Processing Array. A bit overkill, but very flexible.
 
 
@@ -397,6 +505,7 @@ GT_MetaTileEntity_MultiBlockBase {
 
 		//If no core, return false;
 		if (aControlCoreTier == 0) {
+			log("No control core found.");
 			return false;
 		}
 
@@ -413,11 +522,12 @@ GT_MetaTileEntity_MultiBlockBase {
 
 		//Check to see if Voltage Tier > Control Core Tier
 		if (tTier > aControlCoreTier) {
+			log("Control core found is lower tier than power tier.");
 			return false;
 		}
 
 
-		GT_Recipe tRecipe = findRecipe(
+		GT_Recipe tRecipe = aRecipe != null ? aRecipe : findRecipe(
 				getBaseMetaTileEntity(), mLastRecipe, false,
 				gregtech.api.enums.GT_Values.V[tTier], aFluidInputs, aItemInputs);
 
@@ -621,7 +731,7 @@ GT_MetaTileEntity_MultiBlockBase {
 				this.mMultiDynamoHatches.clear();
 			}
 		}
-		
+
 
 		super.onPostTick(aBaseMetaTileEntity, aTick);
 	}
@@ -982,16 +1092,17 @@ GT_MetaTileEntity_MultiBlockBase {
 	@Override
 	public final void onScrewdriverRightClick(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
 		super.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);
+		resetRecipeMapForAllInputHatches();
 		onModeChangeByScrewdriver(aSide, aPlayer, aX, aY, aZ);
 	}
-	
+
 	public void onModeChangeByScrewdriver(byte aSide, EntityPlayer aPlayer, float aX, float aY, float aZ) {
-		resetRecipeMapForAllInputHatches();
+
 	}
 
-	
-	
-	
+
+
+
 
 	/**
 	 * Enable Texture Casing Support if found in GT 5.09
@@ -1139,6 +1250,22 @@ GT_MetaTileEntity_MultiBlockBase {
 		}
 		else {
 			return "";
+		}
+	}
+	
+	private static Method calculatePollutionReduction;
+	public int calculatePollutionReductionForHatch(GT_MetaTileEntity_Hatch_Muffler i , int g) {		
+		if (calculatePollutionReduction == null) {
+			try {
+				calculatePollutionReduction = i.getClass().getDeclaredMethod("calculatePollutionReduction", int.class);
+			} catch (NoSuchMethodException | SecurityException e) {
+				calculatePollutionReduction = null;
+			}
+		}		
+		try {
+			return (int) calculatePollutionReduction.invoke(i, g);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			return 0;
 		}
 	}
 
@@ -1320,10 +1447,12 @@ GT_MetaTileEntity_MultiBlockBase {
 
 
 		if (mRecipeResult == null) {
+			log("Invalid recipe, Fallback lookup. "+this.getRecipeMap().mRecipeList.size()+" | "+this.getRecipeMap().mNEIName);	
 			if (!CORE.MAIN_GREGTECH_5U_EXPERIMENTAL_FORK) {
 				try {
 					return (GT_Recipe) findRecipe08.invoke(getRecipeMap(), aTileEntity, aRecipe, aNotUnificated, aVoltage, aFluids, aSpecialSlot, aInputs);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					e.printStackTrace();
 					return null;
 				}
 			}
@@ -1331,6 +1460,7 @@ GT_MetaTileEntity_MultiBlockBase {
 				try {
 					return (GT_Recipe) findRecipe09.invoke(getRecipeMap(), aTileEntity, aRecipe, aNotUnificated, aDontCheckStackSizes, aVoltage,	aFluids, aSpecialSlot, aInputs);
 				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					e.printStackTrace();
 					return null;
 				}
 			}
@@ -1369,6 +1499,38 @@ GT_MetaTileEntity_MultiBlockBase {
 	}
 
 
+	public final boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {	
+		boolean aStructureCheck = checkMultiblock(aBaseMetaTileEntity, aStack);
+		boolean aHasCore = this.getControlCoreBus() != null;	
+		return aStructureCheck && aHasCore;
+	}
+
+	public abstract boolean checkMultiblock(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack);
+	
+	
+	public boolean isValidBlockForStructure(IGregTechTileEntity aBaseMetaTileEntity, int aCasingID, boolean canBeHatch, Block aFoundBlock, int aFoundMeta, Block aExpectedBlock, int aExpectedMeta) {
+		boolean isHatch = false;		
+		if (aBaseMetaTileEntity != null) {
+			isHatch = this.addToMachineList(aBaseMetaTileEntity, aCasingID);
+			if (isHatch) {
+				return true;
+			}
+		}
+		if (!isHatch) {
+			if (aFoundBlock != aExpectedBlock || aFoundMeta != aExpectedMeta) {
+				return false;
+			}
+			else {
+				return true;
+			}
+		}
+		else {
+			return true;
+		}
+		
+		
+		
+	}
 
 
 

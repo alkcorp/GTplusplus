@@ -64,8 +64,6 @@ extends GregtechMeta_MultiBlockBase {
 				"1x Input Bus (Any casing)",
 				"1x Input Hatch (Any casing)",
 				"1x Output Bus (Any casing)",
-				"1x Muffler Hatch (Any casing)",
-				"1x Maintenance Hatch (Any casing)",
 				"1x Energy Hatch (Any casing)",
 				"Wash Plant Casings for the rest"
 
@@ -109,9 +107,19 @@ extends GregtechMeta_MultiBlockBase {
 		}
 		return false;
 	}
+	
+	@Override
+	public int getMaxParallelRecipes() {
+		return (4* GT_Utility.getTier(this.getMaxInputVoltage()));
+	}
 
 	@Override
-	public boolean checkMachine(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
+	public int getEuDiscountForParallelism() {
+		return 100;
+	}
+
+	@Override
+	public boolean checkMultiblock(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
 
 		//Get Facing direction
 		int mDirectionX  = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
@@ -363,7 +371,6 @@ extends GregtechMeta_MultiBlockBase {
 		else {
 			PlayerUtils.messagePlayer(aPlayer, "Wash Plant is now running in Ore Washer Mode.");
 		}		
-		super.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);
 	}
 
 }

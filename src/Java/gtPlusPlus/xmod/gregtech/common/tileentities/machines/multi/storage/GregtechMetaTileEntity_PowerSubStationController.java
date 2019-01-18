@@ -141,7 +141,7 @@ public class GregtechMetaTileEntity_PowerSubStationController extends GregtechMe
 	public static final int CELL_HEIGHT_MIN = 2;
 
 	@Override
-	public boolean checkMachine(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
+	public boolean checkMultiblock(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
 		Logger.INFO("Checking structure for Industrial Power Sub-Station.");
 		final int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX * 2;
 		final int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ * 2;
@@ -375,6 +375,16 @@ public class GregtechMetaTileEntity_PowerSubStationController extends GregtechMe
 		this.mEfficiencyIncrease = 10000;
 		return true;
 	}
+	
+	@Override
+	public int getMaxParallelRecipes() {
+		return 1;
+	}
+
+	@Override
+	public int getEuDiscountForParallelism() {
+		return 0;
+	}
 
 	private void drawEnergyFromHatch(MetaTileEntity aHatch)  {
 		if (!isValidMetaTileEntity(aHatch)) return;
@@ -573,7 +583,6 @@ public class GregtechMetaTileEntity_PowerSubStationController extends GregtechMe
 		else {
 			PlayerUtils.messagePlayer(aPlayer, "Sub-Station is now inputting power into the controller.");
 		}
-		super.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);
 	}
 
 }

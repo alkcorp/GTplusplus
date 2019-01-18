@@ -63,12 +63,23 @@ public class GregtechMetaTileEntity_IndustrialFishingPond extends GregtechMeta_M
 
 	@Override
 	public String[] getTooltip() {
-		return new String[] { "Controller Block for the Fishing Pond", "Size: 9x3x9 [WxHxL] (open)", "X           X",
-				"X           X", "XXXXXXXXX", "Put a numbered circuit into the input bus.", "Circuit 14 for Fish",
-				"Circuit 15 for Junk", "Circuit 16 for Treasure", "Controller (front centered)",
-				"1x Output Bus (Any casing)", "1x Input Bus (Any casing)",
-				"1x Input Hatch (Any casing, fill with water)", "1x Maintenance Hatch (Any casing)",
-				"1x Energy Hatch (Any casing)", "Aquatic Casings for the rest",  };
+		return new String[] {
+				"Controller Block for the Fishing Pond",
+				"Size: 9x3x9 [WxHxL] (open)",
+				"X           X",
+				"X           X", 
+				"XXXXXXXXX", 
+				"Put a numbered circuit into the input bus.", 
+				"Circuit 14 for Fish",
+				"Circuit 15 for Junk", 
+				"Circuit 16 for Treasure", 
+				"Aquatic Casings (all non-hatches)", 
+				"Controller (front centered)",
+				"1x Output Bus", 
+				"1x Input Bus",
+				"1x Input Hatch (fill with water)",
+				"1x Energy Hatch", 
+				};
 	}
 
 	@Override
@@ -139,9 +150,19 @@ public class GregtechMetaTileEntity_IndustrialFishingPond extends GregtechMeta_M
 		}
 		return true;
 	}
+	
+	@Override
+	public int getMaxParallelRecipes() {
+		return 1;
+	}
 
 	@Override
-	public boolean checkMachine(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
+	public int getEuDiscountForParallelism() {
+		return 100;
+	}
+
+	@Override
+	public boolean checkMultiblock(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
 		// Get Facing direction
 		int mDirectionX = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
 		int mCurrentDirectionX;

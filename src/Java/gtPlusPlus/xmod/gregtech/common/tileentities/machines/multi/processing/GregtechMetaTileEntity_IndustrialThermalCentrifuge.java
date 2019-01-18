@@ -44,14 +44,13 @@ extends GregtechMeta_MultiBlockBase {
 				"150% faster than using single block machines of the same voltage",
 				"Only uses 80% of the eu/t normally required",
 				"Processes eight items per voltage tier",
-				"Size: 3x2x3 [WxHxL]", "Controller (front centered, top layer)",
+				"Size: 3x2x3 [WxHxL]", 
+				"Thermal processing Casings (8 at least!)",
+				"Noise Hazard Sign Blocks also count as valid casings",
+				"Controller (front centered, top layer)",
 				"1x Input Bus (Any bottom layer casing)",
 				"1x Output Bus (Any bottom layer casing)",
-				"1x Maintenance Hatch (Any bottom layer casing)",
-				"1x Muffler Hatch (Casing under controller)",
 				"1x Energy Hatch (Any bottom layer casing)",
-				"Thermal processing Casings for the rest (8 at least!)",
-				"Noise Hazard Sign Blocks also count as valid casings",
 				
 		};
 	}
@@ -88,9 +87,19 @@ extends GregtechMeta_MultiBlockBase {
 	public boolean checkRecipe(final ItemStack aStack) {
 		return checkRecipeGeneric((8* GT_Utility.getTier(this.getMaxInputVoltage())), 80, 150);
 	}
+	
+	@Override
+	public int getMaxParallelRecipes() {
+		return (8 * GT_Utility.getTier(this.getMaxInputVoltage()));
+	}
 
 	@Override
-	public boolean checkMachine(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
+	public int getEuDiscountForParallelism() {
+		return 80;
+	}
+
+	@Override
+	public boolean checkMultiblock(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
 		int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
 		int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
 		/*if (!(aBaseMetaTileEntity.getAirOffset(xDir, 0, zDir))) {

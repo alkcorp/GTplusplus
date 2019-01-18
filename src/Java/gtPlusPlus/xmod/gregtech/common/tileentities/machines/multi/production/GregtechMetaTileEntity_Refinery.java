@@ -105,10 +105,20 @@ public class GregtechMetaTileEntity_Refinery extends GregtechMeta_MultiBlockBase
             }
         }
         return false;
-    }
+    }	
+	
+	@Override
+	public int getMaxParallelRecipes() {
+		return 1;
+	}
 
 	@Override
-	public boolean checkMachine(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
+	public int getEuDiscountForParallelism() {
+		return 0;
+	}
+
+	@Override
+	public boolean checkMultiblock(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
 		final int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
 		final int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
 		for (int i = -1; i < 2; i++) {

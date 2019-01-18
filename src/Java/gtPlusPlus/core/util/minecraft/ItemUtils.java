@@ -286,6 +286,13 @@ public class ItemUtils {
 		else {
 			mTemp = Utils.sanitizeString(mTemp);			
 		}
+		
+		
+		
+		if (oredictName.contains("rod")) {
+			String s = "stick"+oredictName.substring(3);
+			oredictName = s;
+		}
 
 		// Banned Materials and replacements for GT5.8 compat.
 
@@ -814,9 +821,10 @@ public class ItemUtils {
 			if (mLocaleCache.get(mCacheKey).toLowerCase().contains(".name")) {
 				mLocaleCache.remove(mCacheKey);
 				String mNew = ItemUtils.simpleMetaStack(block, meta, 1).getDisplayName();
-				// Logger.INFO("Re-caching "+mNew+" into locale cache.");
+				//Logger.INFO("Re-caching "+mNew+" into locale cache.");
 				mLocaleCache.put(mCacheKey, mNew);
 			}
+			//Logger.INFO("Returning Cached Value.");
 			return mLocaleCache.get(mCacheKey);
 		} else {
 			Item item = Item.getItemFromBlock(block);
@@ -829,6 +837,7 @@ public class ItemUtils {
 				blockName = ItemUtils.simpleMetaStack(block, meta, 1).getDisplayName();
 			}
 			mLocaleCache.put(mCacheKey, blockName);
+			//Logger.INFO("Cached New Value.");
 			return blockName;
 		}
 	}

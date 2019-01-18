@@ -101,7 +101,7 @@ public class GregtechMetaTileEntity_Cyclotron extends GregtechMeta_MultiBlockBas
 	}
 
 	@Override
-	public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
+	public boolean checkMultiblock(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
 		Logger.INFO("Checking form of Cyclotron.");
 		int xCenter = getBaseMetaTileEntity().getXCoord() + ForgeDirection.getOrientation(getBaseMetaTileEntity().getFrontFacing()).offsetX * 5;
 		int yCenter = getBaseMetaTileEntity().getYCoord();
@@ -234,7 +234,10 @@ public class GregtechMetaTileEntity_Cyclotron extends GregtechMeta_MultiBlockBas
 	}
 
 	private boolean isAdvancedMachineCasing(int aX, int aY, int aZ) {
-		return (getBaseMetaTileEntity().getBlock(aX, aY, aZ) == getCasing()) && (getBaseMetaTileEntity().getMetaID(aX, aY, aZ) == getCasingMeta());
+		final Block aBlock = getBaseMetaTileEntity().getBlock(aX, aY, aZ);
+		final int aMeta = getBaseMetaTileEntity().getMetaID(aX, aY, aZ);	
+		final IGregTechTileEntity tTileEntity2 = getBaseMetaTileEntity().getIGregTechTileEntity(aX, aY, aZ);		
+		return isValidBlockForStructure(tTileEntity2, TAE.GTPP_INDEX(26), true, aBlock, aMeta, getCasing(), getCasingMeta());			
 	}
 
 	private boolean isCyclotronCoil(int aX, int aY, int aZ) {
@@ -268,11 +271,11 @@ public class GregtechMetaTileEntity_Cyclotron extends GregtechMeta_MultiBlockBas
 				"------------------------------------------------------------",
 				"Consists of the same layout as a Fusion Reactor",
 				"Cyclotron Machine Casings around Cyclotron Coil Blocks", 
+				"All Hatches must be IV or better",
 				"1-16 Input Hatches", 
 				"1-16 Input Busses",
 				"1-16 Output Busses", 
 				"1-16 Energy Hatches", 
-				"All Hatches must be IV or better",
 				};
 	}
 
@@ -355,6 +358,16 @@ public class GregtechMetaTileEntity_Cyclotron extends GregtechMeta_MultiBlockBas
 			}
 		}		
 		return false;
+	}	
+	
+	@Override
+	public int getMaxParallelRecipes() {
+		return 1;
+	}
+
+	@Override
+	public int getEuDiscountForParallelism() {
+		return 0;
 	}
 
 	@Override
@@ -362,7 +375,7 @@ public class GregtechMetaTileEntity_Cyclotron extends GregtechMeta_MultiBlockBas
 		if (aBaseMetaTileEntity.isServerSide()) {
 			if (mEfficiency < 0)
 				mEfficiency = 0;
-			if (mRunningOnLoad && checkMachine(aBaseMetaTileEntity, mInventory[1])) {
+			if (mRunningOnLoad && checkMultiblock(aBaseMetaTileEntity, mInventory[1])) {
 				this.mEUStore = (int) aBaseMetaTileEntity.getStoredEU();
 				checkRecipe(mInventory[1]);
 			}
@@ -375,7 +388,7 @@ public class GregtechMetaTileEntity_Cyclotron extends GregtechMeta_MultiBlockBas
 				mEnergyHatches.clear();
 				mMufflerHatches.clear();
 				mMaintenanceHatches.clear();
-				mMachine = checkMachine(aBaseMetaTileEntity, mInventory[1]);
+				mMachine = checkMultiblock(aBaseMetaTileEntity, mInventory[1]);
 			}
 			if (mStartUpCheck < 0) {
 				if (mMachine) {

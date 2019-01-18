@@ -16,6 +16,8 @@ import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.block.ModBlocks;
 import gtPlusPlus.core.item.general.ItemLavaFilter;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.base.GregtechMeta_MultiBlockBase;
+import gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtBlock;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
@@ -120,6 +122,16 @@ extends GregtechMeta_MultiBlockBase
 		this.mMaxProgresstime = 0;
 		this.mEUt = 0;
 		return false;
+	}	
+	
+	@Override
+	public int getMaxParallelRecipes() {
+		return 1;
+	}
+
+	@Override
+	public int getEuDiscountForParallelism() {
+		return 0;
 	}
 
 	@Override
@@ -182,15 +194,14 @@ extends GregtechMeta_MultiBlockBase
 	{
 		return new String[]{
 				"Thermal Boiler Controller",
-				"Converts Heat into Steam",
-				"Size: 3x3x3 (Hollow)",
-				"Controller (front middle)",
-				"2x Output Hatch/Bus",
-				"2x Input Hatch",
-				"1x Maintenance Hatch",
-				"Thermal Containment Casings for the rest",
-				"Use 2 Output Hatches by default, change one to a Bus if filtering Lava",
+				"Converts Water & Heat into Steam",
 				"Consult user manual for more information",
+				"Size: 3x3x3 (Hollow)",
+				"Thermal Containment Casings (10 at least!)",
+				"Controller (front middle)",
+				"2x Input Hatch",
+				"1x Output Hatch (Steam)",
+				"1x Output Bus (Filter results, optional)",
 				};
 	}
 
@@ -198,39 +209,42 @@ extends GregtechMeta_MultiBlockBase
 	public ITexture[] getTexture(final IGregTechTileEntity aBaseMetaTileEntity, final byte aSide, final byte aFacing, final byte aColorIndex, final boolean aActive, final boolean aRedstone) {
 		if (aSide == aFacing) {
 			return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[TAE.GTPP_INDEX(1)],
-					new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_LARGE_BOILER_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_LARGE_BOILER)};
+					new GT_RenderedTexture(aActive ? TexturesGtBlock.Overlay_Machine_Controller_Advanced_Active : TexturesGtBlock.Overlay_Machine_Controller_Advanced)};
 		}
 		return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[TAE.GTPP_INDEX(1)]};
 	}
 
 	@Override
-	public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack arg1) {
-		final int xDir = ForgeDirection.getOrientation((int) aBaseMetaTileEntity.getBackFacing()).offsetX;
-		final int zDir = ForgeDirection.getOrientation((int) aBaseMetaTileEntity.getBackFacing()).offsetZ;
+	public boolean checkMultiblock(IGregTechTileEntity aBaseMetaTileEntity, ItemStack arg1) {
+		int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
+		int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
+		int tAmount = 0;
+
 		if (!aBaseMetaTileEntity.getAirOffset(xDir, 0, zDir)) {
 			return false;
-		}
-		int tAmount = 0;
-		for (int i = -1; i < 2; ++i) {
-			for (int j = -1; j < 2; ++j) {
-				for (int h = -1; h < 2; ++h) {
-					if (h != 0 || ((xDir + i != 0 || zDir + j != 0) && (i != 0 || j != 0))) {
-						final IGregTechTileEntity tTileEntity = aBaseMetaTileEntity
-								.getIGregTechTileEntityOffset(xDir + i, h, zDir + j);
-						if (!this.addToMachineList(tTileEntity, TAE.GTPP_INDEX(1))) {
-							if (aBaseMetaTileEntity.getBlockOffset(xDir + i, h,	zDir + j) != ModBlocks.blockCasings2Misc) {
-								return false;
-							}
-							if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j) != 11) {
+		} else {
+			for (int i = -1; i < 2; ++i) {
+				for (int j = -1; j < 2; ++j) {
+					for (int h = -1; h < 2; ++h) {
+						if (h != 0 || (xDir + i != 0 || zDir + j != 0) && (i != 0 || j != 0)) {
+							IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i,
+									h, zDir + j);
+							Block aBlock = aBaseMetaTileEntity.getBlockOffset(xDir + i, h, zDir + j);
+							int aMeta = aBaseMetaTileEntity.getMetaIDOffset(xDir + i, h, zDir + j);
+
+							if (!isValidBlockForStructure(tTileEntity, 1, true, aBlock, aMeta,
+									ModBlocks.blockCasings2Misc, 11)) {
+								Logger.INFO("Bad Thermal Boiler casing");
 								return false;
 							}
 							++tAmount;
+
 						}
 					}
 				}
 			}
+			return tAmount >= 10;
 		}
-		return tAmount >= 10;
 	}
 
 	public boolean damageFilter(){

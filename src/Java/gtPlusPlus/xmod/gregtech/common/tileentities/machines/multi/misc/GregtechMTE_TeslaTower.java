@@ -113,7 +113,7 @@ public class GregtechMTE_TeslaTower extends GregtechMeta_MultiBlockBase {
 	@Override
 	public ITexture[] getTexture(final IGregTechTileEntity aBaseMetaTileEntity, final byte aSide, final byte aFacing, final byte aColorIndex, final boolean aActive, final boolean aRedstone) {
 		if (aSide == aFacing) {
-			return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[getCasingTextureIndex()], new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_VACUUM_FREEZER_ACTIVE : Textures.BlockIcons.OVERLAY_FRONT_VACUUM_FREEZER)};
+			return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[getCasingTextureIndex()], new GT_RenderedTexture(aActive ? gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtBlock.Overlay_Machine_Controller_Advanced_Active : gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtBlock.Overlay_Machine_Controller_Advanced)};
 		}
 		return new ITexture[]{Textures.BlockIcons.CASING_BLOCKS[getCasingTextureIndex()]};
 	}
@@ -156,7 +156,7 @@ public class GregtechMTE_TeslaTower extends GregtechMeta_MultiBlockBase {
 	}
 
 	@Override
-	public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
+	public boolean checkMultiblock(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
 		updateCoordinates();
 		//check base layer
 		for (int xOff = -1 + back.offsetX; xOff <= 1 + back.offsetX; xOff++) {
@@ -453,7 +453,16 @@ public class GregtechMTE_TeslaTower extends GregtechMeta_MultiBlockBase {
 		else {
 			PlayerUtils.messagePlayer(aPlayer, "[Tesla Tower] Targetting all types of entities.");
 		}		
-		super.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);
+	}
+
+	@Override
+	public int getMaxParallelRecipes() {
+		return 0;
+	}
+
+	@Override
+	public int getEuDiscountForParallelism() {
+		return 0;
 	}
 
 
