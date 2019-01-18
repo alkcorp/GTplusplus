@@ -52,13 +52,14 @@ extends GregtechMeta_MultiBlockBase {
 				"Each Input Bus can have a different shape!",
 				"You can use several input busses per multiblock",
 				"Size: 3x3x5 [WxHxL] (Hollow)",
-				"Inconel Reinforced Casings (28 at least!)",
 				"Controller (front centered)",
-				"1x Input Bus",
-				"1x Output Bus",
-				"1x Input Hatch",
-				"1x Energy Hatch",
-				"Maintenance Hatch must be at the back, centered",
+				"Busses & Hatches cannot replace edge casings",
+				"1x Input Bus (anywhere)",
+				"1x Output Bus (anywhere)",
+				"1x Energy Hatch (anywhere)",
+				"1x Muffler Hatch (anywhere)",
+				"1x Maintenance Hatch (Back Center)",
+				"Inconel Reinforced Casings for the rest (28 at least!)"
 				};
 	}
 
@@ -123,16 +124,6 @@ extends GregtechMeta_MultiBlockBase {
 		}
 		return false;
 	}
-	
-	@Override
-	public int getMaxParallelRecipes() {
-		return (4 * GT_Utility.getTier(this.getMaxInputVoltage()));
-	}
-
-	@Override
-	public int getEuDiscountForParallelism() {
-		return 100;
-	}
 
 	@Override
 	public void startProcess() {
@@ -140,7 +131,7 @@ extends GregtechMeta_MultiBlockBase {
 	}
 
 	@Override
-	public boolean checkMultiblock(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
+	public boolean checkMachine(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
 		final byte tSide = this.getBaseMetaTileEntity().getBackFacing();
 		if ((this.getBaseMetaTileEntity().getAirAtSideAndDistance(this.getBaseMetaTileEntity().getBackFacing(), 1)) && (this.getBaseMetaTileEntity().getAirAtSideAndDistance(this.getBaseMetaTileEntity().getBackFacing(), 2) && (this.getBaseMetaTileEntity().getAirAtSideAndDistance(this.getBaseMetaTileEntity().getBackFacing(), 3)))) {			
 			for (byte i = 2; i < 6; i = (byte) (i + 1)) {
@@ -159,15 +150,18 @@ extends GregtechMeta_MultiBlockBase {
 				for (byte j = -1; j < 2; j = (byte) (j + 1)) {
 					if ((i != 0) || (j != 0)) {
 						for (byte k = 0; k < 5; k = (byte) (k + 1)) {
-							
-							Block aBlock = this.getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i));
-							int aMeta = this.getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i));
-							IGregTechTileEntity aTile = this.getBaseMetaTileEntity().getIGregTechTileEntity(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i));
-							if (!isValidBlockForStructure(aTile, getCasingTextureIndex(), true, aBlock, aMeta, getCasingBlock(), getCasingMeta())) {
-								Logger.INFO("Bad Casing on Extruder.");
+							//if (((i == 0) || (j == 0)) && ((k == 1) || (k == 2) || (k == 3))) {
+							if ((this.getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == this.getCasingBlock()) && (this.getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == this.getCasingMeta())) {
+							}
+							else if (!this.addToMachineList(this.getBaseMetaTileEntity().getIGregTechTileEntity(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)), getCasingTextureIndex()) && (!this.addEnergyInputToMachineList(this.getBaseMetaTileEntity().getIGregTechTileEntity(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)), getCasingTextureIndex()))) {
+								Logger.WARNING("False 2");
 								return false;
 							}
-							
+							/*}
+							else {
+								Logger.WARNING("False 3");
+								return false;
+							}*/
 						}
 					}
 				}

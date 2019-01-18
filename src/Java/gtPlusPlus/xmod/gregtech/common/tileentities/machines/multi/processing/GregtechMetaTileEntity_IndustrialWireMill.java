@@ -47,16 +47,16 @@ extends GregtechMeta_MultiBlockBase {
 				"200% faster than using single block machines of the same voltage",
 				"Only uses 75% of the eu/t normally required",
 				"Processes four items per voltage tier",
-				"Size: 3x3x5 [WxHxL] (Hollow)",
-				"Wire Factory Casings (32 at least!)",
-				"Controller (front centered)",
-				"1x Input Bus",
-				"1x Output Bus",
-				"1x Energy Hatch",
-				"Maintenance Hatch must be at the back, centered",
+				"Size: 3x3x5 [WxHxL] (Hollow)", "Controller (front centered)",
+				"2x Input Bus (side centered)",
+				"2x Output Bus (side centered)",
+				"1x Energy Hatch (top or bottom centered)",
+				"1x Muffler Hatch (top or bottom centered)",
+				"1x Maintenance Hatch (back centered)",
+				"Wire Factory Casings for the rest (32 at least!)"
 		};
 	}
-	
+
 	@Override
 	public String getSound() {
 		return GregTech_API.sSoundList.get(Integer.valueOf(204));
@@ -94,19 +94,9 @@ extends GregtechMeta_MultiBlockBase {
 	public boolean checkRecipe(final ItemStack aStack) {
 		return checkRecipeGeneric((4* GT_Utility.getTier(this.getMaxInputVoltage())), 75, 200);
 	}
-	
-	@Override
-	public int getMaxParallelRecipes() {
-		return (4* GT_Utility.getTier(this.getMaxInputVoltage()));
-	}
 
 	@Override
-	public int getEuDiscountForParallelism() {
-		return 75;
-	}
-
-	@Override
-	public boolean checkMultiblock(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
+	public boolean checkMachine(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
 		final byte tSide = this.getBaseMetaTileEntity().getBackFacing();
 		if ((this.getBaseMetaTileEntity().getAirAtSideAndDistance(this.getBaseMetaTileEntity().getBackFacing(), 1)) && (this.getBaseMetaTileEntity().getAirAtSideAndDistance(this.getBaseMetaTileEntity().getBackFacing(), 2) && (this.getBaseMetaTileEntity().getAirAtSideAndDistance(this.getBaseMetaTileEntity().getBackFacing(), 3)))) {
 			for (byte i = 2; i < 6; i = (byte) (i + 1)) {
@@ -124,14 +114,21 @@ extends GregtechMeta_MultiBlockBase {
 			for (byte i = -1; i < 2; i = (byte) (i + 1)) {
 				for (byte j = -1; j < 2; j = (byte) (j + 1)) {
 					if ((i != 0) || (j != 0)) {
-						for (byte k = 0; k < 5; k = (byte) (k + 1)) {							
-								Block aBlock = this.getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i));
-								int aMeta = this.getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i));
-								IGregTechTileEntity aTile = this.getBaseMetaTileEntity().getIGregTechTileEntity(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i));
-								if (!isValidBlockForStructure(aTile, getCasingTextureIndex(), true, aBlock, aMeta, getCasingBlock(), getCasingMeta())) {
-									Logger.INFO("Bad Casing on Wiremill.");
+						for (byte k = 0; k < 5; k = (byte) (k + 1)) {
+							//if (((i == 0) || (j == 0)) && ((k == 1) || (k == 2) || (k == 3))) {
+								if ((this.getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == this.getCasingBlock()) && (this.getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == this.getCasingMeta())) {
+								}
+								else if (!this.addToMachineList(this.getBaseMetaTileEntity().getIGregTechTileEntity(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i))) && (!this.addEnergyInputToMachineList(this.getBaseMetaTileEntity().getIGregTechTileEntity(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i))))) {
+									Logger.INFO("False 2");
 									return false;
-								}	
+								}
+							/*}
+							else if ((this.getBaseMetaTileEntity().getBlock(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == this.getCasingBlock()) && (this.getBaseMetaTileEntity().getMetaID(tX + (tSide == 5 ? k : tSide == 4 ? -k : i), tY + j, tZ + (tSide == 2 ? -k : tSide == 3 ? k : i)) == this.getCasingMeta())) {
+							}
+							else {
+								Logger.INFO("False 3");
+								return false;
+							}*/
 						}
 					}
 				}

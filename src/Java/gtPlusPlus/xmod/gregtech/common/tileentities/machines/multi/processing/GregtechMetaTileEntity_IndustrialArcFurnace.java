@@ -115,16 +115,6 @@ extends GregtechMeta_MultiBlockBase {
 	public boolean checkRecipe(final ItemStack aStack) {
 		return this.checkRecipeGeneric(this.mSize * 8 * GT_Utility.getTier(this.getMaxInputVoltage()), 100, 250);
 	}
-	
-	@Override
-	public int getMaxParallelRecipes() {
-		return (this.mSize * 8 * GT_Utility.getTier(this.getMaxInputVoltage()));
-	}
-
-	@Override
-	public int getEuDiscountForParallelism() {
-		return 100;
-	}
 
 	@Override
 	public void startProcess() {
@@ -133,7 +123,7 @@ extends GregtechMeta_MultiBlockBase {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean checkMultiblock(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
+	public boolean checkMachine(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
 		int x = 1;
 		int z = 1;
 		int depth = 1;
@@ -355,7 +345,8 @@ extends GregtechMeta_MultiBlockBase {
 			else {
 				PlayerUtils.messagePlayer(aPlayer, "["+EnumChatFormatting.RED+"MODE"+EnumChatFormatting.RESET+"] "+EnumChatFormatting.YELLOW+"Electric"+EnumChatFormatting.RESET);			
 			}
-		}		
+		}	
+		super.onScrewdriverRightClick(aSide, aPlayer, aX, aY, aZ);	
 	}
 
 	@Override

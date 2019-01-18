@@ -27,7 +27,6 @@ import gtPlusPlus.core.util.minecraft.FluidUtils;
 import gtPlusPlus.core.util.minecraft.ItemUtils;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.base.GregtechMeta_MultiBlockBase;
 import gtPlusPlus.xmod.gregtech.common.StaticFields59;
-import gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.ForgeDirection;
 import net.minecraftforge.fluids.FluidStack;
@@ -105,27 +104,26 @@ public class GregtechMetaTileEntity_Adv_EBF extends GregtechMeta_MultiBlockBase 
 
 		return new String[] { "Controller Block for the Advanced Electric Blast Furnace",
 				"120% faster than using an equal tier EBF", "Only uses 90% of the eu/t normally required",
-				"Processes upto 8 recipes at once", 
-				"Consumes 10L of " + mHotFuelName + "/s during operation",
-				"Each 900K over the min. Heat Capacity grants 5% speedup (multiplicatively)",
-				"Each 1800K over the min. Heat Capacity allows for one upgraded overclock",
-				"Upgraded overclocks reduce recipe time to 25% and increase EU/t to 400%",
+				"Processes upto 8 recipes at once", "Consumes 1L of " + mHotFuelName + "/t during operation",
 				"Size(WxHxD): 3x4x3 (Hollow), Controller (Front middle bottom)",
-				"16x Heating Coils (Two middle Layers, hollow)", 
-				"1x " + mHatchName,
-				"1x Input Hatch/Bus", 
-				"1x Output Hatch/Bus (Bottom Layer)",
+				"16x Heating Coils (Two middle Layers, hollow)", "1x " + mHatchName + " (Any bottom layer casing)",
+				"1x Input Hatch/Bus (Any bottom layer casing)", "1x Output Hatch/Bus (Any bottom layer casing)",
+				"1x Energy Hatch (Any bottom layer casing)", "1x Maintenance Hatch (Any bottom layer casing)",
+				"1x Muffler Hatch (Top middle)",
 				"1x Output Hatch to recover CO2/CO/SO2 (optional, any top layer casing),",
 				"    Recovery scales with Muffler Hatch tier", mCasingName + "s for the rest",
-				"1x Energy Hatch",
-		};
+				"Each 900K over the min. Heat Capacity grants 5% speedup (multiplicatively)",
+				"Each 1800K over the min. Heat Capacity allows for one upgraded overclock",
+				"Upgraded overclocks reduce recipe time to 25% and increase EU/t to 400%"
+				};
 	}
 
 	public ITexture[] getTexture(IGregTechTileEntity aBaseMetaTileEntity, byte aSide, byte aFacing, byte aColorIndex,
 			boolean aActive, boolean aRedstone) {
 		if (aSide == aFacing) {
 			return new ITexture[] { Textures.BlockIcons.CASING_BLOCKS[CASING_TEXTURE_ID],
-					new GT_RenderedTexture(aActive ? TexturesGtBlock.Overlay_Machine_Controller_Advanced_Active : TexturesGtBlock.Overlay_Machine_Controller_Advanced) };
+					new GT_RenderedTexture(aActive ? Textures.BlockIcons.OVERLAY_FRONT_ELECTRIC_BLAST_FURNACE_ACTIVE
+							: Textures.BlockIcons.OVERLAY_FRONT_ELECTRIC_BLAST_FURNACE) };
 		}
 		return new ITexture[] { Textures.BlockIcons.CASING_BLOCKS[CASING_TEXTURE_ID] };
 	}
@@ -159,10 +157,10 @@ public class GregtechMetaTileEntity_Adv_EBF extends GregtechMeta_MultiBlockBase 
 
 	public boolean checkRecipe(ItemStack aStack) {
 		return checkRecipeGeneric(8, 90, 120); // Will have to clone the logic from parent class to handle heating coil
-		// tiers.
+												// tiers.
 	}
 
-	public boolean checkMultiblock(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
+	public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
 		controllerY = aBaseMetaTileEntity.getYCoord();
 		int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
 		int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
@@ -256,21 +254,34 @@ public class GregtechMetaTileEntity_Adv_EBF extends GregtechMeta_MultiBlockBase 
 					}
 					if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 1, zDir + j) != tUsedMeta) {
 						return false;
-					}					
-					if (!isValidBlockForStructure(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 3, zDir + j), CASING_TEXTURE_ID, true, aBaseMetaTileEntity.getBlockOffset(xDir + i, 0, zDir + j), (int) aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 0, zDir + j), ModBlocks.blockCasings3Misc, 11)) {
-						Logger.INFO("Matter Fabricator Casings Missing from one of the top layers inner 3x3.");
-						return false;
-					}					
+					}
+					if (!addOutputToMachineList(aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 3, zDir + j),
+							CASING_TEXTURE_ID)) {
+						if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 3, zDir + j) != ModBlocks.blockCasings3Misc) {
+							return false;
+						}
+						if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 3, zDir + j) != 11) {
+							return false;
+						}
+					}
 				}
 			}
 		}
 		for (int i = -1; i < 2; i++) {
 			for (int j = -1; j < 2; j++) {
 				if ((xDir + i != 0) || (zDir + j != 0)) {
-					IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0,zDir + j);					
-					if (!isValidBlockForStructure(tTileEntity, CASING_TEXTURE_ID, true, aBaseMetaTileEntity.getBlockOffset(xDir + i, 0, zDir + j), (int) aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 0, zDir + j), ModBlocks.blockCasings3Misc, 11)) {
-						Logger.INFO("Matter Fabricator Casings Missing from one of the top layers inner 3x3.");
-						return false;
+					IGregTechTileEntity tTileEntity = aBaseMetaTileEntity.getIGregTechTileEntityOffset(xDir + i, 0,
+							zDir + j);
+					if ((!addMaintenanceToMachineList(tTileEntity, CASING_TEXTURE_ID))
+							&& (!addInputToMachineList(tTileEntity, CASING_TEXTURE_ID))
+							&& (!addOutputToMachineList(tTileEntity, CASING_TEXTURE_ID))
+							&& (!addEnergyInputToMachineList(tTileEntity, CASING_TEXTURE_ID))) {
+						if (aBaseMetaTileEntity.getBlockOffset(xDir + i, 0, zDir + j) != ModBlocks.blockCasings3Misc) {
+							return false;
+						}
+						if (aBaseMetaTileEntity.getMetaIDOffset(xDir + i, 0, zDir + j) != 11) {
+							return false;
+						}
 					}
 				}
 			}
@@ -498,28 +509,21 @@ public class GregtechMetaTileEntity_Adv_EBF extends GregtechMeta_MultiBlockBase 
 	@SuppressWarnings("unused")
 	@Override
 	public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
-		if (this.mMaxProgresstime > 0 && this.mProgresstime != 0 || this.getBaseMetaTileEntity().hasWorkJustBeenEnabled()) {			
-			if (aTick % 10 == 0 || this.getBaseMetaTileEntity().hasWorkJustBeenEnabled()) {
-				if (!this.depleteInput(FluidUtils.getFluidStack("pyrotheum", 5))) {
-					this.causeMaintenanceIssue();
-					this.stopMachine();
+		if (this.mMaxProgresstime > 0 && this.mProgresstime != 0) {
+			if (!this.depleteInput(FluidUtils.getFluidStack("pyrotheum", 1))) {
+				if (mGraceTimer-- == 0) {
+					if (this.causeMaintenanceIssue()) {
+						this.stopMachine();
+					}
+					if (false) { // To be replaced with a config option or something
+						this.explodeMultiblock();
+					}
 				}
-				if (false) { // To be replaced with a config option or something
-					this.explodeMultiblock();
-				}
-			}			
+			} else {
+				mGraceTimer = 100;
+			}
 		}
 		super.onPostTick(aBaseMetaTileEntity, aTick);
-	}
-
-	@Override
-	public int getMaxParallelRecipes() {
-		return 8;
-	}
-
-	@Override
-	public int getEuDiscountForParallelism() {
-		return 90;
 	}
 
 }

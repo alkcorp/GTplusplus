@@ -54,6 +54,18 @@ public class GregtechMetaTileEntityTreeFarm extends GregtechMeta_MultiBlockBase 
 	public String[] getTooltip() {
 		return new String[]{
 		        "THIS MULTIBLOCK IS DISABLED - DO NOT BUILD",
+				"Controller Block for the Tree Farmer",
+				"How to get your first logs without an axe.",
+				"Size(WxHxD): 15x2x15",
+				"Purple: Farm Keeper Blocks",
+				"Dark Purple: Dirt/Grass/Podzol/Humus",
+				"Light Blue: Fence/Fence Gate",
+				"Blue/Yellow: Controller",
+				"1x Input Bus (anywhere)",
+				"1x Output Bus (anywhere)",
+				"1x Input Hatch (anywhere)",
+				"1x Energy Hatch (anywhere)",
+				"1x Maintenance Hatch (anywhere)",
 		};
 	}
 
@@ -249,16 +261,6 @@ public class GregtechMetaTileEntityTreeFarm extends GregtechMeta_MultiBlockBase 
 			return true;
 		}		
 		return false;
-	}	
-	
-	@Override
-	public int getMaxParallelRecipes() {
-		return 1;
-	}
-
-	@Override
-	public int getEuDiscountForParallelism() {
-		return 0;
 	}
 
 
@@ -273,7 +275,7 @@ public class GregtechMetaTileEntityTreeFarm extends GregtechMeta_MultiBlockBase 
 	}
 
 	@Override
-	public boolean checkMultiblock(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
+	public boolean checkMachine(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
 		Logger.WARNING("Step 1");
 		final int xDir = net.minecraftforge.common.util.ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX * 7;
 		final int zDir = net.minecraftforge.common.util.ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ * 7;

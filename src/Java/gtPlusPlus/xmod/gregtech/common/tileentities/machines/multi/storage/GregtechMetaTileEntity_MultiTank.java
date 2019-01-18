@@ -207,11 +207,12 @@ extends GregtechMeta_MultiBlockBase {
 				"Size: 3xHx3 (Block behind controller must be air)",
 				"Structure must be at least 4 blocks tall, maximum 20.",
 				"Each casing within the structure adds 128000L storage.",
-				"Multitank Exterior Casings (16 at least!)",
 				"Controller (front centered)",
-				"1x Input hatch",
-				"1x Output hatch",
-				"1x Energy Hatch",
+				"1x Input hatch (anywhere)",
+				"1x Output hatch (anywhere)",
+				"1x Energy Hatch (anywhere)",
+				"1x Maintenance Hatch (anywhere)",
+				"Multitank Exterior Casings for the rest (16 at least!)"
 		};
 	}
 
@@ -390,20 +391,10 @@ extends GregtechMeta_MultiBlockBase {
 		//this.getBaseMetaTileEntity().(tFluids[0].amount, true);
 		Logger.WARNING("Tank");
 		return false;
-	}	
-	
-	@Override
-	public int getMaxParallelRecipes() {
-		return 1;
 	}
 
 	@Override
-	public int getEuDiscountForParallelism() {
-		return 0;
-	}
-
-	@Override
-	public boolean checkMultiblock(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
+	public boolean checkMachine(final IGregTechTileEntity aBaseMetaTileEntity, final ItemStack aStack) {
 		final int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
 		final int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
 		if (!aBaseMetaTileEntity.getAirOffset(xDir, 0, zDir)) {

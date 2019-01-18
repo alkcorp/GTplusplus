@@ -116,16 +116,6 @@ public class GregtechMTE_LargeNaqReactor extends GregtechMeta_MultiBlockBase {
 
 	public boolean checkRecipe(ItemStack aStack) {
 		return false;
-	}	
-	
-	@Override
-	public int getMaxParallelRecipes() {
-		return 1;
-	}
-
-	@Override
-	public int getEuDiscountForParallelism() {
-		return 0;
 	}
 
 	public void startSoundLoop(byte aIndex, double aX, double aY, double aZ) {
@@ -134,11 +124,6 @@ public class GregtechMTE_LargeNaqReactor extends GregtechMeta_MultiBlockBase {
 			GT_Utility.doSoundAtClient((String) GregTech_API.sSoundList.get(Integer.valueOf(212)), 10, 1.0F, aX, aY,
 					aZ);
 		}
-	}
-
-	@Override
-	public String getSound() {
-		return (String) GregTech_API.sSoundList.get(Integer.valueOf(212)); 
 	}
 	
 	private Block getCasing(int casingID) {
@@ -167,7 +152,7 @@ public class GregtechMTE_LargeNaqReactor extends GregtechMeta_MultiBlockBase {
 	//Casing2, Meta 9 - "Assembler Machine Casing"
 	//Magic Glass - blockAlloyGlass
 
-	public boolean checkMultiblock(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
+	public boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {
 		int xDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetX;
 		int zDir = ForgeDirection.getOrientation(aBaseMetaTileEntity.getBackFacing()).offsetZ;
 		int r;

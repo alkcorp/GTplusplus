@@ -1,23 +1,36 @@
 package gtPlusPlus.core.block.general;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import gtPlusPlus.core.creative.AddToCreativeTab;
-import gtPlusPlus.core.item.base.itemblock.ItemBlockEntityBase;
-import gtPlusPlus.core.lib.CORE;
+
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+
+import gregtech.common.items.GT_MetaGenerated_Tool_01;
+
+import gtPlusPlus.api.objects.data.Triplet;
+import gtPlusPlus.core.creative.AddToCreativeTab;
+import gtPlusPlus.core.item.base.itemblock.ItemBlockEntityBase;
+import gtPlusPlus.core.lib.CORE;
+import gtPlusPlus.core.tileentities.general.TileEntityXpConverter;
+import gtPlusPlus.core.util.Utils;
+import gtPlusPlus.core.util.minecraft.EnchantingUtils;
+import gtPlusPlus.core.util.minecraft.PlayerUtils;
 
 public class BlockTankXpConverter extends BlockContainer {
 
@@ -27,6 +40,10 @@ public class BlockTankXpConverter extends BlockContainer {
 	private IIcon textureBottom;
 	@SideOnly(Side.CLIENT)
 	private IIcon textureFront;
+
+	private int mRainbowTick = 0;
+	private int mRainbowTickMax = 0;
+	private final Map<Integer, Triplet<Integer, Integer, Integer>> mRainbowMap = new HashMap<Integer, Triplet<Integer, Integer, Integer>>();
 
 	@SuppressWarnings("deprecation")
 	public BlockTankXpConverter() {
@@ -67,10 +84,6 @@ public class BlockTankXpConverter extends BlockContainer {
 	@Override
 	public boolean onBlockActivated(final World world, final int x, final int y, final int z, final EntityPlayer player,
 			final int side, final float lx, final float ly, final float lz) {
-
-		return true;
-
-		/*
 		if (world.isRemote) {
 			return true;
 		}
@@ -123,7 +136,7 @@ public class BlockTankXpConverter extends BlockContainer {
 			}
 		}
 		return true;
-		 */}
+	}
 
 	@Override
 	public int getRenderBlockPass() {
@@ -137,8 +150,7 @@ public class BlockTankXpConverter extends BlockContainer {
 
 	@Override
 	public TileEntity createNewTileEntity(final World world, final int p_149915_2_) {
-		//return new TileEntityXpConverter();
-		return null;
+		return new TileEntityXpConverter();
 	}
 
 	@Override
@@ -186,7 +198,7 @@ public class BlockTankXpConverter extends BlockContainer {
 
 	@Override
 	public int getLightValue() {
-		return 6;
-	}
+			return 6;
+			}
 
 }
