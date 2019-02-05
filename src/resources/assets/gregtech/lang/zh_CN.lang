@@ -18,4 +18,65 @@ GTPP.CC.machinetier=控制核心等级
 GTPP.CC.discount=EU损耗
 GTPP.CC.parallel=最大并行处理进程
 
-//This zh_CN.lang is translation by huajijam for GregTech++ (18/1/19)
+
+
+
+
+//Some Generic Words
+GTPP.info.eu=EU
+GTPP.info.euInfo=EU信息
+GTPP.info.inputLimit=输入限制
+GTPP.info.currentPower=当前能量
+GTPP.info.hidden=隐藏
+
+
+
+
+
+
+
+
+//Achievements
+achievement.gt.blockmachines.fusioncomputer.tier.09=聚变计算机MK IV
+achievement.gt.blockmachines.fusioncomputer.tier.09.desc=捡起这个物品以在NEI内查看配方
+
+achievement.gtplusplus.blockcasings.3.12=聚变框架MK III
+achievement.gtplusplus.blockcasings.3.12.desc=捡起这个物品以在NEI内查看配方
+
+achievement.gtplusplus.blockcasings.3.13=进阶磁力遏制!
+achievement.gtplusplus.blockcasings.3.13.desc=捡起这个物品以在NEI内查看配方
+
+achievement.gtplusplus.blockcasings.3.15=量子遏制!
+achievement.gtplusplus.blockcasings.3.15.desc=捡起这个物品以在NEI内查看配方
+
+achievement.gt.blockmachines.gtplusplus.fusion.single=受控聚变
+achievement.gt.blockmachines.gtplusplus.fusion.single.desc=捡起这个物品以在NEI内查看配方
+
+achievement.gt.blockmachines.gtplusplus.tank.plasma=等离子存储
+achievement.gt.blockmachines.gtplusplus.tank.plasma.desc=捡起这个物品以在NEI内查看配方
+
+
+
+
+
+
+
+
+
+//Tooltips for the Charger Packs
+GTPP.battpack.tooltip.1=在Baubles的腰带栏内使用
+GTPP.battpack.tooltip.2=消耗
+GTPP.battpack.tooltip.3=给穿着的盔甲充能
+GTPP.battpack.tooltip.4=同样给快捷栏内的物品充能
+
+
+
+//Tooltips for the Personal Healing Bauble
+GTPP.nanohealer.tooltip.1=在Baubles的项链栏内使用
+GTPP.nanohealer.tooltip.2=每次操作消耗1638400EU
+GTPP.nanohealer.tooltip.3=可以恢复血量,饥饿和饱和度
+GTPP.nanohealer.tooltip.4=不会阻止死亡
+GTPP.nanohealer.tooltip.5=Shift+右键来切换信息
+GTPP.nanohealer.hidden=隐藏信息?
+
+//This zh_CN.lang is translation by huajijam for GregTech++ (5/2/19)

@@ -1727,7 +1727,7 @@ item.itemPlateVoid.name=虚空板
 item.itemPlateDimensionShard.name=维度碎片板
 item.rfEUBattery.name=通用充电电池
 item.personalCloakingDevice.name=§9个人隐形装置§7
-item.personalHealingDevice.name=§9私人治疗纳米加速器§r
+item.personalHealingDevice.name=§9个人纳米治疗加速器§r
 item.SlowBuildingRing.name=§e缓建指环§7
 item.itemStaballoyPickaxe.name=隧道挖掘者
 item.itemStaballoyAxe.name=树林砍伐者
@@ -2709,5 +2709,12 @@ tile.playerDoorIce.name=冰自动门
 tile.playerDoorIron.name=铁自动门
 tile.playerDoorWood.name=木自动门
 
+//Added 4/2/19
 
-//This zh_CN.lang is translation by huajijam for GregTech++ (4/2/19)
+item.GTPP.BattPack.06.name=充电工具包[LuV]
+item.GTPP.BattPack.07.name=充电工具包[ZPM]
+item.GTPP.BattPack.08.name=充电工具包[UV]
+item.GTPP.BattPack.09.name=充电工具包[MAX]
+
+
+//This zh_CN.lang is translation by huajijam for GregTech++ (5/2/19)
