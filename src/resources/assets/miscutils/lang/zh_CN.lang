@@ -112,14 +112,14 @@ tile.blockNet.name=网
 //GT++ Items
 
 //Meta Tool
-MU metaitem.01.0.name=MU metaitem.01.0.name
+MU metaitem.01.0.name=MU-metaitem.01.0.name
 
 //Cells
 item.SulfurDioxide.name=优质二氧化硫单元
 item.mobessence.name=怪物精华液单元
 item.Fertiliser.name=流体肥料单元
-item.UN32Fertiliser.name=UN 32肥料单元
-item.UN18Fertiliser.name=UN 18肥料单元
+item.UN32Fertiliser.name=UN-32肥料单元
+item.UN18Fertiliser.name=UN-18肥料单元
 item.RaisinJuice.name=葡萄汁单元
 item.BerylliumHydroxide.name=氢氧化铍单元
 item.AmmoniumBifluoride.name=氟化氢铵单元
@@ -1475,12 +1475,12 @@ item.itemDustTinyZrCl4.name=小撮氯化锆粉
 item.itemDustCookedZrCl4.name=焙烧过的氯化锆粉
 item.itemDustSmallCookedZrCl4.name=小堆焙烧过的氯化锆粉
 item.itemDustTinyCookedZrCl4.name=小撮焙烧过的氯化锆粉
-item.itemDustUN18Fertiliser.name=流体肥料UN 18粉
-item.itemDustSmallUN18Fertiliser.name=小堆流体肥料UN 18粉
-item.itemDustTinyUN18Fertiliser.name=小撮流体肥料UN 18粉
-item.itemDustUN32Fertiliser.name=流体肥料UN 32粉
-item.itemDustSmallUN32Fertiliser.name=小堆流体肥料UN 32粉
-item.itemDustTinyUN32Fertiliser.name=小撮流体肥料UN 32粉
+item.itemDustUN18Fertiliser.name=流体肥料un-18粉
+item.itemDustSmallUN18Fertiliser.name=小堆流体肥料un-18粉
+item.itemDustTinyUN18Fertiliser.name=小撮流体肥料un-18粉
+item.itemDustUN32Fertiliser.name=流体肥料un-32粉
+item.itemDustSmallUN32Fertiliser.name=小堆流体肥料un-32粉
+item.itemDustTinyUN32Fertiliser.name=小撮流体肥料un-32粉
 item.itemNuggetPlutonium239.name=钚 239粒
 item.itemCellPlutonium239.name=钚 239单元
 item.itemIngotPlutonium239.name=钚 239锭
@@ -1678,8 +1678,8 @@ item.PhthalicAcid.name=邻苯二甲酸单元
 item.itemDustPhthalicAnhydride.name=邻苯二甲酸酐粉
 item.itemDustSmallPhthalicAnhydride.name=小堆邻苯二甲酸酐粉
 item.itemDustTinyPhthalicAnhydride.name=小撮邻苯二甲酸酐粉
-item.2Ethylanthraquinone.name=2 乙基蒽醌单元
-item.2Ethylanthrahydroquinone.name=2 乙基氢蒽醌单元
+item.2Ethylanthraquinone.name=2-乙基蒽醌单元
+item.2Ethylanthrahydroquinone.name=2-乙基氢蒽醌单元
 item.HydrogenPeroxide.name=过氧化氢单元
 item.itemDustLithiumHydroperoxide.name=过氧化氢锂粉
 item.itemDustSmallLithiumHydroperoxide.name=小堆过氧化氢锂粉
@@ -1973,10 +1973,10 @@ item.itemDustTinyPromethium.name=小撮钷粉
 item.itemDustPromethium.name=钷粉
 tile.Block of Promethium.name=钷块
 
-item.itemCellAmericium241.name=镅 241单元
-item.itemCellPolonium210.name=钋 210单元
-item.itemCellStrontium90.name=锶 90单元
-item.itemCellPlutonium238.name=钚 238单元
+item.itemCellAmericium241.name=镅-241单元
+item.itemCellPolonium210.name=钋-210单元
+item.itemCellStrontium90.name=锶-90单元
+item.itemCellPlutonium238.name=钚-238单元
 
 entity.MiningCharge.name=采矿费用
 entity.throwablePotionSulfuric.name=硫酸烧瓶
@@ -2029,10 +2029,10 @@ entity.miscutils.sickBlaze.name=被感染的狂热者
 item.ZirconiumTetrafluoride.name=四氟化锆单元
 item.Formaldehyde.name=甲醛单元
 item.RocketFuelMixA.name=H8N4C2O4火箭燃料单元
-item.RocketFuelMixB.name=RP 1火箭燃料单元
+item.RocketFuelMixB.name=RP-1火箭燃料单元
 item.RocketFuelMixC.name=CN3H7O3火箭燃料单元
 item.RocketFuelMixD.name=密集肼火箭燃料单元
-item.RP1Fuel.name=RP 1燃料单元
+item.RP1Fuel.name=RP-1燃料单元
 item.Monomethylhydrazine.name=甲基肼单元
 item.Hydrazine.name=肼单元
 item.NitrogenTetroxide.name=四氧化二氮单元
@@ -2545,11 +2545,11 @@ item.pyrotheum.name=烈焰之炽焱单元
 item.GeneticMutagen.name=诱变剂单元
 
 //Ingots
-item.itemHotIngotIncoloy020.name=热耐热铬铁合金 020锭
-item.itemHotIngotIncoloyDS.name=热耐热铬铁合金 DS锭
+item.itemHotIngotIncoloy020.name=热耐热铬铁合金-020锭
+item.itemHotIngotIncoloyDS.name=热耐热铬铁合金-DS锭
 item.itemHotIngotTalonite.name=热铬钴磷酸盐合金锭
-item.itemHotIngotHastelloyX.name=热哈斯特洛依合金 X锭
-item.itemHotIngotHastelloyW.name=热哈斯特洛依合金 W碳化物锭
+item.itemHotIngotHastelloyX.name=热哈斯特洛依合金-X锭
+item.itemHotIngotHastelloyW.name=热哈斯特洛依合金-W碳化物锭
 
 //Railcraft Fix
 item.railcraft.part.plate.lead.name=铅板
