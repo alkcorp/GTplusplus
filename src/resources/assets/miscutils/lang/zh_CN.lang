@@ -2373,8 +2373,8 @@ item.itemScrewNitinol60.name=镍钛诺60螺丝
 item.itemRotorNitinol60.name=镍钛诺60转子
 item.itemGearNitinol60.name=镍钛诺60齿轮
 item.itemCellNitinol60.name=镍钛诺60单元
-tile.Block of Nitinol-60.name=镍钛诺60块
-tile.Nitinol-60 Frame Box.name=镍钛诺60框架
+tile.Block of Nitinol 60.name=镍钛诺60块
+tile.Nitinol 60 Frame Box.name=镍钛诺60框架
 
 item.itemIngotAdvancedNitinol.name=进阶镍钛诺锭
 item.itemHotIngotAdvancedNitinol.name=热进阶镍钛诺锭
