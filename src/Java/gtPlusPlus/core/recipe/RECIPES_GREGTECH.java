@@ -2,6 +2,7 @@ package gtPlusPlus.core.recipe;
 
 import static gtPlusPlus.core.lib.CORE.GTNH;
 
+import cpw.mods.fml.common.Loader;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.ConfigCategories;
 import gregtech.api.enums.GT_Values;
@@ -17,6 +18,8 @@ import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.block.ModBlocks;
 import gtPlusPlus.core.item.ModItems;
 import gtPlusPlus.core.item.chemistry.IonParticles;
+import gtPlusPlus.core.item.crafting.ItemDummyResearch;
+import gtPlusPlus.core.item.crafting.ItemDummyResearch.ASSEMBLY_LINE_RESEARCH;
 import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.lib.LoadedMods;
 import gtPlusPlus.core.material.ALLOY;
@@ -137,7 +140,7 @@ public class RECIPES_GREGTECH {
 		
 		//Containment Casings
 		CORE.RA.addAssemblylineRecipe(
-				ItemList.Field_Generator_IV.get(1), 
+				ItemDummyResearch.getResearchStack(ASSEMBLY_LINE_RESEARCH.RESEARCH_1_CONTAINMENT, 1), 
 				20 * 60 * 30,
 				new ItemStack[] {
 						ItemList.Field_Generator_IV.get(GTNH ? 32 : 16),
@@ -424,6 +427,15 @@ public class RECIPES_GREGTECH {
 				ELEMENT.STANDALONE.CHRONOMATIC_GLASS.getDust(1),
 				20 * 60 * 5,
 				MaterialUtils.getVoltageForTier(ELEMENT.STANDALONE.CHRONOMATIC_GLASS.vTier));	
+
+		
+		GT_Values.RA.addLaserEngraverRecipe(
+				CI.getFieldGenerator(6, 1),
+				CI.getEmitter(7, 2),
+				ItemDummyResearch.getResearchStack(ASSEMBLY_LINE_RESEARCH.RESEARCH_1_CONTAINMENT, 1),
+				20 * 60 * 5,
+				MaterialUtils.getVoltageForTier(5));
+		
 		
 	}
 
@@ -1056,6 +1068,23 @@ public class RECIPES_GREGTECH {
 						ItemUtils.getItemStackOfAmountFromOreDict("cellHydrogen", 2) }, // Output		
 				3 * 20, // Time in ticks
 				30); // EU
+		
+		/*
+		 * Try Add custom Recipe for drying leather
+		 */		
+		if (LoadedMods.PamsHarvestcraft && Loader.isModLoaded("Backpack")) {			
+			ItemStack aLeather1, aLeather2;			
+			aLeather1 = ItemUtils.getCorrectStacktype("harvestcraft:hardenedleatherItem", 1);
+			aLeather2 = ItemUtils.getCorrectStacktype("Backpack:tannedLeather", 1);			
+			CORE.RA.addDehydratorRecipe(
+					aLeather1,
+					GT_Values.NF,
+					new ItemStack[] {
+							aLeather2
+					},
+					5 * 20,
+					180);
+		}
 
 	}
 
@@ -1607,6 +1636,8 @@ public class RECIPES_GREGTECH {
 				ItemUtils.getItemStackOfAmountFromOreDict("plateMeatRaw", 1));
 		GT_ModHandler.addCompressionRecipe(ItemUtils.getItemStackOfAmountFromOreDict("dustMeatRaw", 9),
 				ItemUtils.getItemStackOfAmountFromOreDict("blockMeatRaw", 1));
+		
+		CORE.RA.addCompressorRecipe(ItemList.FusionComputer_UV.get(9), GregtechItemList.Compressed_Fusion_Reactor.get(1), (int) GT_Values.V[7], (int) GT_Values.V[8]);
 	}
 
 	private static void macerationRecipes() {
