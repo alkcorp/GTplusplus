@@ -10,11 +10,15 @@ import gtPlusPlus.GTplusplus;
 import gtPlusPlus.GTplusplus.INIT_PHASE;
 import gtPlusPlus.api.objects.GregtechException;
 import gtPlusPlus.api.objects.data.AutoMap;
+import gtPlusPlus.core.item.base.itemblock.FluidItemBlock;
 import gtPlusPlus.core.util.Utils;
+import gtPlusPlus.core.util.minecraft.FluidUtils;
 import gtPlusPlus.core.util.minecraft.ItemUtils;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -49,20 +53,28 @@ public class FluidFactory {
 	public static final Map<Integer, Fluid> mMetaToFluidMap = new LinkedHashMap<Integer, Fluid>();
 	public static final Map<Integer, ItemStack> mMetaToBucketMap = new LinkedHashMap<Integer, ItemStack>();
 	public static final Map<Integer, Block> mMetaToBlockMap = new LinkedHashMap<Integer, Block>();
+	
+	
+	//Special Colour Handling
+	public static final Map<Integer, Integer> mMetaToColourMap = new LinkedHashMap<Integer, Integer>();
 
 
-	private static Fluid mErrorFluid;
+	public static Item mGenericBucket;
+	private static FluidPackage mErrorFluid;
 	private static AutoMap<FluidPackage> mGeneratedFluids = new AutoMap<FluidPackage>();
 
 	public static void preInit() {
 
 	}
 
-	public static void init() {
-		GameRegistry.registerItem(new ItemGenericFluidBucket(Blocks.air), "gtpp.bucket.generic");
-		for (FluidPackage y : mGeneratedFluids) {
-			FluidRegistry.registerFluid(y.get());
-			GameRegistry.registerBlock(y.mBlock, "gtpp_" + y.mName);
+	public static void init() {		
+		mGenericBucket = new ItemGenericFluidBucket(Blocks.air);		
+		GameRegistry.registerItem(mGenericBucket, "gtpp.bucket.generic");
+		for (FluidPackage y : mGeneratedFluids) {			
+			if (!y.valid()) {
+				continue;
+			}			
+			GameRegistry.registerBlock(y.mBlock, FluidItemBlock.class, "gtpp_" + y.mName);
 			FluidContainerRegistry.registerFluidContainer(y.get(), y.mBucket, new ItemStack(Items.bucket));
 		}
 		Utils.registerEvent(BucketHandler.INSTANCE);
@@ -72,8 +84,36 @@ public class FluidFactory {
 
 	}
 
+	/**
+	 * Generates a 'Water' type fluid.
+	 * @param aID - The Fluid ID (Must be unique)
+	 * @param aUnlocalName - Unlocalized Fluid Name
+	 * @param aRGB - a {@link Short[]} containing the RGB of the FluidPackage.
+	 * @return - A fully constructed & registered {@linkplain FluidPackage}
+	 */
+	public static FluidPackage generate(int aID, String aUnlocalName, short[] aRGB) {
+		return generate(aID, aUnlocalName, Short.MIN_VALUE, Short.MIN_VALUE, Short.MIN_VALUE, Short.MIN_VALUE, aRGB);
+	}
+	
+	/**
+	 * Generate a {@link FluidPackage} from the data provided. This FluidPackage is automatically registered and handled internally.
+	 * Pass in {@link Short}.MIN_VALUE for any of the Fluid Fields (Besides ID, Name or RGB) and it will default to water values.
+	 * @param aID - The Fluid ID (Must be unique)
+	 * @param aUnlocalName - Unlocalized Fluid Name
+	 * @param luminosity - How bright is the fluid.
+	 * @param density - completely arbitrary; negative density indicates that the fluid is
+     * lighter than air. Default value is approximately the real-life density of water in kg/m^3.
+	 * @param temp - completely arbitrary; higher temperature indicates that the fluid is
+     * hotter than air. Default value is approximately the real-life room temperature of water in degrees Kelvin
+	 * @param viscosity - completely arbitrary; negative values are not
+     * permissible. Default value is approximately the real-life density of water in m/s^2 (x10^-3).     *
+     * Higher viscosity means that a fluid flows more slowly, like molasses.
+     * Lower viscosity means that a fluid flows more quickly, like helium.
+	 * @param aRGB - a {@link Short[]} containing the RGB of the FluidPackage.
+	 * @return - A fully constructed & registered {@linkplain FluidPackage}
+	 */
 	public static FluidPackage generate(int aID, String aUnlocalName, int luminosity, int density, int temp,
-			int viscosity) {
+			int viscosity, short[] aRGB) {
 
 		FluidPackage aFluidToGenerate = null;
 
@@ -86,40 +126,45 @@ public class FluidFactory {
 			}
 		}
 		
-		Fluid aGenFluid = fluid(aUnlocalName, 0, 0, 0, 0);
-		Block aGenBlock = block();
-		ItemStack aGenBucket = bucket();
+		Fluid aGenFluid = fluid(aUnlocalName, luminosity, density, temp, viscosity, aRGB);
+		Block aGenBlock = block(aGenFluid, aRGB);
+		ItemStack aGenBucket = bucket(aID);
 
 		aFluidToGenerate = new FluidPackage(aID, aUnlocalName, aGenFluid, aGenBucket, aGenBlock);
 
-		if (aFluidToGenerate.valid()) {
-			FluidRegistry.registerFluid(aFluidToGenerate.get());			
+		if (aFluidToGenerate != null && aFluidToGenerate.valid()) {
+			FluidRegistry.registerFluid(aFluidToGenerate.get());	
+			mGeneratedFluids.put(aFluidToGenerate);		
+		}
+		else {
+			// Handle Bad generation
+			if (mErrorFluid == null) {
+				mErrorFluid = new FluidPackage(0, "", FluidUtils.getWater(1).getFluid(), ItemUtils.getSimpleStack(Items.water_bucket), Blocks.water);
+			}
+			return mErrorFluid;
 		}
 		
 
-		// Handle Bad generation
-		if (mErrorFluid == null) {
-			mErrorFluid = new Fluid("baderrorfluid.gtpp").setViscosity(4000);
-		}
-		if (aFluidToGenerate != null) {
-			mGeneratedFluids.put(aFluidToGenerate);
-		}
 		return aFluidToGenerate;
 	}
 	
 	
 	
 	private static Fluid fluid(String aUnlocalName, int luminosity, int density, int temp,
-			int viscosity) {
-		return new FactoryFluid(aUnlocalName, 0, 0, 0, 0);
+			int viscosity, short[] aRGB) {
+		return new FactoryFluid(aUnlocalName, luminosity, density, temp, viscosity, aRGB);
 	}
 	
-	private static ItemStack bucket() {
-		return null;
+	private static ItemStack bucket(int aID) {
+		return ItemGenericFluidBucket.registerFluidForBucket(aID);
 	}
 	
-	private static Block block() {
-		return null;
+	private static Block block(Fluid aFluidForBlock, short[] aRGB) {
+		if (aFluidForBlock != null) {
+			FluidRegistry.registerFluid(aFluidForBlock);
+			return new BlockFluidBase(aFluidForBlock, aRGB);
+		}
+		return Blocks.dirt;	
 	}
 
 	/**
