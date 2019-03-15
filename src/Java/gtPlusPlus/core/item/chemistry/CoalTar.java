@@ -24,6 +24,7 @@ import net.minecraftforge.fluids.FluidStack;
 public class CoalTar extends ItemPackage {
 
 	public static Fluid Coal_Gas;
+	public static Fluid Coal_Oil;
 	public static Fluid Ethylene;
 	public static Fluid Benzene;
 	public static Fluid Ethylbenzene;
@@ -118,6 +119,15 @@ public class CoalTar extends ItemPackage {
 
 
 	public static void recipeCoalToCoalTar(){
+		//Charcoal
+		AddGregtechRecipe.addCokeAndPyrolyseRecipes(
+				GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Charcoal, 32L),
+				8,
+				GT_Values.NF,
+				ItemUtils.getItemStackOfAmountFromOreDict("dustSmallDirt", 2),
+				FluidUtils.getFluidStack("fluid.coaltar", 800), 
+				15,
+				120);
 		//Lignite
 		AddGregtechRecipe.addCokeAndPyrolyseRecipes(
 				GT_OreDictUnificator.get(OrePrefixes.gem, Materials.Lignite, 16L),
@@ -125,7 +135,7 @@ public class CoalTar extends ItemPackage {
 				GT_Values.NF,
 				ItemUtils.getItemStackOfAmountFromOreDict("dustSmallDarkAsh", 2),
 				FluidUtils.getFluidStack("fluid.coaltar", 800), 
-				90,
+				45,
 				60);
 
 		//Coal
@@ -135,7 +145,7 @@ public class CoalTar extends ItemPackage {
 				GT_Values.NF,
 				ItemUtils.getItemStackOfAmountFromOreDict("dustSmallDarkAsh", 2),
 				FluidUtils.getFluidStack("fluid.coaltar", 2200), 
-				60,
+				30,
 				120);
 
 		//Coke
@@ -145,7 +155,7 @@ public class CoalTar extends ItemPackage {
 				GT_Values.NF,
 				ItemUtils.getItemStackOfAmountFromOreDict("dustSmallAsh", 3),
 				FluidUtils.getFluidStack("fluid.coaltar", 3400), 
-				30,
+				15,
 				240);
 
 	}
@@ -185,14 +195,24 @@ public class CoalTar extends ItemPackage {
 				900, //aDuration
 				30,//aEUt
 				false //Hidden?
-				);
+				);		
+		GT_Values.RA.addDistilleryRecipe(
+				CI.getNumberedCircuit(5), //Circuit
+				FluidUtils.getFluidStack("fluid.coaltar", 1500), //aInput
+				FluidUtils.getFluidStack("fluid.kerosene", 400), //aOutput
+				300, //aDuration
+				64,//aEUt
+				false //Hidden?
+				);	
+		
 		GT_Values.RA.addDistillationTowerRecipe(
 				FluidUtils.getFluidStack("fluid.coaltar", 1000),
 				new FluidStack[]{
-						FluidUtils.getFluidStack("fluid.coaltaroil", 600), //aOutput
-						FluidUtils.getFluidStack("liquid_naphtha", 150), //aOutput
-						FluidUtils.getFluidStack("fluid.ethylbenzene", 200), //aOutput
+						FluidUtils.getFluidStack("fluid.coaltaroil", 500), //aOutput
+						FluidUtils.getFluidStack("liquid_naphtha", 100), //aOutput
+						FluidUtils.getFluidStack("fluid.ethylbenzene", 150), //aOutput
 						FluidUtils.getFluidStack("fluid.anthracene", 50), //aOutput
+						FluidUtils.getFluidStack("fluid.kerosene", 200), //aOutput
 				},
 				null,
 				900,
@@ -343,14 +363,13 @@ public class CoalTar extends ItemPackage {
 		recipeLithiumHydroperoxide();
 		recipeLithiumPeroxide();
 		
-		recipeEthylBenzineFuelsIntoHeavyFuel();
-		
+		recipeEthylBenzineFuelsIntoHeavyFuel();		
 
 		//Burn the coal gas!
 		GT_Values.RA.addFuel(ItemUtils.getItemStackOfAmountFromOreDict("cellCoalGas", 1), null, 96, 1);
-		GT_Values.RA.addFuel(ItemUtils.getItemStackOfAmountFromOreDict("cellSulfuricCoalTarOil", 1), null, 32, 3);
-		GT_Values.RA.addFuel(ItemUtils.getItemStackOfAmountFromOreDict("cellCoalTarOil", 1), null, 64, 3);
-		GT_Values.RA.addFuel(ItemUtils.getItemStackOfAmountFromOreDict("cellCoalTar", 1), null, 128, 3);		
+		CORE.RA.addSemifluidFuel(ItemUtils.getItemStackOfAmountFromOreDict("cellSulfuricCoalTarOil", 1), 64);
+		CORE.RA.addSemifluidFuel(ItemUtils.getItemStackOfAmountFromOreDict("cellCoalTarOil", 1), 32);
+		CORE.RA.addSemifluidFuel(ItemUtils.getItemStackOfAmountFromOreDict("cellCoalTar", 1), 16);		
 		
 		return true;
 	}

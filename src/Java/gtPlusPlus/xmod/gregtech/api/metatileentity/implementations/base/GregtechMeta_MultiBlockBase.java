@@ -16,6 +16,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.GT_Values;
 import gregtech.api.enums.Materials;
+import gregtech.api.enums.TAE;
 import gregtech.api.gui.GT_Container_MultiMachine;
 import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
@@ -71,6 +72,7 @@ extends
 GT_MetaTileEntity_MultiBlockBase {
 
 
+	public static final boolean DEBUG_DISABLE_CORES_TEMPORARILY = true;
 
 
 	static {
@@ -202,7 +204,7 @@ GT_MetaTileEntity_MultiBlockBase {
 			}
 		}
 
-		int tTier = requireControlCores ? this.getControlCoreTier() : -1;
+		int tTier = this.getControlCoreTier();
 
 		mInfo.add(getMachineTooltip());
 
@@ -553,8 +555,8 @@ GT_MetaTileEntity_MultiBlockBase {
 
 		//Control Core to control the Multiblocks behaviour.
 		int aControlCoreTier = getControlCoreTier();
-
-		//If no core, return false;
+		
+		//If no core, return false;				
 		if (aControlCoreTier == 0 && requireControlCores) {
 			log("No control core found.");
 			return false;
@@ -639,7 +641,7 @@ GT_MetaTileEntity_MultiBlockBase {
 
 		//Only Overclock as high as the control circuit.
 		byte tTierOld = tTier;
-		tTier = requireControlCores ? (byte) aControlCoreTier : tTierOld;
+		tTier = getControlCoreTier() > 0 ? (byte) aControlCoreTier : tTierOld;
 
 		// Overclock
 		if (this.mEUt <= 16) {
@@ -953,10 +955,10 @@ GT_MetaTileEntity_MultiBlockBase {
 	public int getControlCoreTier() {	
 		
 		//Always return best tier if config is off.
-		boolean aCoresConfig = gtPlusPlus.core.lib.CORE.ConfigSwitches.requireControlCores;
+		/*boolean aCoresConfig = gtPlusPlus.core.lib.CORE.ConfigSwitches.requireControlCores;
 		if (!aCoresConfig) {
 			return 10;
-		}
+		}*/
 		
 		if (mControlCoreBus.isEmpty()) {
 			log("No Control Core Modules Found.");
@@ -997,9 +999,16 @@ GT_MetaTileEntity_MultiBlockBase {
 			log("Tried to add a secondary control core module.");
 			return false;
 		}
-
-		log("Adding control core module.");
-		return addToMachineListInternal(mControlCoreBus, aMetaTileEntity, aBaseCasingIndex);		
+		
+		GT_MetaTileEntity_Hatch_ControlCore Module = (GT_MetaTileEntity_Hatch_ControlCore) aMetaTileEntity;
+		
+		if (Module != null) {
+			if (Module.setOwner(aTileEntity)) {
+				log("Adding control core module.");
+				return addToMachineListInternal(mControlCoreBus, aMetaTileEntity, aBaseCasingIndex);	
+			}
+		}
+		return false;
 	}
 
 	@Override
@@ -1567,7 +1576,7 @@ GT_MetaTileEntity_MultiBlockBase {
 
 	public final boolean checkMachine(IGregTechTileEntity aBaseMetaTileEntity, ItemStack aStack) {	
 		boolean aStructureCheck = checkMultiblock(aBaseMetaTileEntity, aStack);	
-		boolean aHasCore = (requireControlCores ? (this.getControlCoreBus() != null) : true);	
+		boolean aHasCore = DEBUG_DISABLE_CORES_TEMPORARILY; //(requireControlCores ? (this.getControlCoreBus() != null) : true);	
 		return aStructureCheck && aHasCore;
 	}
 
@@ -1578,6 +1587,11 @@ GT_MetaTileEntity_MultiBlockBase {
 			Block aFoundBlock, int aFoundMeta, Block aExpectedBlock, int aExpectedMeta) {
 		boolean isHatch = false;
 		if (aBaseMetaTileEntity != null) {
+			
+			if (aCasingID < 64) {
+				aCasingID = TAE.GTPP_INDEX(aCasingID);
+			}
+			
 			isHatch = this.addToMachineList(aBaseMetaTileEntity, aCasingID);
 			if (isHatch) {
 				return true;

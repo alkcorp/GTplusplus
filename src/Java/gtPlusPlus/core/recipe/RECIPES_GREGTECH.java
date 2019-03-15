@@ -18,6 +18,7 @@ import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.block.ModBlocks;
 import gtPlusPlus.core.item.ModItems;
 import gtPlusPlus.core.item.chemistry.IonParticles;
+import gtPlusPlus.core.item.chemistry.RocketFuels;
 import gtPlusPlus.core.item.crafting.ItemDummyResearch;
 import gtPlusPlus.core.item.crafting.ItemDummyResearch.ASSEMBLY_LINE_RESEARCH;
 import gtPlusPlus.core.lib.CORE;
@@ -85,8 +86,32 @@ public class RECIPES_GREGTECH {
 		breweryRecipes();
 		laserEngraverRecipes();
 		assemblyLineRecipes();
+		latheRecipes();
+		vacuumFreezerRecipes();
 		
 		addFuels();
+	}
+
+	private static void vacuumFreezerRecipes() {
+		GT_Values.RA.addVacuumFreezerRecipe(GregtechItemList.Bomb_Cast_Molten.get(1), GregtechItemList.Bomb_Cast_Set.get(1), 20 * 30);		
+	}
+
+	private static void latheRecipes() {
+		
+		GT_Values.RA.addLatheRecipe(
+				ALLOY.EGLIN_STEEL.getBlock(1),
+				GregtechItemList.Bomb_Cast_Mold.get(1),
+				null,
+				20 * 60 * 15,
+				120);
+		
+		GT_Values.RA.addLatheRecipe(
+				GregtechItemList.Bomb_Cast_Set.get(1),
+				GregtechItemList.Bomb_Cast_Broken.get(2),
+				ItemUtils.getSimpleStack(ModItems.itemBombCasing, 2),
+				20 * 60 * 5,
+				30);
+		
 	}
 
 	private static void fusionRecipes() {		
@@ -1249,6 +1274,21 @@ public class RECIPES_GREGTECH {
 				FluidUtils.getFluidStack("molten.krypton", 500),
 				T6, 2000, 512000);
 
+		addAR(ItemUtils.getItemStackOfAmountFromOreDict(
+				"dustClay", 32),
+				GregtechItemList.Bomb_Cast_Mold.get(0),
+				FluidUtils.getWater(4000),
+				GregtechItemList.Bomb_Cast.get(4),
+				30, 120);
+		addAR(ItemUtils.getSimpleStack(Items.redstone, 32),
+				ItemUtils.getSimpleStack(ModItems.itemRope, 16),
+				Materials.Glue.getFluid(500),
+				ItemUtils.getSimpleStack(ModItems.itemDetCable, 24),
+				30, 
+				120);
+		
+
+
 		/*addAR(ItemUtils.getItemStackOfAmountFromOreDict("plateIncoloy020", 16),
 				ItemUtils.getItemStackOfAmountFromOreDict("frameGtIncoloyMA956", 4), null,
 				GregtechItemList.Casing_Power_SubStation.get(4), 80, 120);*/
@@ -1465,6 +1505,52 @@ public class RECIPES_GREGTECH {
 				ItemUtils.getItemStackOfAmountFromOreDict("dustSmallThorium", 20),
 				ELEMENT.getInstance().URANIUM232.getDust(1), GT_Values.NI, GT_Values.NI, GT_Values.NI,
 				new int[] { 0, 0, 10 }, 500 * 20, 2000);
+		
+
+		//Process Used Fuel Rods for Krypton
+		
+		//Uranium
+		GT_Values.RA.addCentrifugeRecipe(
+				CI.getNumberedCircuit(20),
+				ItemUtils.getItemStackFromFQRN("IC2:reactorUraniumSimpledepleted", 8),
+				GT_Values.NF,
+				ELEMENT.getInstance().KRYPTON.getFluid(60),
+				ItemList.IC2_Fuel_Rod_Empty.get(8),
+				ELEMENT.getInstance().URANIUM238.getDust(2),
+				ELEMENT.getInstance().URANIUM232.getSmallDust(1),
+				ELEMENT.getInstance().URANIUM233.getSmallDust(1),
+				ELEMENT.getInstance().URANIUM235.getSmallDust(1),
+				ELEMENT.getInstance().PLUTONIUM239.getTinyDust(1),
+				new int[] { 0, 0, 1000, 1000, 1000, 500 }, 500 * 20, 4000);
+		//Mox
+		GT_Values.RA.addCentrifugeRecipe(
+				CI.getNumberedCircuit(20),
+				ItemUtils.getItemStackFromFQRN("IC2:reactorMOXSimpledepleted", 8),
+				GT_Values.NF,
+				ELEMENT.getInstance().KRYPTON.getFluid(90),
+				ItemList.IC2_Fuel_Rod_Empty.get(8),
+				ELEMENT.getInstance().PLUTONIUM244.getDust(2),
+				ELEMENT.getInstance().PLUTONIUM241.getTinyDust(1),
+				ELEMENT.getInstance().PLUTONIUM239.getTinyDust(1),
+				ELEMENT.getInstance().PLUTONIUM238.getTinyDust(1),
+				ELEMENT.getInstance().PLUTONIUM239.getTinyDust(1),
+				new int[] { 0, 0, 500, 500, 500, 500 }, 750 * 20, 4000);
+		
+		//Thorium
+		GT_Values.RA.addCentrifugeRecipe(
+				CI.getNumberedCircuit(20),
+				ItemList.Depleted_Thorium_1.get(8),
+				GT_Values.NF,
+				ELEMENT.getInstance().KRYPTON.getFluid(30),
+				ItemList.IC2_Fuel_Rod_Empty.get(8),
+				ELEMENT.getInstance().THORIUM.getDust(2),
+				ELEMENT.getInstance().THORIUM232.getDust(1),
+				ELEMENT.getInstance().LUTETIUM.getSmallDust(1),
+				ELEMENT.getInstance().POLONIUM.getSmallDust(1),
+				ELEMENT.getInstance().THALLIUM.getTinyDust(1),
+				new int[] { 0, 0, 5000, 5000, 5000, 2500 }, 250 * 20, 4000);
+		
+		
 
 	}
 
@@ -1518,6 +1604,24 @@ public class RECIPES_GREGTECH {
 				ItemUtils.getItemStackOfAmountFromOreDict("dustLithium7", 16), FluidUtils.getFluidStack("water", 1000),
 				FluidUtils.getFluidStack("lithiumhydroxide", 144 * 4),
 				CI.emptyCells(1), 300 * 20);
+		
+		//Bombs
+		GT_Values.RA.addChemicalRecipe(
+				ItemUtils.getSimpleStack(ModItems.itemBombCasing, 4),
+				ItemUtils.getSimpleStack(RocketFuels.Ammonium_Nitrate_Dust, 8),
+				Materials.Fuel.getFluid(1000),
+				null,
+				ItemUtils.getSimpleStack(ModItems.itemBombUnf, 4),
+				300 * 20);
+		
+		GT_Values.RA.addChemicalRecipe(
+				ItemUtils.getSimpleStack(ModItems.itemBombUnf, 4),
+				ItemUtils.getSimpleStack(ModItems.itemDetCable, 4),
+				FluidUtils.getFluidStack(RocketFuels.Kerosene, 100),
+				null,
+				ItemUtils.getSimpleStack(ModItems.itemBomb, 4),
+				10 * 20);
+		
 
 		// LFTR Fuel Related Compounds
 		if (GTNH) {
@@ -1620,6 +1724,18 @@ public class RECIPES_GREGTECH {
 				MaterialUtils.getVoltageForTier(GTNH ? 5 : 4),
 				4500);
 		
+		//Bomb Casings
+		GT_Values.RA.addBlastRecipe(
+				GregtechItemList.Bomb_Cast.get(4),
+				ALLOY.STEEL.getDust(16),
+				ELEMENT.getInstance().OXYGEN.getFluid(2000),
+				GT_Values.NF,
+				GregtechItemList.Bomb_Cast_Molten.get(4),
+				null,
+				4 * 60 * 20,
+				MaterialUtils.getVoltageForTier(GTNH ? 3 : 2),
+				2800);
+		
 		
 	}
 
@@ -1654,10 +1770,9 @@ public class RECIPES_GREGTECH {
 
 		GT_ModHandler.addPulverisationRecipe(ItemUtils.getItemStackOfAmountFromOreDict("blockMeatRaw", 1),
 				ItemUtils.getItemStackOfAmountFromOreDict("dustMeatRaw", 9));
-		/*
-		 * GT_ModHandler.addPulverisationRecipe( FLUORIDES.FLUORITE.getOre(1),
-		 * FLUORIDES.FLUORITE.getDust(4));
-		 */
+
+		GT_ModHandler.addPulverisationRecipe(GregtechItemList.Bomb_Cast_Broken.get(1),
+				ItemUtils.getItemStackOfAmountFromOreDict("dustClay", 3));
 
 		if (ItemUtils.simpleMetaStack("chisel:limestone", 0, 1) != null) {
 			GT_ModHandler.addPulverisationRecipe(ItemUtils.getItemStackOfAmountFromOreDict("limestone", 1),

@@ -34,6 +34,7 @@ import gtPlusPlus.core.item.bauble.HealthBoostBauble;
 import gtPlusPlus.core.item.bauble.ModularBauble;
 import gtPlusPlus.core.item.chemistry.AgriculturalChem;
 import gtPlusPlus.core.item.chemistry.CoalTar;
+import gtPlusPlus.core.item.chemistry.GenericChem;
 import gtPlusPlus.core.item.chemistry.IonParticles;
 import gtPlusPlus.core.item.chemistry.NuclearChem;
 import gtPlusPlus.core.item.chemistry.RocketFuels;
@@ -61,6 +62,7 @@ import gtPlusPlus.core.item.general.chassis.ItemDehydratorCoil;
 import gtPlusPlus.core.item.general.chassis.ItemDehydratorCoilWire;
 import gtPlusPlus.core.item.general.throwables.ItemHydrofluoricAcidPotion;
 import gtPlusPlus.core.item.general.throwables.ItemSulfuricAcidPotion;
+import gtPlusPlus.core.item.general.throwables.ItemThrowableBomb;
 import gtPlusPlus.core.item.init.ItemsFoods;
 import gtPlusPlus.core.item.materials.DustDecayable;
 import gtPlusPlus.core.item.tool.misc.DebugScanner;
@@ -337,6 +339,11 @@ public final class ModItems {
 	public static DebugScanner itemDebugScanner;
 
 	public static ItemDummyResearch itemDummyResearch;
+
+	public static CoreItem itemBombCasing;
+	public static CoreItem itemBombUnf;
+	public static CoreItem itemDetCable;
+	public static ItemThrowableBomb itemBomb;
 
 	static {
 		Logger.INFO("Items!");
@@ -888,6 +895,19 @@ public final class ModItems {
 		
 		//Farm Animal Fun
 		new AgriculturalChem();
+		
+		//General Chemistry
+		new GenericChem();
+		
+		
+		//Bombs
+		itemBombCasing = new CoreItem("itemBombCasing", "Bomb Casing", tabMisc);
+		itemBombCasing.setTextureName(CORE.MODID + ":bomb_casing");		
+		itemBombUnf = new CoreItem("itemBombUnf", "Bomb (unf)", tabMisc);
+		itemBombUnf.setTextureName(CORE.MODID + ":bomb_casing");		
+		itemDetCable = new CoreItem("itemDetCable", "Det. Cable", tabMisc);
+		itemDetCable.setTextureName("string");		
+		itemBomb = new ItemThrowableBomb();
 		
 		//Only used for debugging.
 		/*if (CORE.DEVENV) {
