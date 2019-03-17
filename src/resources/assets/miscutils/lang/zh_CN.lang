@@ -2717,4 +2717,58 @@ item.GTPP.BattPack.08.name=充电工具包[UV]
 item.GTPP.BattPack.09.name=充电工具包[MAX]
 
 
-//This zh_CN.lang is translation by huajijam for GregTech++ (5/2/19)
+//Added 13/3/19
+item.gtpp.debug.scanner.name=GT++排错扫描器
+item.RawWaste.name=动物粪便单元
+item.ManureSlurry.name=粪浆单元
+item.FertileManureSlurry.name=肥沃的泥浆单元
+item.itemDustTinyDemicheleiteBr.name=小撮Demicheleite (Br)
+item.itemDustSmallDemicheleiteBr.name=小堆Demicheleite (Br)
+tile.blockPooCollector.name=农业下水道
+tile.Block of Lithium 7.name=锂7块
+
+//Added 14/3/19
+item.blood.name=血单元
+item.aniline.name=苯胺单元
+item.cadaverine.name=尸胺单元
+item.polyurethane.name=聚氨酯单元
+item.putrescine.name=腐胺单元
+item.cyclohexane.name=环己单元
+item.cyclohexanone.name=环己酮单元
+item.nitrobenzene.name=硝基苯单元
+item.ender.name=液体末影单元
+item.xpjuice.name=液体经验单元
+item.itemBombUnf.name=可投掷炸弹(未完成)
+item.itemBombCasing.name=炸弹框架
+item.gtpp.throwable.bomb.name=可投掷炸弹
+item.itemDetCable.name=炸弹保险丝
+tile.blockPooCollector.0.name=农业下水道
+tile.blockPooCollector.8.name=生物复合收集器
+item.itemIngotBakelite.name=电木锭
+item.itemDustBakelite.name=电木粉
+item.itemDustTinyBakelite.name=小撮电木粉
+item.itemDustSmallBakelite.name=小堆电木粉
+item.itemNuggetBakelite.name=电木粒
+item.itemPlateBakelite.name=电木板
+item.itemPlateDoubleBakelite.name=双重电木板
+item.itemCellBakelite.name=电木单元
+tile.Block of Bakelite.name=电木块
+item.itemIngotNylon.name=尼龙锭
+item.itemDustNylon.name=尼龙粉
+item.itemDustTinyNylon.name=小撮尼龙粉
+item.itemDustSmallNylon.name=小堆尼龙粉
+item.itemNuggetNylon.name=尼龙粒
+item.itemPlateNylon.name=尼龙板 
+item.itemPlateDoubleNylon.name=双重尼龙板
+item.itemCellNylon.name=尼龙单元
+tile.Block of Nylon.name=尼龙块
+item.itemIngotTeflon.name=特富龙锭
+item.itemDustTeflon.name=特富龙粉
+item.itemDustTinyTeflon.name=小撮特富龙粉
+item.itemDustSmallTeflon.name=小堆特富龙粉
+item.itemNuggetTeflon.name=特富龙粒
+item.itemPlateTeflon.name=特富龙板
+item.itemPlateDoubleTeflon.name=双重特富龙板
+item.itemCellTeflon.name=特富龙单元
+tile.Block of Teflon.name=特富龙块
+//This zh_CN.lang is translation by huajijam for GregTech++ (17/3/19)
