@@ -2722,8 +2722,8 @@ item.gtpp.debug.scanner.name=GT++排错扫描器
 item.RawWaste.name=动物粪便单元
 item.ManureSlurry.name=粪浆单元
 item.FertileManureSlurry.name=肥沃的泥浆单元
-item.itemDustTinyDemicheleiteBr.name=小撮Demicheleite (Br)
-item.itemDustSmallDemicheleiteBr.name=小堆Demicheleite (Br)
+item.itemDustTinyDemicheleiteBr.name=小撮德米凯莱(Br)
+item.itemDustSmallDemicheleiteBr.name=小堆德米凯莱(Br)
 tile.blockPooCollector.name=农业下水道
 tile.Block of Lithium 7.name=锂7块
 
