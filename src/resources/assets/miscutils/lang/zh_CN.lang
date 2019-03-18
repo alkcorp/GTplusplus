@@ -2762,13 +2762,4 @@ item.itemPlateNylon.name=尼龙板
 item.itemPlateDoubleNylon.name=双重尼龙板
 item.itemCellNylon.name=尼龙单元
 tile.Block of Nylon.name=尼龙块
-item.itemIngotTeflon.name=特富龙锭
-item.itemDustTeflon.name=特富龙粉
-item.itemDustTinyTeflon.name=小撮特富龙粉
-item.itemDustSmallTeflon.name=小堆特富龙粉
-item.itemNuggetTeflon.name=特富龙粒
-item.itemPlateTeflon.name=特富龙板
-item.itemPlateDoubleTeflon.name=双重特富龙板
-item.itemCellTeflon.name=特富龙单元
-tile.Block of Teflon.name=特富龙块
-//This zh_CN.lang is translation by huajijam for GregTech++ (17/3/19)
+//This zh_CN.lang is translation by huajijam for GregTech++ (18/3/19)
