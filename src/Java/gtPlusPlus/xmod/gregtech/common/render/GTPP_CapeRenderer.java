@@ -171,7 +171,7 @@ public class GTPP_CapeRenderer extends RenderPlayer {
 		try {
 
 			if (tResource == null && CORE.DEVENV) {
-			    Resource = mCapes[3];
+			    tResource = mCapes[3];
 			}
 			else if (tResource == null && !CORE.DEVENV){
 			    aEvent.setCanceled(true);
@@ -229,11 +229,9 @@ public class GTPP_CapeRenderer extends RenderPlayer {
 			if (GT_Values.D1) {
 				e.printStackTrace(GT_Log.err);
 			}
-			{
-			    aEvent.setCanceled(true);
-			    Logger.WARNING("A3");
-			    return;
-			}
+			aEvent.setCanceled(true);
+			Logger.WARNING("A3");
+			return;			
 		}
 	}
 
