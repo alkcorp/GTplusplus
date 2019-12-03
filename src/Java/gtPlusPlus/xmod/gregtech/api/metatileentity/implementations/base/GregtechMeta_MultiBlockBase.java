@@ -994,21 +994,18 @@ GT_MetaTileEntity_MultiBlockBase {
 		long tVoltage = getMaxInputVoltage();
 		
 		// Get total Amps available to this multiblock
-		long tAmpsIn = 0;
+		long tEnergyIn = 0;
 		for (GT_MetaTileEntity_Hatch_Energy aHatch : this.mEnergyHatches) {
-			tAmpsIn += aHatch.maxAmperesIn();
+			tEnergyIn += aHatch.maxAmperesIn() * aHatch.maxEUInput();
 		}
 		
-		// How much voltage can actually go in
-		long tEffectiveVoltage = tVoltage * tAmpsIn;
-
 		byte tTierInputVoltage = (byte) Math.max(1, GT_Utility.getTier(tVoltage));
-		byte tTier = (byte) Math.max(1, GT_Utility.getTier(tEffectiveVoltage));
+		byte tTier = (byte) Math.max(1, GT_Utility.getTier(tEnergyIn));
 		log("Running checkRecipeGeneric(0)");
 
 		log("Amps: "+tAmpsIn);
 		log("Input Voltage: "+tVoltage+", Tier: "+tTierInputVoltage);
-		log("Effective Voltage: "+tEffectiveVoltage+", Effective Tier: "+tTier);	
+		log("Effective Voltage: "+tEnergyIn+", Effective Tier: "+tTier);	
 
 		GT_Recipe tRecipe = findRecipe(
 				getBaseMetaTileEntity(), mLastRecipe, false,
@@ -1041,7 +1038,7 @@ GT_MetaTileEntity_MultiBlockBase {
 		log("tVoltage: "+tVoltage);
 		log("tRecipeEUt: "+tRecipeEUt);
 		// Count recipes to do in parallel, consuming input items and fluids and considering input voltage limits
-		for (; parallelRecipes < aMaxParallelRecipes && tTotalEUt < (tEffectiveVoltage - tRecipeEUt); parallelRecipes++) {
+		for (; parallelRecipes < aMaxParallelRecipes && tTotalEUt < (tEnergyIn - tRecipeEUt); parallelRecipes++) {
 			if (!tRecipe.isRecipeInputEqual(true, aFluidInputs, aItemInputs)) {
 				log("Broke at "+parallelRecipes+".");
 				break;
