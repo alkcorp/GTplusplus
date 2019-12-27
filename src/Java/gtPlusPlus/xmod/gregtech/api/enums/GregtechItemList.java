@@ -113,6 +113,9 @@ public enum GregtechItemList implements GregtechItemContainer {
 	Bomb_Cast_Set, Bomb_Cast_Broken,
 	Bomb_Cast_Mold,
 	
+	// Pellet Mold
+	Pellet_Mold,
+	
 	//Charged Items for Tree Farms
 	Farm_Processor_EV, 
 	Farm_Processor_IV,
@@ -231,7 +234,9 @@ public enum GregtechItemList implements GregtechItemContainer {
 	
 	//Algae
 	AlgaeFarm_Controller,
-
+	
+	//Chemical Plant
+	ChemicalPlant_Controller,
 
 	//GT4 autoCrafter
 	GT4_Multi_Crafter, 

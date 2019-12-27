@@ -6,6 +6,7 @@ import gregtech.api.enums.OrePrefixes;
 import gregtech.api.util.GT_ModHandler;
 import gregtech.api.util.GT_Utility;
 import gtPlusPlus.api.objects.Logger;
+import gtPlusPlus.core.item.chemistry.AgriculturalChem;
 import gtPlusPlus.core.lib.CORE;
 import gtPlusPlus.core.lib.LoadedMods;
 import gtPlusPlus.core.material.ALLOY;
@@ -1237,6 +1238,10 @@ public class CI {
 			return ItemUtils.simpleMetaStack(StaticFields59.getBlockCasings5(), i, 1);
 		}
 
+	}
+
+	public static ItemStack getNumberedBioCircuit(int i) {
+		return ItemUtils.simpleMetaStack(AgriculturalChem.mBioCircuit, i, 0);
 	}
 
 }

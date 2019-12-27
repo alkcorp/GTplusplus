@@ -53,6 +53,7 @@ import gtPlusPlus.plugin.villagers.block.BlockGenericSpawner;
 import gtPlusPlus.xmod.eio.handler.HandlerTooltip_EIO;
 import gtPlusPlus.xmod.galacticraft.handler.HandlerTooltip_GC;
 import gtPlusPlus.xmod.gregtech.api.enums.GregtechItemList;
+import gtPlusPlus.xmod.gregtech.api.util.SpecialBehaviourTooltipHandler;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityBlaze;
@@ -147,6 +148,8 @@ public class CommonProxy {
 		// Block Handler for all events.
 		Utils.registerEvent(new BlockEventHandler());
 		Utils.registerEvent(new GeneralTooltipEventHandler());
+		// Handles Tooltips for items giving custom multiblock behaviour
+		Utils.registerEvent(new SpecialBehaviourTooltipHandler());		
 		// Handles Custom tooltips for EIO.
 		Utils.registerEvent(new HandlerTooltip_EIO());
 		// Handles Custom Tooltips for GC
@@ -194,14 +197,18 @@ public class CommonProxy {
 		COMPAT_HANDLER.RemoveRecipesFromOtherMods();
 		Logger.INFO("Initialising Handler, Then Adding Recipes");
 		COMPAT_HANDLER.InitialiseHandlerThenAddRecipes();
-		Logger.INFO("Loading Gregtech API recipes.");
-		COMPAT_HANDLER.startLoadingGregAPIBasedRecipes();
 		Logger.INFO("Loading Intermod staging.");
 		COMPAT_IntermodStaging.postInit(e);
 		Logger.INFO("Loading queued recipes.");
 		COMPAT_HANDLER.runQueuedRecipes();
 		Logger.INFO("Registering custom mob drops.");
 		registerCustomMobDrops();
+
+		// Moved last in postInit().
+		// 12/12/19 - Alkalus
+		// Moved last, to prevent recipes being generated post initialisation.
+		Logger.INFO("Loading Gregtech API recipes.");
+		COMPAT_HANDLER.startLoadingGregAPIBasedRecipes();
 	}
 
 	public void serverStarting(final FMLServerStartingEvent e) {
