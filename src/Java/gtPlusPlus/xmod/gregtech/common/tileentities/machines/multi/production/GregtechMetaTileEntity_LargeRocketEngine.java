@@ -190,6 +190,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 							Logger.INFO("Found CO2");
 							if (this.mRuntime % 72 == 0 || this.mRuntime == 0) {
 								if (!consumeCO2()) {
+									Logger.INFO("false");
 									return false;
 								}
 							}
@@ -199,6 +200,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 							this.mProgresstime = 1;
 							this.mMaxProgresstime = 1;
 							this.mEfficiencyIncrease = this.boostEu ? 15 : 5;
+							this.mEfficiency = (this.boostEu	? euProduction * 3:	euProduction * 1);
 							Logger.INFO("this.fuelValue"+this.fuelValue);
 							Logger.INFO("this.fuelRemaining"+this.fuelRemaining);
 							Logger.INFO("this.mEUt"+this.mEUt);
@@ -206,10 +208,12 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 							Logger.INFO("this.mMaxProgresstime"+this.mMaxProgresstime);
 							Logger.INFO("this.mEfficiencyIncrease"+this.mEfficiencyIncrease);
 							Logger.INFO("euproduction"+euProduction);
+							Logger.INFO("true");
 							return true;
 							//Logger.INFO("");
 						}
 						Logger.INFO("no CO found");
+						Logger.INFO("false");
 						return false;
 					}
 				}
@@ -224,6 +228,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 		Logger.INFO("this.mMaxProgresstime"+this.mMaxProgresstime);
 		Logger.INFO("this.mEfficiencyIncrease"+this.mEfficiencyIncrease);
 		Logger.INFO("euproduction"+euProduction);
+		Logger.INFO("false");
 		return false;
 	}
 
@@ -488,10 +493,11 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 	@Override
 	public int getMaxEfficiency(final ItemStack aStack) {
 		Logger.INFO("get eff"+ (this.boostEu	? euProduction * 3:	euProduction * 1));
-		if ( this.mEfficiency > this.boostEu	? euProduction * 3:	euProduction * 1)
-			return this.mEfficiency - this.boostEu ? 15 : 5;
+		Logger.INFO("get actual eff"+ this.mEfficiency);
+		if ( this.mEfficiency > (this.boostEu	? euProduction * 3:	euProduction * 1))
+			return (this.mEfficiency - (this.boostEu ? 15 : 5));
 		else
-			return this.boostEu	? euProduction * 3:	euProduction * 1;
+			return (this.boostEu	? euProduction * 3:	euProduction * 1);
 	}
 
 	@Override
