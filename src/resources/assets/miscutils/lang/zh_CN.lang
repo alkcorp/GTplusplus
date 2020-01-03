@@ -2669,9 +2669,9 @@ item.particle.ion.Roentgenium.name=錀离子
 item.particle.ion.Copernicium.name=鎶离子
 item.particle.ion.Nihonium.name=鉨离子
 item.particle.ion.Flerovium.name=鈇离子
-item.particle.ion.Moscovium.name=Mc离子
+item.particle.ion.Moscovium.name=镆离子
 item.particle.ion.Livermorium.name=鉝离子
-item.particle.ion.Tennessine.name=Ts离子
+item.particle.ion.Tennessine.name=钿离子
 item.particle.ion.Oganesson.name=Og离子
 
 
@@ -2958,10 +2958,10 @@ item.itemCellSeleniumDioxide.name=二氧化硒单元
 item.itemCellSeleniousAcid.name=亚硒酸单元
 
 //Added 25/7/19
-container.pestkiller=害虫杀手
+container.pestkiller=害虫终结者
 
 //Added 15/8/19
-gtpp.nei.decayables=腐烂箱子
+gtpp.nei.decayables=衰变箱子
 entity.batKing.name=蝙蝠王
 item.itemCellCarbyne.name=直链乙炔碳单元
 item.itemCellHydrogenCyanide.name=氰化氢单元
@@ -2978,12 +2978,12 @@ item.LiquidHydrogen.name=液态氢单元[LOH]
 tile.blockDoorAlloy.name=加强门
 tile.blockInhibitorObelisk.name=抑制方尖碑
 tile.Battlesign.name=战斗牌子
-tile.blockMagicBox.name=魔法盒
+tile.blockMagicBox.name=魔法の盒
 tile.blockManaPod.name=法力豆荚
 tile.buildToolBlock.name=工具块
 tile.blockRedPlasma.name=红等离子块
 tile.pipeBlock.name=管道
-item.null.name=给ALKALU(作者)报告bug
+item.null.name=给ALKALUS(作者)报告bug
 
 //Added 24/8/19
 tile.OreGreenockite.name=硫镉矿石
