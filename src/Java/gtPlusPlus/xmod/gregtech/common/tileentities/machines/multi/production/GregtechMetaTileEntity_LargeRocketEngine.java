@@ -88,11 +88,12 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 		}
 		return new String[] { 
 				"Controller Block for the Large Combustion Engine",
-				"Supply Rocket Fuels and 1000L of "+mLubricantName+" per hour to run",
-				"Supply 40L of "+mCoolantName+" per second to boost output (optional)", 
-				"Consumes upto 5000L of Air per second",
-				"Default: Produces "+GT_Values.V[5]+"EU/t at 100% efficiency", 
-				"Boosted: Produces "+(GT_Values.V[5]*3)+"EU/t at 150% efficiency",
+				"Supply Rocket Fuels and 1000L(3000L boosted) of "+mLubricantName+" per hour to run",
+				"Supply 4L of "+mCoolantName+" per second per 2100 eu/t to boost output (optional)", 
+				"Consumes upto 37500L of Air per second",
+				"Produces between 4K and 32K eu/t depending on how much fuel is fed",
+				"when producing more then 16K eu/t fuel wil be consume less efieciently 3x - 1.5x eff",
+				"boosting wil produce 3x the amount of power but wil consume 3x tha amount of fuel",
 				"Size(WxHxD): 3x3x10, Controller (front centered)",
 				"3x3x10 of Stable "+mCasingName+" (hollow, Min 64!)",
 				"8x "+mGearboxName+" inside the Hollow Casing",
@@ -123,15 +124,20 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 	}
 
 	public int getAir() {
+		Logger.INFO("geting air in ");
 		if (this.mAirIntakes.isEmpty() || this.mAirIntakes.size() <= 0) {
+			Logger.INFO("return air 0");
 			return 0;
 		}
 		else {
 			int totalAir = 0;
 			FluidStack airstack = FluidUtils.getFluidStack("air", 1);
 			for (GT_MetaTileEntity_Hatch_AirIntake u : this.mAirIntakes) {
-				if (u != null) {
+				if (u != null && u.mFluid != null) {
+					Logger.INFO(" to fluid stack");
+					// had this trow errors cousing the machine to stop probebly fixed
 					FluidStack f = u.mFluid;
+					Logger.INFO("fluid stack made");
 					if (f.isFluidEqual(airstack)) {
 						totalAir += f.amount;
 					}
@@ -143,92 +149,100 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 
 	@Override
 	public boolean checkRecipe(final ItemStack aStack) {
+		if (this.mEfficiency < 0)
 		Logger.INFO(" geting air");
 		final ArrayList<FluidStack> tFluids = this.getStoredFluids();
 		FluidStack air = FluidUtils.getFluidStack("air", 1);
 		Logger.INFO(" geting air 2");
 
 		int aircount = getAir() ;
-		if (aircount < (boostEu ? 500 : 200)) {
-			Logger.INFO(" boost");
+		if (aircount <  euProduction/32) {
+			Logger.INFO(" not enough air");
 			//Logger.INFO("Not Enough Air to Run "+aircount);
 			return false;
 		}
 		else {		
 			Logger.INFO(" no boost");	
-			boolean hasIntakeAir = this.depleteInput(FluidUtils.getFluidStack(air, boostEu ? 500 : 200));
+			boolean hasIntakeAir = this.depleteInput(FluidUtils.getFluidStack(air, euProduction/32));
 			if (!hasIntakeAir) {
 				//Logger.INFO("Could not consume Air to run "+aircount);
+				freeFuelTicks = 0;
 				return false;
 			}			
 		}
+		// reste fuel ticks incase it does not reset when it stops
+		if (freeFuelTicks != 0 && this.mProgresstime == 0 && this.mEfficiency == 0)
+			freeFuelTicks = 0;
 		
 		//Logger.INFO("Running "+aircount);
 		Logger.INFO("looking at hatch");
 		final Collection<GT_Recipe> tRecipeList = Recipe_GT.Gregtech_Recipe_Map.sRocketFuels.mRecipeList;
+		
+		
 		if (tFluids.size() > 0 && tRecipeList != null) {
 			Logger.INFO("has fluid");
+			
+			if (tFluids.contains(MISC_MATERIALS.CARBON_DIOXIDE.getFluid(this.boostEu ? 3 : 1)) || tFluids.contains(FluidUtils.getFluidStack("carbondioxide", (this.boostEu ? 3 : 1)))) {
+				Logger.INFO("Found CO2");
+				if (this.mRuntime % 72 == 0 || this.mRuntime == 0) {
+					if (!consumeCO2()) {
+						freeFuelTicks = 0;
+						return false;
+					}
+				}
+			} else
+			{
+				Logger.INFO("no CO found");
+				freeFuelTicks = 0;
+				return false;
+			}
+			
+			if (freeFuelTicks == 0)
+				this.boostEu = consumeLOH();
+			Logger.INFO("Did we consume LOH? "+boostEu);
+			
 			for (final FluidStack hatchFluid1 : tFluids) {
 				if (hatchFluid1.isFluidEqual(air)) {
 					continue;
-				}			
-				for (final GT_Recipe aFuel : tRecipeList) {
-					final FluidStack tLiquid;
-					tLiquid = aFuel.mFluidInputs[0];
-					if (hatchFluid1.isFluidEqual(tLiquid)) {
-						Logger.INFO("consume fuel amount" + hatchFluid1.amount);
-						if (!consumeFuel(aFuel,hatchFluid1.amount)) {
-							continue;
-						}
-
-						Logger.INFO("Consumed some input fuel");
-						if (freeFuelTicks == 1)
-							this.boostEu = consumeLOH();
-						Logger.INFO("Did we consume LOH? "+boostEu);
-
-						if (tFluids.contains(MISC_MATERIALS.CARBON_DIOXIDE.getFluid(this.boostEu ? 2 : 1)) || tFluids.contains(FluidUtils.getFluidStack("carbondioxide", (this.boostEu ? 2 : 1)))) {
-							Logger.INFO("Found CO2");
-							if (this.mRuntime % 72 == 0 || this.mRuntime == 0) {
-								if (!consumeCO2()) {
-									Logger.INFO("false");
-									return false;
-								}
-							}
+				}
+				
+				if (freeFuelTicks == 0) {
+					Logger.INFO("tick = 0 consuming fuel");
+					for (final GT_Recipe aFuel : tRecipeList) {
+						final FluidStack tLiquid;
+						tLiquid = aFuel.mFluidInputs[0];
+						if (hatchFluid1.isFluidEqual(tLiquid)) {
+							Logger.INFO("consume fuel amount" + hatchFluid1.amount);
+							if (!consumeFuel(aFuel,hatchFluid1.amount)) {
+								continue;
+							}	
 							this.fuelValue = aFuel.mSpecialValue;
 							this.fuelRemaining = hatchFluid1.amount;
 							this.mEUt = (int) ((this.mEfficiency < 2000) ? 0 : GT_Values.V[5]<<1);
 							this.mProgresstime = 1;
 							this.mMaxProgresstime = 1;
-							this.mEfficiencyIncrease = this.boostEu ? 15 : 5;
-							this.mEfficiency = (this.boostEu	? euProduction * 3:	euProduction * 1);
-							Logger.INFO("this.fuelValue"+this.fuelValue);
-							Logger.INFO("this.fuelRemaining"+this.fuelRemaining);
-							Logger.INFO("this.mEUt"+this.mEUt);
-							Logger.INFO("this.mProgresstime"+this.mProgresstime);
-							Logger.INFO("this.mMaxProgresstime"+this.mMaxProgresstime);
-							Logger.INFO("this.mEfficiencyIncrease"+this.mEfficiencyIncrease);
-							Logger.INFO("euproduction"+euProduction);
-							Logger.INFO("true");
+							this.mEfficiencyIncrease =  euProduction/4000; 
 							return true;
 							//Logger.INFO("");
 						}
-						Logger.INFO("no CO found");
-						Logger.INFO("false");
-						return false;
 					}
+				
+				} else
+				{
+					this.mEfficiencyIncrease =  euProduction/4000; 
+					freeFuelTicks--;
+					this.mEUt = (int) ((this.mEfficiency < 1000) ? 0 : GT_Values.V[5]<<1);
+					this.mProgresstime = 1;
+					this.mMaxProgresstime = 1;
+					return true;
 				}
+				
 			}
 		}
 		this.mEUt = 0;
 		this.mEfficiency = 0;
-		Logger.INFO("this.fuelValue"+this.fuelValue);
-		Logger.INFO("this.fuelRemaining"+this.fuelRemaining);
-		Logger.INFO("this.mEUt"+this.mEUt);
-		Logger.INFO("this.mProgresstime"+this.mProgresstime);
-		Logger.INFO("this.mMaxProgresstime"+this.mMaxProgresstime);
-		Logger.INFO("this.mEfficiencyIncrease"+this.mEfficiencyIncrease);
-		Logger.INFO("euproduction"+euProduction);
-		Logger.INFO("false");
+		Logger.INFO("no fuel found");
+		freeFuelTicks = 0;
 		return false;
 	}
 
@@ -237,55 +251,50 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 	 * @param aFuel
 	 * @return
 	 */
-	public boolean consumeFuel(GT_Recipe aFuel,int amount) {
-		if (freeFuelTicks > 0) {
-			freeFuelTicks--;
-			Logger.INFO("freeTicks not consuming fuel");
-			return true;
-		}
-		else {		
+	public boolean consumeFuel(GT_Recipe aFuel,int amount) {	
+			amount *= this.boostEu ? 0.3 : 0.9;
 			Logger.INFO("Consuming fuel.");
 			freeFuelTicks = 0;
 			int value = aFuel.mSpecialValue * 3;
 			Logger.INFO("amount: "+amount);
 			Logger.INFO("Value: "+value);
 			int energy = value * amount;
-			Logger.INFO("energy: "+energy);
 			//engine needs at leas 2A EV of fuel to waork
-			if (energy < 4096){
-				Logger.INFO("not enough energy");
+			if (energy < 40000){
+				Logger.INFO("not enough fuel to work");
 				return false;
 			}	
 			//limits engine to LuV fuel consumption
-			if (energy > 43384){
-				amount = (int) ((double) 43384/value);
-				energy = 43384;
+			if (energy > 427500){
+				amount = (int) ((double) 427500/value);
+				energy = 427500;
 			}
 			Logger.INFO("amount2: "+amount);
-			FluidStack tLiquid = FluidUtils.getFluidStack(aFuel.mFluidInputs[0], (this.boostEu ? amount * 2 : amount));			
+			FluidStack tLiquid = FluidUtils.getFluidStack(aFuel.mFluidInputs[0], (this.boostEu ? amount * 3 : amount));			
 			if (!this.depleteInput(tLiquid)) {
 				Logger.INFO("could not deplete fluid");
 				return false;
 			}
 			else {					
-				this.fuelConsumption = amount;						
+				this.fuelConsumption = this.boostEu ? amount * 3 : amount;						
 				this.freeFuelTicks = 20;
 				setEUProduction(energy);
 				Logger.INFO("Consumed "+amount+"L. Waiting "+freeFuelTicks+" ticks to consume more.");
 				return true;
 			}		
-		}
 	}
 
 	public void setEUProduction(int energy){
-		double energyEfficiency = energy > 11000 ? ((double) Math.sqrt(11000)/Math.sqrt(energy) * energy) : energy;
-		Logger.INFO("energy calculation "+ energyEfficiency);
-		euProduction = (int) ((double) energyEfficiency / 1.1);
-		Logger.INFO("euproduction"+euProduction);
+		energy /= 20;
+		// 3x eff unles it gose above 16K eu/t
+		double energyEfficiency = energy > 5500 ? ((double) Math.sqrt(5500)/Math.sqrt(energy) * energy) : energy;
+		euProduction = (int) ((double) energyEfficiency * 1.84);
+		if (this.boostEu)
+			euProduction *= 3;
 	}
 
 	public boolean consumeCO2() {
-		if (this.depleteInput(MISC_MATERIALS.CARBON_DIOXIDE.getFluid(this.boostEu ? 2 : 1)) || this.depleteInput(FluidUtils.getFluidStack("carbondioxide", (this.boostEu ? 2 : 1)))) {
+		if (this.depleteInput(MISC_MATERIALS.CARBON_DIOXIDE.getFluid(this.boostEu ? 3 : 1)) || this.depleteInput(FluidUtils.getFluidStack("carbondioxide", (this.boostEu ? 3 : 1)))) {
 			return true;
 		}
 		else {
@@ -294,7 +303,8 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 	}
 
 	public boolean consumeLOH() {
-		return this.depleteInput(FluidUtils.getFluidStack(RocketFuels.Liquid_Hydrogen, 2)); //(40 * ((long) euProduction / 10000))
+		int LOHamount = (3 * euProduction)/1000;
+		return this.depleteInput(FluidUtils.getFluidStack(RocketFuels.Liquid_Hydrogen, LOHamount)); //(40 * ((long) euProduction / 10000))
 	}
 
 	@Override
@@ -492,17 +502,12 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 
 	@Override
 	public int getMaxEfficiency(final ItemStack aStack) {
-		Logger.INFO("get eff"+ (this.boostEu	? euProduction * 3:	euProduction * 1));
-		Logger.INFO("get actual eff"+ this.mEfficiency);
-		if ( this.mEfficiency > (this.boostEu	? euProduction * 3:	euProduction * 1))
-			return (this.mEfficiency - (this.boostEu ? 15 : 5));
-		else
-			return (this.boostEu	? euProduction * 3:	euProduction * 1);
+			return euProduction;
 	}
 
 	@Override
 	public int getPollutionPerTick(final ItemStack aStack) {
-		return	(int) ((long) (this.boostEu ? 150 : 75) * ( euProduction / 10000));
+		return	75 * ( euProduction / 10000);
 	}
 
 	@Override
