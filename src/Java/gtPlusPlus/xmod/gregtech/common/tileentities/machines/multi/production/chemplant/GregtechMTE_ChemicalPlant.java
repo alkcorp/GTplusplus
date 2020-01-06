@@ -57,8 +57,6 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 	private int mPipeCasingTier = 0;
 	private int mCoilTier = 0;
 
-	//none 0, red 1, green 2, yellow 3, blue 4, orange 5, purple 6, brown 7 
-
 
 	/**
 	 * Internal Recipe Map which holds the actual recipes, backed by the real map, shown by NEI.
@@ -777,8 +775,6 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 	public int getSpeedBonus() {
 		return 50 * (this.mCoilTier - 2);
 	}
-
-	//none 0, red 1, green 2, yellow 3, blue 4, orange 5, purple 6, brown 7 
 	
 	
 	@Override
@@ -819,11 +815,6 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 			log("solid tier is too low");
 			return false;
 		}
-		
-		
-//		boolean a = true;
-//		if (a)
-//			return false;
 		
 		
 		if (!this.canBufferOutputs(tRecipe, aMaxParallelRecipes)) {
@@ -871,10 +862,15 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 				} else
 					break;
 			}
-		} else
+		}
 		
 		if (maxParrallelCatalyst<parallelRecipes) {
 			tTotalEUt -= tRecipeEUt * (parallelRecipes - maxParrallelCatalyst);
+		}
+		
+		if (maxParrallelCatalyst == 0) {
+			log("no valid catalyst found");
+			return false;
 		}
 
 
@@ -973,19 +969,11 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 		log("GOOD RETURN - 1");
 		return true;
 	}
-	
-//	private ItemStack mRedCatalyst;
-//	private ItemStack mGreenCatalyst;
-//	private ItemStack mYellowCatalyst;
-//	private ItemStack mBlueCatalyst;
-//	private ItemStack mOrangeCatalyst;
-//	private ItemStack mPurpleCatalyst;
 
 	private ItemStack findCatalyst(ItemStack[] aItemInputs) {
 		if (aItemInputs != null) {
 			for (final ItemStack aInput : aItemInputs) {
 				if (aInput != null) {
-					log("aINput "+aInput.getDisplayName());
 					if (aInput.isItemEqual(GenericChem.mRedCatalyst))
 						return aInput;
 					else if (aInput.isItemEqual(GenericChem.mYellowCatalyst))
@@ -1021,7 +1009,7 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 			int damage = getDamage(aStack) + 1;
 			log("damge catalyst "+damage);
 			if (damage >= mCatalystDurabilety) {
-				log(""+damage);
+				log("consume catalyst");
 				ItemStack emptyCatalyst = ItemUtils.getSimpleStack(AgriculturalChem.mCatalystCarrier,1);
 				addOutput(emptyCatalyst);
 				setDamage(aStack,0);
