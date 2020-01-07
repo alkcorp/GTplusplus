@@ -87,7 +87,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 			mCoolantName = FluidUtils.getFluidStack("liquidhydrogen", 1).getLocalizedName();
 		}
 		return new String[] { 
-				"Controller Block for the Large Combustion Engine",
+				"Controller Block for the Large Rocket Engine",
 				"Supply Rocket Fuels and 1000L(3000L boosted) of "+mLubricantName+" per hour to run",
 				"Supply 4L of "+mCoolantName+" per second per 2100 eu/t to boost output (optional)", 
 				"Consumes upto 37500L of Air per second",
