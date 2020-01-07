@@ -100,8 +100,8 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 	@Override
 	public String[] getTooltip() {
 		return new String[] {
-				"Heavy Industry, now right at your doorstep!",
 				"Controller Block for the Chemical Plant",
+				"Heavy Industry, now right at your doorstep!",
 				"Solid Casings dictate Chemical Plant tier",
 				"Machine Casings dictate Hatch tier",			
 				"Higher tier coils speed up the machine",
@@ -114,7 +114,8 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 				"80+ Solid Casings",
 				"Construction Guide:",
 				"Controller is placed on a middle casing in the bottom layer",
-				"7x7x7 Hollow cube of solid casings",
+				"Hatches can only be placed on the bottom layer edges",
+				"7x7x7 Hollow frame of solid casings",
 				"5x1x5 layer of solid casings (fills in top layer)",
 				"5x1x5 layer of machine casings (fills in bottom layer)",
 				"In the central 3x5x3:",
