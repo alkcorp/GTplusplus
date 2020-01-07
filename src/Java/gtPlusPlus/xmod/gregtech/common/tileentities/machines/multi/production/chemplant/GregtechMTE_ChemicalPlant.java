@@ -749,6 +749,15 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 	public String getCustomGUIResourceName() {
 		return null;
 	}
+	
+	// same speed bonus as pyrolisis oven
+	public int getSpeedBonus() {
+		return 50 * (this.mCoilTier - 2);
+	}
+
+	public int getMaxCatalystDuarbilerty() {
+		return 50;
+	}
 
 	@Override
 	public void onPostTick(IGregTechTileEntity aBaseMetaTileEntity, long aTick) {
@@ -769,11 +778,6 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 	public boolean checkRecipe(final ItemStack aStack) {
 		
 		return checkRecipeGeneric(getMaxParallelRecipes(), getEuDiscountForParallelism(), getSpeedBonus());
-	}
-	
-	// same speed bonus as pyrolisis oven
-	public int getSpeedBonus() {
-		return 50 * (this.mCoilTier - 2);
 	}
 	
 	
@@ -821,6 +825,21 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 			log("BAD RETURN - 2");
 			return false;
 		}
+		
+		// checks if it has enough catalyst durabilety
+		ArrayList<ItemStack>tCatalysts = null; 
+		int tMaxParrallelCatalyst = aMaxParallelRecipes;
+		ItemStack tCatalystRecipe = findCatalyst(tRecipe.mInputs);
+		if (tCatalystRecipe != null) {
+			log("needs catlyst");
+			tCatalysts = new ArrayList<ItemStack>();
+			tMaxParrallelCatalyst = getCatalysts(aItemInputs, tCatalystRecipe, aMaxParallelRecipes,tCatalysts);
+		}
+			
+		if (tMaxParrallelCatalyst == 0) {
+			log("found not enough catalists catalyst");
+			return false;
+		}
 
 		// EU discount
 		float tRecipeEUt = (tRecipe.mEUt * aEUPercent) / 100.0f;
@@ -831,12 +850,13 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 		int parallelRecipes = 0;
 
 		log("parallelRecipes: "+parallelRecipes);
-		log("aMaxParallelRecipes: "+aMaxParallelRecipes);
+		log("aMaxParallelRecipes: "+tMaxParrallelCatalyst);
 		log("tTotalEUt: "+tTotalEUt);
 		log("tVoltage: "+tVoltage);
+		log("tEnergy: "+tEnergy);
 		log("tRecipeEUt: "+tRecipeEUt);
 		// Count recipes to do in parallel, consuming input items and fluids and considering input voltage limits
-		for (; parallelRecipes < aMaxParallelRecipes && tTotalEUt < (tEnergy - tRecipeEUt); parallelRecipes++) {
+		for (; parallelRecipes < tMaxParrallelCatalyst && tTotalEUt < (tEnergy - tRecipeEUt); parallelRecipes++) {
 			if (!tRecipe.isRecipeInputEqual(true, aFluidInputs, aItemInputs)) {
 				log("Broke at "+parallelRecipes+".");
 				break;
@@ -849,34 +869,23 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 			log("BAD RETURN - 3");
 			return false;
 		}
+		
+		if (tCatalysts != null) {
+			log("damging catalist");
+			for (int j = 0;j<parallelRecipes;j++) {
+				log("j = "+j);
+				for (int i = 0;i<tCatalysts.size();i++) {
+					log("i = "+i);
+					if (tCatalysts.get(i) != null && tCatalysts.get(i).stackSize != 0) {
+						damageCatalys(tCatalysts.get(i));
+						break;
+					}		
+				}
+			}
+		}
 
 		// -- Try not to fail after this point - inputs have already been consumed! --
-		int maxParrallelCatalyst = 0;
 		
-		ItemStack tCatalystRecipe = findCatalyst(tRecipe.mInputs);
-		if (tCatalystRecipe != null) {
-			for (;maxParrallelCatalyst<parallelRecipes;maxParrallelCatalyst++) {
-				ItemStack tCatalystInput = compareCatalyst(tCatalystRecipe,aItemInputs);
-				if (tCatalystInput != null) {
-					damageCatalys(tCatalystInput,parallelRecipes);
-				} else
-					break;
-			}
-		} else
-		{
-			maxParrallelCatalyst = parallelRecipes;
-		}
-		
-		if (maxParrallelCatalyst<parallelRecipes) {
-			tTotalEUt -= tRecipeEUt * (parallelRecipes - maxParrallelCatalyst);
-		}
-		
-		if (maxParrallelCatalyst == 0) {
-			log("no valid catalyst found");
-			return false;
-		}
-
-
 
 		// Convert speed bonus to duration multiplier
 		// e.g. 100% speed bonus = 200% speed = 100%/200% = 50% recipe duration.
@@ -912,7 +921,7 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 		for (int h = 0; h < tRecipe.mFluidOutputs.length; h++) {
 			if (tRecipe.getFluidOutput(h) != null) {
 				tOutputFluids[h] = tRecipe.getFluidOutput(h).copy();
-				tOutputFluids[h].amount *= maxParrallelCatalyst;
+				tOutputFluids[h].amount *= parallelRecipes;
 			}
 		}
 
@@ -928,7 +937,7 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 		// Set output item stack sizes (taking output chance into account)
 		for (int f = 0; f < tOutputItems.length; f++) {
 			if (tRecipe.mOutputs[f] != null && tOutputItems[f] != null) {
-				for (int g = 0; g < maxParrallelCatalyst; g++) {
+				for (int g = 0; g < parallelRecipes; g++) {
 					if (getBaseMetaTileEntity().getRandomNumber(aOutputChanceRoll) < tRecipe.getOutputChance(f))
 						tOutputItems[f].stackSize += tRecipe.mOutputs[f].stackSize;
 				}
@@ -973,6 +982,28 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 		return true;
 	}
 
+	private int getCatalysts(ItemStack[] aItemInputs,ItemStack aRecipeCatalyst,int aMaxParrallel,ArrayList<ItemStack> aOutPut) {
+		int allowedParrallel = 0;
+		for (final ItemStack aInput : aItemInputs) {
+			if (aRecipeCatalyst.isItemEqual(aInput)) {
+					if (aInput.stackSize == 1) {
+						int damage = getDamage(aInput) + aMaxParrallel;
+						if (damage >getMaxCatalystDuarbilerty() ) {
+							aOutPut.add(aInput);
+							allowedParrallel += aMaxParrallel + (getMaxCatalystDuarbilerty() - damage);
+							if (allowedParrallel >aMaxParrallel ) {
+								return aMaxParrallel;
+							}	
+							continue;
+						}
+					}
+					aOutPut.add(aInput);
+					return aMaxParrallel;
+			}
+		}
+		return allowedParrallel;
+	}
+
 	private ItemStack findCatalyst(ItemStack[] aItemInputs) {
 		if (aItemInputs != null) {
 			for (final ItemStack aInput : aItemInputs) {
@@ -997,21 +1028,12 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 		return null;
 	}
 	
-	private ItemStack compareCatalyst(ItemStack aRecipeCatalyst,ItemStack[] aItemInput){
-		for (final ItemStack aInput : aItemInput) {
-			if (aRecipeCatalyst.isItemEqual(aInput))
-				return aInput;
-		}
-		return null;
-	}
 	
-	int mCatalystDurabilety = 50;
-	
-	private void damageCatalys(ItemStack aStack,int parrallel) {
+	private void damageCatalys(ItemStack aStack) {
 		if (MathUtils.randFloat(0, 10000000)/10000000f < (1.2f - (0.2 * this.mPipeCasingTier))) {
 			int damage = getDamage(aStack) + 1;
 			log("damge catalyst "+damage);
-			if (damage >= mCatalystDurabilety) {
+			if (damage >= getMaxCatalystDuarbilerty()) {
 				log("consume catalyst");
 				ItemStack emptyCatalyst = ItemUtils.getSimpleStack(AgriculturalChem.mCatalystCarrier,1);
 				addOutput(emptyCatalyst);
