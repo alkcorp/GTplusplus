@@ -92,8 +92,8 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 				"Supply 4L of "+mCoolantName+" per second per 2100 eu/t to boost output (optional)", 
 				"Consumes upto 37500L of Air per second",
 				"Produces between 4K and 32K eu/t depending on how much fuel is fed",
-				"when producing more then 16K eu/t fuel wil be consume less efieciently 3x - 1.5x eff",
-				"boosting wil produce 3x the amount of power but wil consume 3x tha amount of fuel",
+				"When producing more then 16K eu/t fuel wil be consume less efficiently (3x - 1.5x eff)",
+				"Boosting will produce 3x the amount of power but will consume 3x fuel",
 				"Size(WxHxD): 3x3x10, Controller (front centered)",
 				"3x3x10 of Stable "+mCasingName+" (hollow, Min 64!)",
 				"8x "+mGearboxName+" inside the Hollow Casing",
@@ -124,9 +124,9 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 	}
 
 	public int getAir() {
-		Logger.INFO("geting air in ");
+		log("geting air in ");
 		if (this.mAirIntakes.isEmpty() || this.mAirIntakes.size() <= 0) {
-			Logger.INFO("return air 0");
+			log("return air 0");
 			return 0;
 		}
 		else {
@@ -134,10 +134,10 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 			FluidStack airstack = FluidUtils.getFluidStack("air", 1);
 			for (GT_MetaTileEntity_Hatch_AirIntake u : this.mAirIntakes) {
 				if (u != null && u.mFluid != null) {
-					Logger.INFO(" to fluid stack");
+					log(" to fluid stack");
 					// had this trow errors cousing the machine to stop probebly fixed
 					FluidStack f = u.mFluid;
-					Logger.INFO("fluid stack made");
+					log("fluid stack made");
 					if (f.isFluidEqual(airstack)) {
 						totalAir += f.amount;
 					}
@@ -150,22 +150,22 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 	@Override
 	public boolean checkRecipe(final ItemStack aStack) {
 		if (this.mEfficiency < 0)
-		Logger.INFO(" geting air");
+		log(" geting air");
 		final ArrayList<FluidStack> tFluids = this.getStoredFluids();
 		FluidStack air = FluidUtils.getFluidStack("air", 1);
-		Logger.INFO(" geting air 2");
+		log(" geting air 2");
 
 		int aircount = getAir() ;
 		if (aircount <  euProduction/32) {
-			Logger.INFO(" not enough air");
-			//Logger.INFO("Not Enough Air to Run "+aircount);
+			log(" not enough air");
+			//log("Not Enough Air to Run "+aircount);
 			return false;
 		}
 		else {		
-			Logger.INFO(" no boost");	
+			log(" no boost");	
 			boolean hasIntakeAir = this.depleteInput(FluidUtils.getFluidStack(air, euProduction/32));
 			if (!hasIntakeAir) {
-				//Logger.INFO("Could not consume Air to run "+aircount);
+				//log("Could not consume Air to run "+aircount);
 				freeFuelTicks = 0;
 				return false;
 			}			
@@ -174,16 +174,16 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 		if (freeFuelTicks != 0 && this.mProgresstime == 0 && this.mEfficiency == 0)
 			freeFuelTicks = 0;
 		
-		//Logger.INFO("Running "+aircount);
-		Logger.INFO("looking at hatch");
+		//log("Running "+aircount);
+		log("looking at hatch");
 		final Collection<GT_Recipe> tRecipeList = Recipe_GT.Gregtech_Recipe_Map.sRocketFuels.mRecipeList;
 		
 		
 		if (tFluids.size() > 0 && tRecipeList != null) {
-			Logger.INFO("has fluid");
+			log("has fluid");
 			
 			if (tFluids.contains(MISC_MATERIALS.CARBON_DIOXIDE.getFluid(this.boostEu ? 3 : 1)) || tFluids.contains(FluidUtils.getFluidStack("carbondioxide", (this.boostEu ? 3 : 1)))) {
-				Logger.INFO("Found CO2");
+				log("Found CO2");
 				if (this.mRuntime % 72 == 0 || this.mRuntime == 0) {
 					if (!consumeCO2()) {
 						freeFuelTicks = 0;
@@ -192,14 +192,14 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 				}
 			} else
 			{
-				Logger.INFO("no CO found");
+				log("no CO found");
 				freeFuelTicks = 0;
 				return false;
 			}
 			
 			if (freeFuelTicks == 0)
 				this.boostEu = consumeLOH();
-			Logger.INFO("Did we consume LOH? "+boostEu);
+			log("Did we consume LOH? "+boostEu);
 			
 			for (final FluidStack hatchFluid1 : tFluids) {
 				if (hatchFluid1.isFluidEqual(air)) {
@@ -207,12 +207,12 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 				}
 				
 				if (freeFuelTicks == 0) {
-					Logger.INFO("tick = 0 consuming fuel");
+					log("tick = 0 consuming fuel");
 					for (final GT_Recipe aFuel : tRecipeList) {
 						final FluidStack tLiquid;
 						tLiquid = aFuel.mFluidInputs[0];
 						if (hatchFluid1.isFluidEqual(tLiquid)) {
-							Logger.INFO("consume fuel amount" + hatchFluid1.amount);
+							log("consume fuel amount" + hatchFluid1.amount);
 							if (!consumeFuel(aFuel,hatchFluid1.amount)) {
 								continue;
 							}	
@@ -223,7 +223,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 							this.mMaxProgresstime = 1;
 							this.mEfficiencyIncrease =  euProduction/4000; 
 							return true;
-							//Logger.INFO("");
+							//log("");
 						}
 					}
 				
@@ -241,7 +241,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 		}
 		this.mEUt = 0;
 		this.mEfficiency = 0;
-		Logger.INFO("no fuel found");
+		log("no fuel found");
 		freeFuelTicks = 0;
 		return false;
 	}
@@ -253,15 +253,15 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 	 */
 	public boolean consumeFuel(GT_Recipe aFuel,int amount) {	
 			amount *= this.boostEu ? 0.3 : 0.9;
-			Logger.INFO("Consuming fuel.");
+			log("Consuming fuel.");
 			freeFuelTicks = 0;
 			int value = aFuel.mSpecialValue * 3;
-			Logger.INFO("amount: "+amount);
-			Logger.INFO("Value: "+value);
+			log("amount: "+amount);
+			log("Value: "+value);
 			int energy = value * amount;
 			//engine needs at leas 2A EV of fuel to waork
 			if (energy < 40000){
-				Logger.INFO("not enough fuel to work");
+				log("not enough fuel to work");
 				return false;
 			}	
 			//limits engine to LuV fuel consumption
@@ -269,17 +269,17 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 				amount = (int) ((double) 427500/value);
 				energy = 427500;
 			}
-			Logger.INFO("amount2: "+amount);
+			log("amount2: "+amount);
 			FluidStack tLiquid = FluidUtils.getFluidStack(aFuel.mFluidInputs[0], (this.boostEu ? amount * 3 : amount));			
 			if (!this.depleteInput(tLiquid)) {
-				Logger.INFO("could not deplete fluid");
+				log("could not deplete fluid");
 				return false;
 			}
 			else {					
 				this.fuelConsumption = this.boostEu ? amount * 3 : amount;						
 				this.freeFuelTicks = 20;
 				setEUProduction(energy);
-				Logger.INFO("Consumed "+amount+"L. Waiting "+freeFuelTicks+" ticks to consume more.");
+				log("Consumed "+amount+"L. Waiting "+freeFuelTicks+" ticks to consume more.");
 				return true;
 			}		
 	}
@@ -316,15 +316,15 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 		final int MAX_LENGTH = 8;
 		for (int length=0;length<MAX_LENGTH;length++) {
 			if(getBaseMetaTileEntity().getBlockAtSideAndDistance(tSide, length+1) != getGearboxBlock()) {
-				Logger.INFO("Bad Gearbox Block");
+				log("Bad Gearbox Block");
 				return false;
 			}
 			if(getBaseMetaTileEntity().getMetaIDAtSideAndDistance(tSide, length+1) != getGearboxMeta()) {
-				Logger.INFO("Bad Gearbox Meta");
+				log("Bad Gearbox Meta");
 				return false;
 			}
 		}
-		Logger.INFO("Found "+MAX_LENGTH+" "+mGearboxName+"s.");		
+		log("Found "+MAX_LENGTH+" "+mGearboxName+"s.");		
 		for (byte i = -1; i < 2; i = (byte) (i + 1)) {
 			for (byte j = -1; j < 2; j = (byte) (j + 1)) {
 				if ((i != 0) || (j != 0)) {
@@ -342,12 +342,12 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 						//final Block frontAir = getBaseMetaTileEntity().getBlock(fX, aY, fZ);
 						//final String frontAirName = frontAir.getUnlocalizedName();						
 						//if(!(getBaseMetaTileEntity().getAir(fX, aY, fZ) || frontAirName.equalsIgnoreCase("tile.air") || frontAirName.equalsIgnoreCase("tile.railcraft.residual.heat"))) {
-						//Logger.INFO("Bad Air Check");
+						//log("Bad Air Check");
 						//return false; //Fail if vent blocks are obstructed
 						//}
 
 						if (((i == 0) || (j == 0)) && ((aLength > 0) && (aLength <= MAX_LENGTH))) {
-							Logger.INFO("Checking for Hatches. "+aLength);
+							log("Checking for Hatches. "+aLength);
 							//Top Row
 							if (j == 1) {
 								if (addDynamoToMachineList(getBaseMetaTileEntity().getIGregTechTileEntity(aX, aY, aZ), getCasingTextureIndex())) {
@@ -360,7 +360,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 									// Do nothing
 								}
 								else {
-									Logger.INFO("Top Row - "+aLength+" | Did not find casing or Dynamo");
+									log("Top Row - "+aLength+" | Did not find casing or Dynamo");
 									return false;
 								}
 							}
@@ -370,7 +370,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 									final IMetaTileEntity bCheck = aCheck.getMetaTileEntity();							        
 									// Only allow Dynamos on Top
 									if (bCheck instanceof GT_MetaTileEntity_Hatch_Dynamo) {
-										Logger.INFO("Found dynamo in disallowed location | "+aX+", "+aY+", "+aZ+" | "+i+", "+j+", "+aLength);
+										log("Found dynamo in disallowed location | "+aX+", "+aY+", "+aZ+" | "+i+", "+j+", "+aLength);
 										return false;
 									}
 								}	
@@ -386,30 +386,30 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 								else if (getBaseMetaTileEntity().getBlock(aX, aY, aZ) == getCasingBlock() && getBaseMetaTileEntity().getMetaID(aX, aY, aZ) == getCasingMeta()) {
 									// Do nothing
 								}
-								else {Logger.INFO("Bad block.");
+								else {log("Bad block.");
 								return false;
 								}
 
 							}
-							Logger.INFO("Passed check. "+aLength);
+							log("Passed check. "+aLength);
 
 						} else if (aLength == 0) {
-							Logger.INFO("Searching for Gearbox");							
+							log("Searching for Gearbox");							
 							if (addMaintenanceToMachineList(getBaseMetaTileEntity().getIGregTechTileEntity(aX, aY, aZ), getCasingTextureIndex())) {
 								// Do Nothing
 							}
 							else if(!(getBaseMetaTileEntity().getBlock(aX, aY, aZ) == getCasingBlock() && getBaseMetaTileEntity().getMetaID(aX, aY, aZ) == getCasingMeta())) {
-								Logger.INFO("Bad Missing Casing || Bad Meta");
+								log("Bad Missing Casing || Bad Meta");
 								return false;
 							}
 							else {								
-								Logger.INFO("Found "+mCasingName+".");								
+								log("Found "+mCasingName+".");								
 							}
 						} else if (getBaseMetaTileEntity().getBlock(aX, aY, aZ) == getCasingBlock() && getBaseMetaTileEntity().getMetaID(aX, aY, aZ) == getCasingMeta()) {
-							Logger.INFO("Found Casing.");
+							log("Found Casing.");
 							// Do nothing
 						} else {
-							Logger.INFO("Bad XXX");
+							log("Bad XXX");
 							return false;
 						}
 					}
@@ -427,24 +427,24 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 		}
 
 		if (this.mDynamoHatches.size() <= 0 || this.mDynamoHatches.isEmpty()) {
-			Logger.INFO("Wrong count for Dynamos");			
+			log("Wrong count for Dynamos");			
 			return false;			
 		}
 		if (this.mMufflerHatches.size() != 1 || this.mMufflerHatches.isEmpty()) {
-			Logger.INFO("Wrong count for Mufflers");			
+			log("Wrong count for Mufflers");			
 			return false;			
 		}
 		if (this.mAirIntakes.size() < 8 || this.mAirIntakes.isEmpty()) {
-			Logger.INFO("Wrong count for Air Intakes | "+this.mAirIntakes.size());			
+			log("Wrong count for Air Intakes | "+this.mAirIntakes.size());			
 			return false;			
 		}
 		if (this.mMaintenanceHatches.size() < 1 || this.mMaintenanceHatches.isEmpty()) {
-			Logger.INFO("Wrong count for Maint. Hatches");			
+			log("Wrong count for Maint. Hatches");			
 			return false;			
 		}
 
 
-		Logger.INFO("Formed Rocket Engine.");
+		log("Formed Rocket Engine.");
 		return true;
 	}	
 
