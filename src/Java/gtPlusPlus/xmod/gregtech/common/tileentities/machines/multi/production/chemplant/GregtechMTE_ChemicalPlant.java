@@ -113,6 +113,7 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 				"57x Tiered Machine Casings",
 				"80+ Solid Casings",
 				"Construction Guide:",
+				"Controller is placed on a middle casing in the bottom layer",
 				"7x7x7 Hollow cube of solid casings",
 				"5x1x5 layer of solid casings (fills in top layer)",
 				"5x1x5 layer of machine casings (fills in bottom layer)",
