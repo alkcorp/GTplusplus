@@ -862,6 +862,9 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 				} else
 					break;
 			}
+		} else
+		{
+			maxParrallelCatalyst = parallelRecipes;
 		}
 		
 		if (maxParrallelCatalyst<parallelRecipes) {
