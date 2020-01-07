@@ -102,15 +102,26 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 		return new String[] {
 				"Heavy Industry, now right at your doorstep!",
 				"Controller Block for the Chemical Plant",
-				"higer coils speed up the machine",
+				"Solid Casings dictate Chemical Plant tier",
+				"Machine Casings dictate Hatch tier",			
+				"Higher tier coils speed up the machine",
 				"CuNi 50% , FeAlCr 100% , Ni4Cr 150% , ...",
-				"higher tier pipe casing increases parrallel and reduces catalyst consumption",
-				"2 parrallel per tier, 20% of not damaging catalyst per tier",
-				"27 Coils",
-				"18 Pipe Casings",
-				"57 Tiered Machine Casings",
+				"Higher tier pipe casings boost parallel and reduce catalyst consumption",
+				"+2 parallel per tier, 20% extra chance of not damaging catalyst per tier",
+				"27x Coils",
+				"18x Pipe Casings",
+				"57x Tiered Machine Casings",
 				"80+ Solid Casings",
-				"Hatch tier is limited to Machine Casing tier",
+				"Construction Guide:",
+				"7x7x7 Hollow cube of solid casings",
+				"5x1x5 layer of solid casings (fills in top layer)",
+				"5x1x5 layer of machine casings (fills in bottom layer)",
+				"In the central 3x5x3:",
+				"3x1x3 layer of Coils, surrounded by ring of Machine Casings",
+				"3x1x3 layer of Pipe Casings",
+				"3x1x3 layer of Coils",
+				"3x1x3 layer of Pipe Casings",
+				"3x1x3 layer of Coils, surrounded by ring of Machine Casings",
 		};
 	}
 
@@ -146,7 +157,6 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 		else {
 			aOriginalTexture = Textures.BlockIcons.CASING_BLOCKS[11];
 		}
-
 
 		if (aSide == aFacing) {
 			return new ITexture[]{aOriginalTexture, new GT_RenderedTexture(aActive ? TexturesGtBlock.Overlay_Machine_Controller_Advanced_Active : TexturesGtBlock.Overlay_Machine_Controller_Advanced)};
@@ -750,12 +760,12 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 		return null;
 	}
 	
-	// same speed bonus as pyrolisis oven
+	// Same speed bonus as pyro oven
 	public int getSpeedBonus() {
 		return 50 * (this.mCoilTier - 2);
 	}
 
-	public int getMaxCatalystDuarbilerty() {
+	public int getMaxCatalystDurability() {
 		return 50;
 	}
 
@@ -775,8 +785,7 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 	}
 
 	@Override
-	public boolean checkRecipe(final ItemStack aStack) {
-		
+	public boolean checkRecipe(final ItemStack aStack) {		
 		return checkRecipeGeneric(getMaxParallelRecipes(), getEuDiscountForParallelism(), getSpeedBonus());
 	}
 	
@@ -831,7 +840,7 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 		int tMaxParrallelCatalyst = aMaxParallelRecipes;
 		ItemStack tCatalystRecipe = findCatalyst(tRecipe.mInputs);
 		if (tCatalystRecipe != null) {
-			log("needs catlyst");
+			log("needs catalyst");
 			tCatalysts = new ArrayList<ItemStack>();
 			tMaxParrallelCatalyst = getCatalysts(aItemInputs, tCatalystRecipe, aMaxParallelRecipes,tCatalysts);
 		}
@@ -871,13 +880,13 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 		}
 		
 		if (tCatalysts != null) {
-			log("damging catalist");
+			log("damaging catalyst");
 			for (int j = 0;j<parallelRecipes;j++) {
 				log("j = "+j);
 				for (int i = 0;i<tCatalysts.size();i++) {
 					log("i = "+i);
 					if (tCatalysts.get(i) != null && tCatalysts.get(i).stackSize != 0) {
-						damageCatalys(tCatalysts.get(i));
+						damageCatalyst(tCatalysts.get(i));
 						break;
 					}		
 				}
@@ -1029,20 +1038,24 @@ public class GregtechMTE_ChemicalPlant extends GregtechMeta_MultiBlockBase {
 	}
 	
 	
-	private void damageCatalys(ItemStack aStack) {
+	private void damageCatalyst(ItemStack aStack) {
 		if (MathUtils.randFloat(0, 10000000)/10000000f < (1.2f - (0.2 * this.mPipeCasingTier))) {
 			int damage = getDamage(aStack) + 1;
-			log("damge catalyst "+damage);
-			if (damage >= getMaxCatalystDuarbilerty()) {
+			log("damage catalyst "+damage);
+			if (damage >= getMaxCatalystDurability()) {
 				log("consume catalyst");
 				ItemStack emptyCatalyst = ItemUtils.getSimpleStack(AgriculturalChem.mCatalystCarrier,1);
 				addOutput(emptyCatalyst);
 				setDamage(aStack,0);
 				aStack.stackSize -= 1;
-			} else 
+			} 
+			else {
 				setDamage(aStack,damage);
-		} else 
+			}
+		} 
+		else 
 			log("not consuming catalyst");
+		}
 	}
 	
 	private int getDamage(ItemStack aStack) {
