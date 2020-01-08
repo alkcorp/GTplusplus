@@ -2,6 +2,7 @@ package gtPlusPlus.xmod.gregtech.common.tileentities.machines.multi.production;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import gregtech.api.GregTech_API;
 import gregtech.api.enums.TAE;
@@ -197,6 +198,14 @@ extends GregtechMeta_MultiBlockBase {
 					}
 					this.mMaxProgresstime = Math.max(1, this.mMaxProgresstime);
 					this.mOutputFluids = new FluidStack[]{tRecipe.getFluidOutput(0)};
+					List<ItemStack> tOutPutItems = new ArrayList<ItemStack>();
+					for (ItemStack tOut : tRecipe.mOutputs) {
+						if (tOut != null) {
+							tOutPutItems.add(tOut);
+						}	
+					}
+					if (tOutPutItems.size() > 0)
+					this.mOutputItems = tOutPutItems.toArray(new ItemStack[tOutPutItems.size()]);
 					this.updateSlots();
 					return true;
 				}
