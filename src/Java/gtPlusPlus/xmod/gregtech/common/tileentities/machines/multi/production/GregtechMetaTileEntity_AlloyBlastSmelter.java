@@ -17,6 +17,7 @@ import gregtech.api.util.Recipe_GT;
 import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.block.ModBlocks;
 import gtPlusPlus.core.recipe.common.CI;
+import gtPlusPlus.core.util.minecraft.ItemUtils;
 import gtPlusPlus.xmod.gregtech.api.metatileentity.implementations.base.GregtechMeta_MultiBlockBase;
 import gtPlusPlus.xmod.gregtech.common.blocks.textures.TexturesGtBlock;
 import net.minecraft.item.Item;
@@ -200,7 +201,7 @@ extends GregtechMeta_MultiBlockBase {
 					this.mOutputFluids = new FluidStack[]{tRecipe.getFluidOutput(0)};
 					List<ItemStack> tOutPutItems = new ArrayList<ItemStack>();
 					for (ItemStack tOut : tRecipe.mOutputs) {
-						if (tOut != null) {
+						if (ItemUtils.checkForInvalidItems(tOut)) {
 							tOutPutItems.add(tOut);
 						}	
 					}
