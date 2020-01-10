@@ -621,7 +621,7 @@ public final class ModItems {
 			MaterialGenerator.generate(ALLOY.MARAGING350);
 			MaterialGenerator.generate(ALLOY.AQUATIC_STEEL);
 
-			MaterialGenerator.generate(ALLOY.NITINOL_60);
+			MaterialGenerator.generate(ALLOY.NITINOL_60,true,false);
 
 			//Composite Alloys
 			MaterialGenerator.generate(ALLOY.STELLITE);
@@ -964,8 +964,8 @@ public final class ModItems {
 		dustRadium226 = new DustDecayable("dustRadium226", ELEMENT.getInstance().RADIUM.getRgbAsHex(), 90000, new String[] {""+StringUtils.superscript("226Ra"), "Result: Radon ("+StringUtils.superscript("222Rn")+")"}, ItemUtils.getSimpleStack(dustDecayedRadium226).getItem(), 5);
 
 		dustTechnetium99 = new DustDecayable("dustTechnetium99", ELEMENT.getInstance().TECHNETIUM.getRgbAsHex(), 164500, new String[] {""+StringUtils.superscript("99Mo"), "Result: Ruthenium 99("+StringUtils.superscript("99Ru")+")"}, ELEMENT.getInstance().RUTHENIUM.getDust(1).getItem(), 4);
-		dustTechnetium99M = new DustDecayable("dustTechnetium99M", ELEMENT.getInstance().TECHNETIUM.getRgbAsHex(), 8570, new String[] {""+StringUtils.superscript("99ᵐTc"), "Result: Technicium 99 ("+StringUtils.superscript("99Tc")+")"}, dustTechnetium99, 4);
-		dustMolybdenum99 = new DustDecayable("dustMolybdenum99", ELEMENT.getInstance().MOLYBDENUM.getRgbAsHex(), 16450, new String[] {""+StringUtils.superscript("99Mo"), "Result: Technicium 99ᵐ ("+StringUtils.superscript("99ᵐTc")+")"}, dustTechnetium99M, 4);
+		dustTechnetium99M = new DustDecayable("dustTechnetium99M", ELEMENT.getInstance().TECHNETIUM.getRgbAsHex(), 8570, new String[] {""+StringUtils.superscript("99áµ�Tc"), "Result: Technicium 99 ("+StringUtils.superscript("99Tc")+")"}, dustTechnetium99, 4);
+		dustMolybdenum99 = new DustDecayable("dustMolybdenum99", ELEMENT.getInstance().MOLYBDENUM.getRgbAsHex(), 16450, new String[] {""+StringUtils.superscript("99Mo"), "Result: Technicium 99áµ� ("+StringUtils.superscript("99áµ�Tc")+")"}, dustTechnetium99M, 4);
 		
 		itemIonParticleBase = new IonParticles();
 		itemStandarParticleBase = new StandardBaseParticles();
