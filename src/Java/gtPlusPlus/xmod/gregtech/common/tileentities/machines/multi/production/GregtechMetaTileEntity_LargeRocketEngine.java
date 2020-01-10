@@ -149,7 +149,6 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 
 	@Override
 	public boolean checkRecipe(final ItemStack aStack) {
-		if (this.mEfficiency < 0)
 		log(" geting air");
 		final ArrayList<FluidStack> tFluids = this.getStoredFluids();
 		FluidStack air = FluidUtils.getFluidStack("air", 1);
@@ -221,7 +220,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 							this.mEUt = (int) ((this.mEfficiency < 2000) ? 0 : GT_Values.V[5]<<1);
 							this.mProgresstime = 1;
 							this.mMaxProgresstime = 1;
-							this.mEfficiencyIncrease =  euProduction/4000; 
+							this.mEfficiencyIncrease =  euProduction/2000; 
 							return true;
 							//log("");
 						}
@@ -229,7 +228,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 				
 				} else
 				{
-					this.mEfficiencyIncrease =  euProduction/4000; 
+					this.mEfficiencyIncrease =  euProduction/2000; 
 					freeFuelTicks--;
 					this.mEUt = (int) ((this.mEfficiency < 1000) ? 0 : GT_Values.V[5]<<1);
 					this.mProgresstime = 1;
@@ -265,9 +264,9 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 				return false;
 			}	
 			//limits engine to LuV fuel consumption
-			if (energy > 427500){
-				amount = (int) ((double) 427500/value);
-				energy = 427500;
+			if (energy > 305500){
+				amount = (int) ((double) 305500/value);
+				energy = 305500;
 			}
 			log("amount2: "+amount);
 			FluidStack tLiquid = FluidUtils.getFluidStack(aFuel.mFluidInputs[0], (this.boostEu ? amount * 3 : amount));			
@@ -287,7 +286,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 	public void setEUProduction(int energy){
 		energy /= 20;
 		// 3x eff unles it gose above 16K eu/t
-		double energyEfficiency = energy > 5500 ? ((double) Math.sqrt(5500)/Math.sqrt(energy) * energy) : energy;
+		double energyEfficiency = energy > 5500 ? ((double) Math.cbrt(5500)/Math.cbrt(energy) * energy) : energy;
 		euProduction = (int) ((double) energyEfficiency * 1.84);
 		if (this.boostEu)
 			euProduction *= 3;

@@ -59,7 +59,7 @@ extends GregtechRocketFuelGeneratorBase {
 
 	@Override
 	public int getEfficiency() {
-		int eff = ((40+((this.mTier) * 16))/4)+(this.mTier);		
+		int eff = 80 - (10 * (this.mTier - 4));
 		return eff;
 		
 	}
