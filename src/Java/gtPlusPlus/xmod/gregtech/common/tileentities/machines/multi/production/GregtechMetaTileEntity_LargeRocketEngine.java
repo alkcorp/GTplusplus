@@ -101,7 +101,7 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 				"Size(WxHxD): 3x3x10, Controller (front centered)",
 				"3x3x10 of Stable "+mCasingName+" (hollow, Min 64!)",
 				"8x "+mGearboxName+" inside the Hollow Casing",
-				"1x Dynamo Hatch (Top Middle, Max 8)",
+				"1x Dynamo Hatch (Top Middle, Max 8) suports tectech dynamos",
 				"8x Air Intake Hatch (one of the Casings next to a Gear Box, top row allowed)",
 				"2x Input Hatch (Rocket Fuel/Booster) (one of the Casings next to a Gear Box, top row not allowed)",
 				"1x Maintenance Hatch (one of the Casings next to a Gear Box)", 
@@ -263,6 +263,8 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 			log("Value: "+value);
 			int energy = value * amount;
 			log("amount2: "+amount);
+			if (amount < 5)
+				return false;
 			FluidStack tLiquid = FluidUtils.getFluidStack(aFuel.mFluidInputs[0], (this.boostEu ? amount * 3 : amount));			
 			if (!this.depleteInput(tLiquid)) {
 				log("could not deplete fluid");
