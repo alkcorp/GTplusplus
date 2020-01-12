@@ -12,6 +12,7 @@ import gregtech.api.gui.GT_GUIContainer_MultiMachine;
 import gregtech.api.interfaces.ITexture;
 import gregtech.api.interfaces.metatileentity.IMetaTileEntity;
 import gregtech.api.interfaces.tileentity.IGregTechTileEntity;
+import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Dynamo;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Input;
 import gregtech.api.metatileentity.implementations.GT_MetaTileEntity_Hatch_Muffler;
@@ -22,6 +23,7 @@ import gregtech.api.util.Recipe_GT;
 import gtPlusPlus.api.objects.Logger;
 import gtPlusPlus.core.block.ModBlocks;
 import gtPlusPlus.core.item.chemistry.RocketFuels;
+import gtPlusPlus.core.lib.LoadedMods;
 import gtPlusPlus.core.material.MISC_MATERIALS;
 import gtPlusPlus.core.util.minecraft.FluidUtils;
 import gtPlusPlus.core.util.minecraft.ItemUtils;
@@ -52,6 +54,8 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 
 
 	private final static int CASING_ID = TAE.getIndexFromPage(3, 11);
+	
+	public ArrayList<GT_MetaTileEntity_Hatch> mAllDynamoHatches = new ArrayList<GT_MetaTileEntity_Hatch>();
 
 	public GregtechMetaTileEntity_LargeRocketEngine(final int aID, final String aName, final String aNameRegional) {
 		super(aID, aName, aNameRegional);
@@ -310,6 +314,10 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 		int tX = getBaseMetaTileEntity().getXCoord();
 		int tY = getBaseMetaTileEntity().getYCoord();
 		int tZ = getBaseMetaTileEntity().getZCoord();
+		
+		this.mMultiDynamoHatches.clear();
+		this.mAllDynamoHatches.clear();
+		
 		final int MAX_LENGTH = 8;
 		for (int length=0;length<MAX_LENGTH;length++) {
 			if(getBaseMetaTileEntity().getBlockAtSideAndDistance(tSide, length+1) != getGearboxBlock()) {
@@ -422,8 +430,14 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 				this.updateTexture(tTileEntity, getCasingTextureIndex());
 			}
 		}
+		
+		mAllDynamoHatches.addAll(this.mDynamoHatches);
 
-		if (this.mDynamoHatches.size() <= 0 || this.mDynamoHatches.isEmpty()) {
+		if (LoadedMods.TecTech) {
+			mAllDynamoHatches.addAll(this.mMultiDynamoHatches);
+		}
+
+		if (this.mAllDynamoHatches.size() <= 0 || this.mAllDynamoHatches.isEmpty()) {
 			log("Wrong count for Dynamos");			
 			return false;			
 		}
@@ -443,7 +457,85 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 
 		log("Formed Rocket Engine.");
 		return true;
-	}	
+	}
+	
+	@Override
+	 public boolean addEnergyOutput(long aEU) {
+        if (aEU <= 0) {
+            return true;
+        }
+        if (mAllDynamoHatches.size() > 0) {
+            return addEnergyOutputMultipleDynamos(aEU, true);
+        }
+        return false;
+    }
+	
+	
+	public boolean addEnergyOutputMultipleDynamos(long aEU, boolean aAllowMixedVoltageDynamos) {
+        int injected = 0;
+        long totalOutput = 0;
+        long aFirstVoltageFound = -1;
+        boolean aFoundMixedDynamos = false;
+        for (GT_MetaTileEntity_Hatch aDynamo : mAllDynamoHatches) {
+            if( aDynamo == null ) {
+                return false;
+            }
+            if (isValidMetaTileEntity(aDynamo)) {
+                long aVoltage = aDynamo.maxEUOutput();
+                long aTotal = aDynamo.maxAmperesOut() * aVoltage;
+                // Check against voltage to check when hatch mixing
+                if (aFirstVoltageFound == -1) {
+                    aFirstVoltageFound = aVoltage;
+                }
+                else {
+                    /**
+                      * Calcualtes overclocked ness using long integers
+                      * @param aEUt          - recipe EUt
+                      * @param aDuration     - recipe Duration
+                      * @param mAmperage     - should be 1 ?
+                      */
+                    //Long time calculation
+                    if (aFirstVoltageFound != aVoltage) {
+                        aFoundMixedDynamos = true;
+                    }
+                }
+                totalOutput += aTotal;
+            }
+        }
+
+        if (totalOutput < aEU || (aFoundMixedDynamos && !aAllowMixedVoltageDynamos)) {
+            explodeMultiblock();
+            return false;
+        }
+
+        long leftToInject;
+        //Long EUt calculation
+        long aVoltage;
+        //Isnt too low EUt check?
+        int aAmpsToInject;
+        int aRemainder;
+
+        //xEUt *= 4;//this is effect of everclocking
+        for (GT_MetaTileEntity_Hatch aDynamo : mAllDynamoHatches) {
+            if (isValidMetaTileEntity(aDynamo)) {
+                leftToInject = aEU - injected;
+                aVoltage = aDynamo.maxEUOutput();
+                aAmpsToInject = (int) (leftToInject / aVoltage);
+                aRemainder = (int) (leftToInject - (aAmpsToInject * aVoltage));
+                long powerGain;
+                for (int i = 0; i < Math.min(aDynamo.maxAmperesOut(), aAmpsToInject + 1); i++) {
+                    if (i == Math.min(aDynamo.maxAmperesOut(), aAmpsToInject)){
+                        powerGain = aRemainder;
+                    }else{
+                        powerGain =  aVoltage;
+                    }
+                    aDynamo.getBaseMetaTileEntity().increaseStoredEnergyUnits(powerGain, false);
+                    injected += powerGain;
+                }
+            }
+        }
+        return injected > 0;
+    }
 
 	public Block getCasingBlock() {
 		return ModBlocks.blockCasings4Misc;
