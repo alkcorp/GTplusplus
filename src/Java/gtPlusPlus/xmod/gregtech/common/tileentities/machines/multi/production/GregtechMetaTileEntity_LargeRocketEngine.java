@@ -91,8 +91,8 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 				"Supply Rocket Fuels and 1000L(3000L boosted) of "+mLubricantName+" per hour to run",
 				"Supply 4L of "+mCoolantName+" per second per 2100 eu/t to boost output (optional)", 
 				"Consumes upto 37500L of Air per second",
-				"Produces between 4K and 32K eu/t depending on how much fuel is fed",
-				"When producing more then 16K eu/t fuel wil be consume less efficiently (3x - 1.5x eff)",
+				"Produces as much energy as you put fuel in becomes less ",
+				"When producing more then 30K eu/t fuel wil be consume less efficiently (3x - 1.5x eff@55Keu/t)",
 				"Boosting will produce 3x the amount of power but will consume 3x fuel",
 				"Size(WxHxD): 3x3x10, Controller (front centered)",
 				"3x3x10 of Stable "+mCasingName+" (hollow, Min 64!)",
@@ -155,14 +155,14 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 		log(" geting air 2");
 
 		int aircount = getAir() ;
-		if (aircount <  euProduction/32) {
+		if (aircount <  euProduction/100) {
 			log(" not enough air");
 			//log("Not Enough Air to Run "+aircount);
 			return false;
 		}
 		else {		
 			log(" no boost");	
-			boolean hasIntakeAir = this.depleteInput(FluidUtils.getFluidStack(air, euProduction/32));
+			boolean hasIntakeAir = this.depleteInput(FluidUtils.getFluidStack(air, euProduction/100));
 			if (!hasIntakeAir) {
 				//log("Could not consume Air to run "+aircount);
 				freeFuelTicks = 0;
@@ -258,16 +258,6 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 			log("amount: "+amount);
 			log("Value: "+value);
 			int energy = value * amount;
-			//engine needs at leas 2A EV of fuel to waork
-			if (energy < 40000){
-				log("not enough fuel to work");
-				return false;
-			}	
-			//limits engine to LuV fuel consumption
-			if (energy > 305500){
-				amount = (int) ((double) 305500/value);
-				energy = 305500;
-			}
 			log("amount2: "+amount);
 			FluidStack tLiquid = FluidUtils.getFluidStack(aFuel.mFluidInputs[0], (this.boostEu ? amount * 3 : amount));			
 			if (!this.depleteInput(tLiquid)) {
@@ -285,8 +275,16 @@ public class GregtechMetaTileEntity_LargeRocketEngine extends GregtechMeta_Multi
 
 	public void setEUProduction(int energy){
 		energy /= 20;
-		// 3x eff unles it gose above 16K eu/t
-		double energyEfficiency = energy > 5500 ? ((double) Math.cbrt(5500)/Math.cbrt(energy) * energy) : energy;
+		double energyEfficiency;
+		if (energy > 10000) {
+			energyEfficiency =  ((double) Math.cbrt(10000)/Math.cbrt(energy));
+			if (energy >= 40000)
+				energyEfficiency *= ((double) Math.cbrt(40000)/Math.cbrt(energy));
+			energyEfficiency *= energy;
+		} 
+		else {
+			energyEfficiency = energy;
+		}
 		euProduction = (int) ((double) energyEfficiency * 1.84);
 		if (this.boostEu)
 			euProduction *= 3;
