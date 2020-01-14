@@ -30,12 +30,14 @@ public class ClassTransformer_GT_CharcoalPit {
 	}
 
 	public static boolean isWoodLog(Block log, int meta) {
-		boolean isLog1 = OrePrefixes.log.contains(ItemUtils.getSimpleStack(log, meta, 1));
+        ItemStack logItem = ItemUtils.getSimpleStack(log, meta, 1);
+		boolean isLog1 = OrePrefixes.log.contains(logItem);
 		if (isLog1) {
 			return true;
 		}
 		ArrayList<ItemStack> oredict = OreDictionary.getOres("logWood");
-		if (oredict.contains(ItemUtils.getSimpleStack(log))) {
+        logItem = ItemUtils.getSimpleStack(log);
+		if (oredict.contains(logItem)) {
 			return true;
 		}
 		return false;
