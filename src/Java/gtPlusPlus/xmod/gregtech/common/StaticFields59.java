@@ -292,7 +292,6 @@ public class StaticFields59 {
 		if (CORE.GTNH && aCoilTier <= 6) {
 			mHeatingCapacity += 1;
 		}
-		Logger.INFO("coil tier = "+mHeatingCapacity);
 		return mHeatingCapacity;
 	}
 
