@@ -168,7 +168,7 @@ public class GTPP_CapeRenderer extends RenderPlayer {
 			hasResourceChecked = true;
 		}
 
-		if (GT_Utility.getFullInvisibility(aPlayer) || aPlayer.isInvisible()
+		if (!hasCape || GT_Utility.getFullInvisibility(aPlayer) || aPlayer.isInvisible()
 				|| GT_Utility.getPotion(aPlayer, Integer.valueOf(Potion.invisibility.id).intValue())) {
 			aEvent.setCanceled(true);
 			Logger.WARNING("A3");
@@ -179,7 +179,12 @@ public class GTPP_CapeRenderer extends RenderPlayer {
 		try {
 
 			if (tResource == null && CORE.DEVENV) {
-				tResource = mCapes[3];
+			    tResource = mCapes[3];
+			}
+			else if (tResource == null && !CORE.DEVENV){
+			    aEvent.setCanceled(true);
+			    Logger.WARNING("A3");
+			    return;
 			}
 
 			if ((tResource != null) && (!aPlayer.getHideCape())) {
@@ -221,11 +226,20 @@ public class GTPP_CapeRenderer extends RenderPlayer {
 				GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
 				((ModelBiped) this.mainModel).renderCloak(0.0625F);
 				GL11.glPopMatrix();
+			        return;
+			}
+			else {
+			    aEvent.setCanceled(true);
+			    Logger.WARNING("A3");
+			    return;
 			}
 		} catch (Throwable e) {
 			if (GT_Values.D1) {
 				e.printStackTrace(GT_Log.err);
 			}
+			aEvent.setCanceled(true);
+			Logger.WARNING("A3");
+			return;			
 		}
 	}
 
